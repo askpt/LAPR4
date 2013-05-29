@@ -21,7 +21,15 @@
  * </p>
  * <img src="doc-files/sd_start_int.png">
  * 
+ * <p>
+ * <b>System Sequence Diagram - Send</b>
+ * </p>
+ * <img src="doc-files/sd_system_send.png">
  * 
+ * <p>
+ * <b>System Sequence Diagram - Receive</b>
+ * </p>
+ * <img src="doc-files/sd_system_rec.png">
  * 
  * @author Andre Silva
  */
@@ -31,10 +39,10 @@
 
  left to right direction
 
- Actor user
+ Actor User
 
- user --> (Share cells throw network)
- user --> (Receive cells throw network)
+ User --> (Share cells throw network)
+ User --> (Receive cells throw network)
  @enduml
 
  @startuml doc-files/sd_start_ext.png
@@ -97,6 +105,29 @@
  MB -> SM : icon = getIcon();
  MB -> extensionsMenu : add(extensionMenu); 
  end
+ @enduml
+
+
+ @startuml doc-files/sd_system_send.png
+ Actor User as us
+ participant System as sys
+
+ us -> sys : startSharing()
+ us -> sys : selectSharingMode()
+ us -> sys : sendIP(ipDestination, port)
+ us -> sys : sendCells(cells)
+ sys --> us : return confirmation 
+ @enduml
+
+ @startuml doc-files/sd_system_rec.png
+ Actor User as us
+ participant System as sys
+
+ us -> sys : startSharing()
+ us -> sys : selectSharingMode()
+ sys -> sys : startServer()
+ sys -> sys : receive()
+ sys --> us : return confirmation
  @enduml
  */
 package csheets.ext.share;
