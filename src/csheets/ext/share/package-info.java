@@ -35,7 +35,11 @@
  * <b>Sequence Diagram - Send Cells (Server)</b>
  * </p>
  * <img src="doc-files/sd_send_server.png">
- *  
+ * 
+ * <p>
+ * <b>Sequence Diagram - Receive Cells (Client)</b>
+ * </p>
+ * <img src="doc-files/sd_receive_client.png">
  * @author Andre Silva
  */
 /*
@@ -166,6 +170,38 @@
  deactivate sc
  sui --> sa : return statusSending
  deactivate sa
+
+ @enduml
+
+ @startuml doc-files/sd_receive_client.png
+
+ actor user as us
+ participant ReceiveAction as ra
+ participant ReceiveUI as rui
+ participant ReceiveController as rc
+ participant Client as cli
+
+ activate rui
+ activate cli
+ us -> ra : ActionPerformed(ActionEvent event)
+ activate ra
+ ra -> rui : startUI()
+ us -> rui : insert(IP, port, cell)
+ Create rc
+ rui -> rc : new
+ activate rc
+ rui -> rc : startClient(IP, port, cells)
+ rc -> cli : startClient(IP, port, cells)
+ cli -> cli : startClient(IP, port)
+ note right cli
+ Using TCP sockets
+ end note
+ cli -> cli : receive(cell)
+ cli --> rc : return statusReceiving
+ rc --> rui : return statusReceiving
+ deactivate rc
+ rui --> ra : return statusReceiving
+ deactivate ra
 
  @enduml
 
