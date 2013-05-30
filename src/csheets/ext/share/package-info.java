@@ -31,6 +31,11 @@
  * </p>
  * <img src="doc-files/sd_system_rec.png">
  * 
+ * <p>
+ * <b>Sequence Diagram - Send Cells (Server)</b>
+ * </p>
+ * <img src="doc-files/sd_send_server.png">
+ *  
  * @author Andre Silva
  */
 /*
@@ -132,5 +137,37 @@
  sys -> sys : receive()
  sys --> us : return confirmation
  @enduml
+
+ @startuml doc-files/sd_send_server.png
+ Actor User as us
+ participant SendAction as sa
+ participant "UIExtension : SendUI" as sui
+ participant SendController as sc
+ participant Server as svr
+
+ activate sui
+ activate svr
+ us -> sa : ActionPerformed(ActionEvent event)
+ activate sa
+ sa -> sui : startUI()
+ us -> sui : insert(port, cells)
+ Create sc
+ sui -> sc : new
+ activate sc
+ sui -> sc : startServer(port, cells)
+ sc -> svr : startServer(port, cells)
+ svr -> svr : startConnection(port)
+ note right svr
+ Using TCP sockets
+ end note
+ svr -> svr : send(cells)
+ svr --> sc : return statusSending
+ sc --> sui : return statusSending
+ deactivate sc
+ sui --> sa : return statusSending
+ deactivate sa
+
+ @enduml
+
  */
 package csheets.ext.share;
