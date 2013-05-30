@@ -114,8 +114,10 @@
 
  us -> sys : startSharing()
  us -> sys : selectSharingMode()
- us -> sys : sendIP(ipDestination, port)
+ us -> sys : sendPort(port)
  us -> sys : sendCells(cells)
+ sys -> sys : startServer()
+ sys -> sys : send()
  sys --> us : return confirmation 
  @enduml
 
@@ -125,7 +127,8 @@
 
  us -> sys : startSharing()
  us -> sys : selectSharingMode()
- sys -> sys : startServer()
+ us -> sys : sendPort(port)
+ us -> sys : sendIP (IP)
  sys -> sys : receive()
  sys --> us : return confirmation
  @enduml
