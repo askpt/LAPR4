@@ -17,10 +17,10 @@ public class SendController {
      *            connection port of the cells
      * @param cells
      *            value that will be shared throw network
-     * @return the result of the connection
      */
-    public boolean startServer(int port, Cell[][] cells) {
+    public void startServer(int port, Cell[][] cells) {
 	Server svr = new Server();
-	return svr.startServer(port, cells);
+	svr.startServer(port, cells);
     }
+
 }
