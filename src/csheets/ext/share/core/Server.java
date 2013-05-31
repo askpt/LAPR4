@@ -1,5 +1,11 @@
 package csheets.ext.share.core;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.logging.Level;
+
+import com.sun.istack.internal.logging.Logger;
+
 import csheets.core.Cell;
 
 /**
@@ -20,18 +26,21 @@ public class Server {
      * @return the result of the connection
      */
     public boolean startServer(int port, Cell[][] cells) {
-	startConnection(port);
-	send(cells);
+
+	try {
+	    ServerSocket svr = new ServerSocket(port);
+	    send(cells, svr);
+	} catch (IOException e) {
+	    Logger.getLogger(getClass()).log(Level.SEVERE, null, e);
+
+	    return false;
+	}
+
 	return true;
     }
 
-    private void send(Cell[][] cells) {
-	// TODO create server
-	throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private void startConnection(int port) {
-	// TODO send cells using network
+    private void send(Cell[][] cells, ServerSocket svr) {
+	// TODO send cells
 	throw new UnsupportedOperationException("Not supported yet.");
     }
 }
