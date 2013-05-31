@@ -29,12 +29,11 @@ public class SharingMenu extends JMenu {
 
 	// Sub-extensions
 	add("Receive");
-	add("Sharing");
+	add(new SendAction(uiController));
 
-	// TODO add ReceiveAction and SharingAction classes
+	// TODO add ReceiveAction
 	/*
-	 * add(new ReceiveAction(uiController)); add(new
-	 * SharingAction(uiController));
+	 * add(new ReceiveAction(uiController));
 	 */
     }
 }
