@@ -1,4 +1,4 @@
-// $ANTLR 2.7.5 (20050128): "FormulaCompiler.g" -> "FormulaParser.java"$
+// $ANTLR 2.7.5 (20050128): "NumberSignFormulaCompiler.g" -> "NumberSignFormulaParser.java"$
 package csheets.core.formula.compiler;
 import antlr.TokenBuffer;
 import antlr.TokenStreamException;
@@ -22,32 +22,32 @@ import antlr.collections.impl.ASTArray;
  * A parser that generates expressions from lists of lexical tokens.
  * @author Einar Pehrson
  */
-public class FormulaParser extends antlr.LLkParser       implements FormulaParserTokenTypes
+public class NumberSignFormulaParser extends antlr.LLkParser       implements NumberSignFormulaParserTokenTypes
  {
 
-protected FormulaParser(TokenBuffer tokenBuf, int k) {
+protected NumberSignFormulaParser(TokenBuffer tokenBuf, int k) {
   super(tokenBuf,k);
   tokenNames = _tokenNames;
   buildTokenTypeASTClassMap();
   astFactory = new ASTFactory(getTokenTypeToASTClassMap());
 }
 
-public FormulaParser(TokenBuffer tokenBuf) {
+public NumberSignFormulaParser(TokenBuffer tokenBuf) {
   this(tokenBuf,1);
 }
 
-protected FormulaParser(TokenStream lexer, int k) {
+protected NumberSignFormulaParser(TokenStream lexer, int k) {
   super(lexer,k);
   tokenNames = _tokenNames;
   buildTokenTypeASTClassMap();
   astFactory = new ASTFactory(getTokenTypeToASTClassMap());
 }
 
-public FormulaParser(TokenStream lexer) {
+public NumberSignFormulaParser(TokenStream lexer) {
   this(lexer,1);
 }
 
-public FormulaParser(ParserSharedInputState state) {
+public NumberSignFormulaParser(ParserSharedInputState state) {
   super(state,1);
   tokenNames = _tokenNames;
   buildTokenTypeASTClassMap();
@@ -63,7 +63,7 @@ public FormulaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		AST expression_AST = null;
 		
-		match(EQ);
+		match(NUMBERSIGN);
 		comparison();
 		astFactory.addASTChild(currentAST, returnAST);
 		match(Token.EOF_TYPE);
@@ -634,6 +634,7 @@ public FormulaParser(ParserSharedInputState state) {
 		"EOF",
 		"<2>",
 		"NULL_TREE_LOOKAHEAD",
+		"NUMBERSIGN",
 		"EQ",
 		"NEQ",
 		"GT",

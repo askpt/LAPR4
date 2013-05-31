@@ -1,4 +1,4 @@
-// $ANTLR 2.7.5 (20050128): "FormulaCompiler.g" -> "FormulaLexer.java"$
+// $ANTLR 2.7.5 (20050128): "NumberSignFormulaCompiler.g" -> "NumberSignFormulaLexer.java"$
 package csheets.core.formula.compiler;
 import java.io.InputStream;
 import antlr.TokenStreamException;
@@ -30,18 +30,18 @@ import csheets.core.formula.lang.Language;
  * @author Einar Pehrson
  */
 @SuppressWarnings("all")
-public class FormulaLexer extends antlr.CharScanner implements FormulaParserTokenTypes, TokenStream
+public class NumberSignFormulaLexer extends antlr.CharScanner implements NumberSignFormulaParserTokenTypes, TokenStream
  {
-public FormulaLexer(InputStream in) {
+public NumberSignFormulaLexer(InputStream in) {
 	this(new ByteBuffer(in));
 }
-public FormulaLexer(Reader in) {
+public NumberSignFormulaLexer(Reader in) {
 	this(new CharBuffer(in));
 }
-public FormulaLexer(InputBuffer ib) {
+public NumberSignFormulaLexer(InputBuffer ib) {
 	this(new LexerSharedInputState(ib));
 }
-public FormulaLexer(LexerSharedInputState state) {
+public NumberSignFormulaLexer(LexerSharedInputState state) {
 	super(state);
 	caseSensitiveLiterals = false;
 	setCaseSensitive(false);
@@ -99,6 +99,12 @@ tryAgain:
 				case '=':
 				{
 					mEQ(true);
+					theRetToken=_returnToken;
+					break;
+				}
+				case '#':
+				{
+					mNUMBERSIGN(true);
 					theRetToken=_returnToken;
 					break;
 				}
@@ -545,6 +551,19 @@ tryAgain:
 		int _saveIndex;
 		
 		match("=");
+		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
+			_token = makeToken(_ttype);
+			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
+		}
+		_returnToken = _token;
+	}
+	
+	public final void mNUMBERSIGN(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
+		int _ttype; Token _token=null; int _begin=text.length();
+		_ttype = NUMBERSIGN;
+		int _saveIndex;
+		
+		match("#");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
 			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
