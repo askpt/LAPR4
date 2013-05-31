@@ -76,17 +76,17 @@ ExcelExpressionCompiler -> FormulaParser: getAST()
 ExcelExpressionCompiler -> ExcelExpressionCompiler: convert()
 FormulaCompiler -> Formula: new(Cell cell, Expression expression)
 else
- FormulaCompiler -> ExcelExpressionCompiler: getStarter()
+ FormulaCompiler -> NumberSignExpressionCompiler: getStarter()
   opt source.charAt(0) == '#'
    FormulaCompiler -> NumberSignExpressionCompiler: compile(Cell cell, String source)
-   NumberSignExpressionCompiler -> FormulaLexer: new(String source)
-   NumberSignExpressionCompiler -> FormulaParser: new
-   NumberSignExpressionCompiler -> FormulaParser: expression()
-   FormulaParser -> ASTPair: new
-   FormulaParser -> FormulaParser: match(EQ)
-   FormulaParser -> FormulaParser: comparison
-   FormulaParser -> FormulaParser: match(EOF)
-   NumberSignExpressionCompiler -> FormulaParser: getAST()
+   NumberSignExpressionCompiler -> NumberSignFormulaLexer: new(String source)
+   NumberSignExpressionCompiler -> NumberSignFormulaParser: new
+   NumberSignExpressionCompiler -> NumberSignFormulaParser: expression()
+   NumberSignFormulaParser -> ASTPair: new
+   NumberSignFormulaParser -> NumberSignFormulaParser: match(NSIGN)
+   NumberSignFormulaParser -> NumberSignFormulaParser: comparison
+   NumberSignFormulaParser -> NumberSignFormulaParser: match(EOF)
+   NumberSignExpressionCompiler -> NumberSignFormulaParser: getAST()
    NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert()
    FormulaCompiler -> Formula: new(Cell cell, Expression expression)
 end
