@@ -5,50 +5,51 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
-import csheets.ext.share.controller.SendController;
+import csheets.ext.share.controller.ReceiveController;
 import csheets.ui.ctrl.*;
 
 /**
- * An action for the send action in the sharing extension
+ * An action for the receive action in the sharing extension
  * 
  * @see FocusOwnerAction
  * @author Andre
  * 
  */
-public class SendAction extends FocusOwnerAction {
+public class ReceiveAction extends FocusOwnerAction {
 
     /** User Interface Controller */
     protected UIController uiController;
 
     /**
-     * Creates a new send action
+     * Creates a new receive action
      * 
      * @param uiController
      *            user interface controller
      */
-    public SendAction(UIController uiController) {
+    public ReceiveAction(UIController uiController) {
 	this.uiController = uiController;
     }
 
     /**
-     * This method will create a new UI for the server
+     * This method will create a new UI for the client
      * 
      * @param event
      *            the event that was fired
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-	// SendUI sUI = new SendUI();
-	// TODO create sidebar ui (send)
+	// ReceiveUI = new ReceiveUI();
+	// TODO create sidebar UI (Receive)
 
 	// TODO create threads
 
-	String portTemp = JOptionPane.showInputDialog("Please input a port");
+	String IP = JOptionPane.showInputDialog("Please input an IP");
+	String portTemp = JOptionPane.showInputDialog("Please input a port!");
 	int port = Integer.parseInt(portTemp);
-	Cell[][] cells = focusOwner.getSelectedCells();
+	Cell cellStart = focusOwner.getSelectedCell();
 
-	SendController sc = new SendController();
-	if (sc.startServer(port, cells))
+	ReceiveController rc = new ReceiveController();
+	if (rc.startClient(IP, port, cellStart))
 	    JOptionPane.showMessageDialog(focusOwner, "Sucessfull");
 	else
 	    JOptionPane.showMessageDialog(focusOwner, "Unsucessfull");
@@ -61,6 +62,7 @@ public class SendAction extends FocusOwnerAction {
      */
     @Override
     protected String getName() {
-	return "Send";
+	return "Receive";
     }
+
 }
