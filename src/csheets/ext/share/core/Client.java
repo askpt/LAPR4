@@ -2,9 +2,6 @@ package csheets.ext.share.core;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.logging.Level;
-
-import com.sun.istack.internal.logging.Logger;
 
 import csheets.core.Cell;
 
@@ -32,11 +29,11 @@ public class Client {
 	    Socket cli = new Socket(IP, port);
 	    receive(cellStart, cli);
 	} catch (UnknownHostException e) {
-	    Logger.getLogger(getClass()).log(Level.SEVERE, null, e);
+	    e.printStackTrace();
 
 	    return false;
 	} catch (IOException e) {
-	    Logger.getLogger(getClass()).log(Level.SEVERE, null, e);
+	    e.printStackTrace();
 
 	    return false;
 	}

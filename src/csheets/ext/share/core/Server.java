@@ -2,9 +2,6 @@ package csheets.ext.share.core;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.logging.Level;
-
-import com.sun.istack.internal.logging.Logger;
 
 import csheets.core.Cell;
 
@@ -31,7 +28,7 @@ public class Server {
 	    ServerSocket svr = new ServerSocket(port);
 	    send(cells, svr);
 	} catch (IOException e) {
-	    Logger.getLogger(getClass()).log(Level.SEVERE, null, e);
+	    e.printStackTrace();
 
 	    return false;
 	}
