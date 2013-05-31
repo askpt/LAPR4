@@ -190,8 +190,8 @@
  Create rc
  rui -> rc : new
  activate rc
- rui -> rc : startClient(IP, port, cells)
- rc -> cli : startClient(IP, port, cells)
+ rui -> rc : startClient(IP, port, cell)
+ rc -> cli : startClient(IP, port, cell)
  cli -> cli : startClient(IP, port)
  note right cli
  Using TCP sockets
