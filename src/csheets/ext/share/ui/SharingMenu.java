@@ -28,12 +28,7 @@ public class SharingMenu extends JMenu {
 	setMnemonic(KeyEvent.VK_S);
 
 	// Sub-extensions
-	add("Receive");
+	add(new ReceiveAction(uiController));
 	add(new SendAction(uiController));
-
-	// TODO add ReceiveAction
-	/*
-	 * add(new ReceiveAction(uiController));
-	 */
     }
 }
