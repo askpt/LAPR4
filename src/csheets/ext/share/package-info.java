@@ -150,7 +150,6 @@
  participant Server as svr
 
  activate sui
- activate svr
  us -> sa : ActionPerformed(ActionEvent event)
  activate sa
  sa -> sui : startUI()
@@ -159,15 +158,16 @@
  sui -> sc : new
  activate sc
  sui -> sc : startServer(port, cells)
+ Create svr
+ sc -> svr : new
+ activate svr
  sc -> svr : startServer(port, cells)
  note right svr
  Using TCP sockets
  end note
  svr -> svr : send(cells, svr)
- svr --> sc : return statusSending
- sc --> sui : return statusSending
+ deactivate svr
  deactivate sc
- sui --> sa : return statusSending
  deactivate sa
 
  @enduml
@@ -181,7 +181,6 @@
  participant Client as cli
 
  activate rui
- activate cli
  us -> ra : ActionPerformed(ActionEvent event)
  activate ra
  ra -> rui : startUI()
@@ -190,15 +189,18 @@
  rui -> rc : new
  activate rc
  rui -> rc : startClient(IP, port, cell)
+
+ Create cli
+
+ rc -> cli : new
+ activate cli
  rc -> cli : startClient(IP, port, cell)
  note right cli
  Using TCP sockets
  end note
  cli -> cli : receive(cell, cli)
- cli --> rc : return statusReceiving
- rc --> rui : return statusReceiving
+ deactivate cli
  deactivate rc
- rui --> ra : return statusReceiving
  deactivate ra
 
  @enduml
