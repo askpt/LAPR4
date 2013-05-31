@@ -160,11 +160,10 @@
  activate sc
  sui -> sc : startServer(port, cells)
  sc -> svr : startServer(port, cells)
- svr -> svr : startConnection(port)
  note right svr
  Using TCP sockets
  end note
- svr -> svr : send(cells)
+ svr -> svr : send(cells, svr)
  svr --> sc : return statusSending
  sc --> sui : return statusSending
  deactivate sc
@@ -192,11 +191,10 @@
  activate rc
  rui -> rc : startClient(IP, port, cell)
  rc -> cli : startClient(IP, port, cell)
- cli -> cli : startClient(IP, port)
  note right cli
  Using TCP sockets
  end note
- cli -> cli : receive(cell)
+ cli -> cli : receive(cell, cli)
  cli --> rc : return statusReceiving
  rc --> rui : return statusReceiving
  deactivate rc

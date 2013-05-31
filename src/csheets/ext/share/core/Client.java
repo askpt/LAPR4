@@ -1,5 +1,11 @@
 package csheets.ext.share.core;
 
+import java.io.IOException;
+import java.net.*;
+import java.util.logging.Level;
+
+import com.sun.istack.internal.logging.Logger;
+
 import csheets.core.Cell;
 
 /**
@@ -22,22 +28,24 @@ public class Client {
      */
     public boolean startClient(String IP, int port, Cell cellStart) {
 
-	startClient(IP, port);
-	receive(cellStart);
+	try {
+	    Socket cli = new Socket(IP, port);
+	    receive(cellStart, cli);
+	} catch (UnknownHostException e) {
+	    Logger.getLogger(getClass()).log(Level.SEVERE, null, e);
 
-	System.out.println(IP + ":" + port);
-	System.out.println(cellStart.getContent());
+	    return false;
+	} catch (IOException e) {
+	    Logger.getLogger(getClass()).log(Level.SEVERE, null, e);
+
+	    return false;
+	}
 
 	return true;
     }
 
-    private void receive(Cell cellStart) {
+    private void receive(Cell cellStart, Socket cli) {
 	// TODO receive cells using network
-	throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private void startClient(String iP, int port) {
-	// TODO create client
 	throw new UnsupportedOperationException("Not supported yet.");
     }
 
