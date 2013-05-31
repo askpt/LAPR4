@@ -41,18 +41,13 @@ public class ReceiveAction extends FocusOwnerAction {
 	// ReceiveUI = new ReceiveUI();
 	// TODO create sidebar UI (Receive)
 
-	// TODO create threads
-
 	String IP = JOptionPane.showInputDialog("Please input an IP");
 	String portTemp = JOptionPane.showInputDialog("Please input a port!");
 	int port = Integer.parseInt(portTemp);
 	Cell cellStart = focusOwner.getSelectedCell();
 
 	ReceiveController rc = new ReceiveController();
-	if (rc.startClient(IP, port, cellStart))
-	    JOptionPane.showMessageDialog(focusOwner, "Sucessfull");
-	else
-	    JOptionPane.showMessageDialog(focusOwner, "Unsucessfull");
+	rc.startClient(IP, port, cellStart);
     }
 
     /**
@@ -64,5 +59,4 @@ public class ReceiveAction extends FocusOwnerAction {
     protected String getName() {
 	return "Receive";
     }
-
 }

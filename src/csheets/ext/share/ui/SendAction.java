@@ -38,20 +38,14 @@ public class SendAction extends FocusOwnerAction {
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-	// SendUI sUI = new SendUI();
-	// TODO create sidebar ui (send)
-
-	// TODO create threads
-
+	// SendUI sui = new SendUI();
+	// TODO create UI
 	String portTemp = JOptionPane.showInputDialog("Please input a port");
 	int port = Integer.parseInt(portTemp);
 	Cell[][] cells = focusOwner.getSelectedCells();
 
 	SendController sc = new SendController();
-	if (sc.startServer(port, cells))
-	    JOptionPane.showMessageDialog(focusOwner, "Sucessfull");
-	else
-	    JOptionPane.showMessageDialog(focusOwner, "Unsucessfull");
+	sc.startServer(port, cells);
     }
 
     /**
