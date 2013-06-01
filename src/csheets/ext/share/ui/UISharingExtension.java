@@ -59,94 +59,99 @@ public class UISharingExtension extends UIExtension {
      */
     @Override
     public JComponent getSideBar() {
-	sidebar = new JPanel(new GridLayout(2, 1));
-	sidebar.setName(SharingExtension.NAME);
+	if (sidebar == null) {
+	    sidebar = new JPanel(new GridLayout(2, 1));
+	    sidebar.setName(SharingExtension.NAME);
 
-	// Creates components
+	    // Creates components
 
-	JPanel sendPanel = new JPanel();
-	JLabel sendStaticPort = new JLabel("Port");
-	final JTextField sendPort = new JTextField(10);
-	JButton sendAction = new JButton("Send");
-	sendAction.addActionListener(new ActionListener() {
+	    JPanel sendPanel = new JPanel();
+	    JLabel sendStaticPort = new JLabel("Port");
+	    final JTextField sendPort = new JTextField(10);
+	    JButton sendAction = new JButton("Send");
+	    sendAction.addActionListener(new ActionListener() {
 
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		String portTemp = sendPort.getText();
-		if (checkIfANumber(portTemp)) {
-		    int port = Integer.parseInt(portTemp);
-		    if (checkPort(port)) {
-			SendAction.getInstance().clickOnSidebar(port);
-		    } else {
-			JOptionPane.showMessageDialog(null,
-				"Check if port is between 49152 and 65535",
-				"Port Error", JOptionPane.ERROR_MESSAGE);
-		    }
-		} else {
-		    JOptionPane.showMessageDialog(null,
-			    "Inserted port is not a number", "Port Error",
-			    JOptionPane.ERROR_MESSAGE);
-		}
-	    }
-	});
-	sendPanel.add(sendStaticPort);
-	sendPanel.add(sendPort);
-	sendPanel.add(sendAction);
-
-	JPanel receivePanel = new JPanel();
-	JLabel recStaticIP = new JLabel("IP");
-	final JTextField recIP = new JTextField(10);
-	JLabel recStaticPort = new JLabel("Port");
-	final JTextField recPort = new JTextField(10);
-	JButton recAction = new JButton("Receive");
-	recAction.addActionListener(new ActionListener() {
-
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		String portTemp = recPort.getText();
-		if (checkIfANumber(portTemp)) {
-		    int port = Integer.parseInt(portTemp);
-		    if (checkPort(port)) {
-			String IP = recIP.getText();
-			if (checkIFIPIsCorrect(IP)) {
-			    ReceiveAction.getInstance()
-				    .clickOnSidebar(IP, port);
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		    String portTemp = sendPort.getText();
+		    if (checkIfANumber(portTemp)) {
+			int port = Integer.parseInt(portTemp);
+			if (checkPort(port)) {
+			    SendAction.getInstance().clickOnSidebar(port);
 			} else {
 			    JOptionPane.showMessageDialog(null,
-				    "Insert in IPv4 format, or use localhost",
-				    "IP Error", JOptionPane.ERROR_MESSAGE);
+				    "Check if port is between 49152 and 65535",
+				    "Port Error", JOptionPane.ERROR_MESSAGE);
+			}
+		    } else {
+			JOptionPane.showMessageDialog(null,
+				"Inserted port is not a number", "Port Error",
+				JOptionPane.ERROR_MESSAGE);
+		    }
+		}
+	    });
+	    sendPanel.add(sendStaticPort);
+	    sendPanel.add(sendPort);
+	    sendPanel.add(sendAction);
+
+	    JPanel receivePanel = new JPanel();
+	    JLabel recStaticIP = new JLabel("IP");
+	    final JTextField recIP = new JTextField(10);
+	    JLabel recStaticPort = new JLabel("Port");
+	    final JTextField recPort = new JTextField(10);
+	    JButton recAction = new JButton("Receive");
+	    recAction.addActionListener(new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		    String portTemp = recPort.getText();
+		    if (checkIfANumber(portTemp)) {
+			int port = Integer.parseInt(portTemp);
+			if (checkPort(port)) {
+			    String IP = recIP.getText();
+			    if (checkIFIPIsCorrect(IP)) {
+				ReceiveAction.getInstance().clickOnSidebar(IP,
+					port);
+			    } else {
+				JOptionPane
+					.showMessageDialog(
+						null,
+						"Insert in IPv4 format, or use localhost",
+						"IP Error",
+						JOptionPane.ERROR_MESSAGE);
+			    }
+
+			} else {
+			    JOptionPane.showMessageDialog(null,
+				    "Check if port is between 49152 and 65535",
+				    "Port Error", JOptionPane.ERROR_MESSAGE);
 			}
 
 		    } else {
 			JOptionPane.showMessageDialog(null,
-				"Check if port is between 49152 and 65535",
-				"Port Error", JOptionPane.ERROR_MESSAGE);
+				"Inserted port is not a number", "Port Error",
+				JOptionPane.ERROR_MESSAGE);
 		    }
-
-		} else {
-		    JOptionPane.showMessageDialog(null,
-			    "Inserted port is not a number", "Port Error",
-			    JOptionPane.ERROR_MESSAGE);
 		}
-	    }
-	});
-	receivePanel.add(recStaticIP);
-	receivePanel.add(recIP);
-	receivePanel.add(recStaticPort);
-	receivePanel.add(recPort);
-	receivePanel.add(recAction);
+	    });
+	    receivePanel.add(recStaticIP);
+	    receivePanel.add(recIP);
+	    receivePanel.add(recStaticPort);
+	    receivePanel.add(recPort);
+	    receivePanel.add(recAction);
 
-	// Adds borders
-	TitledBorder border = BorderFactory.createTitledBorder("Receiving");
-	border.setTitleJustification(TitledBorder.CENTER);
-	receivePanel.setBorder(border);
-	border = BorderFactory.createTitledBorder("Sending");
-	border.setTitleJustification(TitledBorder.CENTER);
-	sendPanel.setBorder(border);
+	    // Adds borders
+	    TitledBorder border = BorderFactory.createTitledBorder("Receiving");
+	    border.setTitleJustification(TitledBorder.CENTER);
+	    receivePanel.setBorder(border);
+	    border = BorderFactory.createTitledBorder("Sending");
+	    border.setTitleJustification(TitledBorder.CENTER);
+	    sendPanel.setBorder(border);
 
-	// Creates side bar
-	sidebar.add(sendPanel);
-	sidebar.add(receivePanel);
+	    // Creates side bar
+	    sidebar.add(sendPanel);
+	    sidebar.add(receivePanel);
+	}
 	return sidebar;
     }
 
