@@ -17,7 +17,7 @@
 /dist/*
 
 # Logger files
-*.loc
+*.log
 *.lck
 # Windows image file caches
 Thumbs.db
