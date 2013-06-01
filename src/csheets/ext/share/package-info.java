@@ -40,6 +40,11 @@
  * <b>Sequence Diagram - Receive Cells (Client)</b>
  * </p>
  * <img src="doc-files/sd_receive_client.png">
+ * 
+ * <p>
+ * <b>Sequence Diagram - Data beetween Client and Server</b>
+ * </p>
+ * <img src="doc-files/sd_client_server.png">
  * @author Andre Silva
  */
 /*
@@ -202,6 +207,30 @@
  deactivate cli
  deactivate rc
  deactivate ra
+
+ @enduml
+
+ @startuml doc-files/sd_client_server.png
+ participant Server as svr
+ participant Network as net
+ participant Client as cli
+
+ cli -> net : out("send me data")
+ net -> svr : in ("send me data")
+ alt if in=send me data
+ loop for i < cells.size && while isCell
+ loop for j < cells[i].size
+ svr->net : out(cell) 
+ net -> cli : in (cell)
+ end 
+ end
+ end
+ cli -> net : out("Close yourself")
+ cli -> cli : close()
+ net -> svr : in ("Close yourself")
+ alt if in=Close yourself
+ svr -> svr : close()
+ end
 
  @enduml
 

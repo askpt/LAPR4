@@ -52,7 +52,6 @@ public class Client implements Runnable {
      *            the connection port of the server
      * @param cellStart
      *            cell where we paste the content of the shared cells
-     * @return the result of the connection
      */
     public void startClient(String IP, int port, Cell cellStart) {
 	Thread thr = new Thread(new Client(IP, port, cellStart));

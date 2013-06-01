@@ -43,7 +43,6 @@ public class Server implements Runnable {
      *            connection port
      * @param cells
      *            value that will be shared throw network
-     * @return the result of the connection
      */
     public void startServer(int port, Cell[][] cells) {
 	Thread thr = new Thread(new Server(port, cells));
