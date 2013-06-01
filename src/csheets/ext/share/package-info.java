@@ -149,22 +149,22 @@
 
  @startuml doc-files/sd_send_server.png
  Actor User as us
+ participant "UIExtension : UISharingExtension" as sui
  participant SendAction as sa
- participant "UIExtension : SendUI" as sui
  participant SendController as sc
  participant Server as svr
 
  activate sui
- us -> sa : ActionPerformed(ActionEvent event)
  activate sa
- sa -> sui : startUI()
- us -> sui : insert(port, cells)
+ us -> sui : insert(port)
+ us -> sa : ActionPerformed(ActionEvent event)
+
  Create sc
- sui -> sc : new
+ sa -> sc : create
  activate sc
- sui -> sc : startServer(port, cells)
+ sa -> sc : startServer(port, cells)
  Create svr
- sc -> svr : new
+ sc -> svr : create
  activate svr
  sc -> svr : startServer(port, cells)
  note right svr
@@ -173,31 +173,29 @@
  svr -> svr : send(cells, svr)
  deactivate svr
  deactivate sc
- deactivate sa
 
  @enduml
 
  @startuml doc-files/sd_receive_client.png
 
  actor user as us
+ participant "UIExtension : UISharingExtension" as rui
  participant ReceiveAction as ra
- participant ReceiveUI as rui
  participant ReceiveController as rc
  participant Client as cli
 
  activate rui
- us -> ra : ActionPerformed(ActionEvent event)
  activate ra
- ra -> rui : startUI()
- us -> rui : insert(IP, port, cell)
+ us -> rui : insert(IP, port)
+ rui -> ra : ActionPerformed(ActionEvent event)
  Create rc
- rui -> rc : new
+ ra -> rc : create
  activate rc
- rui -> rc : startClient(IP, port, cell)
+ ra -> rc : startClient(IP, port, cell)
 
  Create cli
 
- rc -> cli : new
+ rc -> cli : create
  activate cli
  rc -> cli : startClient(IP, port, cell)
  note right cli
@@ -206,7 +204,6 @@
  cli -> cli : receive(cell, cli)
  deactivate cli
  deactivate rc
- deactivate ra
 
  @enduml
 
