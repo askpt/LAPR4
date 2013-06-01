@@ -3,6 +3,7 @@ package csheets.ext.share.ui;
 import java.awt.event.ActionEvent;
 
 import csheets.core.Cell;
+import csheets.ext.share.controller.ReceiveController;
 import csheets.ui.ctrl.*;
 
 /**
@@ -18,6 +19,18 @@ public class ReceiveAction extends FocusOwnerAction {
     /** User Interface Controller */
     protected UIController uiController;
 
+    /** The first instance of this action */
+    private static ReceiveAction instance;
+
+    /**
+     * Method that returns the first instance of this action
+     * 
+     * @return the first instance of this action
+     */
+    protected static ReceiveAction getInstance() {
+	return instance;
+    }
+
     /**
      * Creates a new receive action
      * 
@@ -26,6 +39,9 @@ public class ReceiveAction extends FocusOwnerAction {
      */
     public ReceiveAction(UIController uiController) {
 	this.uiController = uiController;
+	if (instance == null) {
+	    instance = this;
+	}
     }
 
     /**
@@ -49,5 +65,20 @@ public class ReceiveAction extends FocusOwnerAction {
     @Override
     protected String getName() {
 	return "Receive";
+    }
+
+    /**
+     * Method that will get the active cell and sends that information to the
+     * controller
+     * 
+     * @param IP
+     *            the server IP
+     * @param port
+     *            the connection port
+     */
+    public void clickOnSidebar(String IP, int port) {
+	Cell cellStart = focusOwner.getSelectedCell();
+	ReceiveController rc = new ReceiveController();
+	rc.startClient(IP, port, cellStart);
     }
 }
