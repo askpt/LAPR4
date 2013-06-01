@@ -15,3 +15,15 @@
 /scripts/csheets.xml
 /scripts/c.lst
 /dist/*
+
+# Logger files
+*.loc
+*.lck
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Mac crap
+.DS_Store
