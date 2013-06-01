@@ -16,6 +16,7 @@ public class Server implements Runnable {
     private int port;
     /** the cells we will pass throw network */
     private Cell[][] cells;
+    private CellNetwork cell;
 
     /**
      * Create a new server
@@ -61,10 +62,30 @@ public class Server implements Runnable {
      *             throw this exception if the I/O have errors
      */
     private void send(Cell[][] cells, ServerSocket svr) throws IOException {
-	while (true) {
+	boolean isAlive = true;
+	while (isAlive) {
 	    Socket sock = svr.accept();
 	    DataInputStream in = new DataInputStream(sock.getInputStream());
-	    System.out.println(in.readUTF());
+	    if (in.readUTF().equals("send me data")) {
+		for (int i = 0; i < cells.length; i++) {
+		    for (int j = 0; j < cells[i].length; j++) {
+			CellNetwork cell = new CellNetwork(
+				cells[i][j].getContent(), cells[i][j]
+					.getAddress().getRow(), cells[i][j]
+					.getAddress().getColumn(), true);
+			ObjectOutputStream outStream = new ObjectOutputStream(
+				sock.getOutputStream());
+			outStream.writeObject(cell);
+		    }
+		}
+		CellNetwork cell = new CellNetwork("", 0, 0, false);
+		ObjectOutputStream outStream = new ObjectOutputStream(
+			sock.getOutputStream());
+		outStream.writeObject(cell);
+	    }
+	    if (in.readUTF().equals("Close yourself")) {
+		isAlive = false;
+	    }
 	    sock.close();
 	}
     }
