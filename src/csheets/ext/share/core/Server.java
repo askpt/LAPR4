@@ -16,7 +16,6 @@ public class Server implements Runnable {
     private int port;
     /** the cells we will pass throw network */
     private Cell[][] cells;
-    private CellNetwork cell;
 
     /**
      * Create a new server
