@@ -70,9 +70,7 @@ public class Server implements Runnable {
 		for (int i = 0; i < cells.length; i++) {
 		    for (int j = 0; j < cells[i].length; j++) {
 			CellNetwork cell = new CellNetwork(
-				cells[i][j].getContent(), cells[i][j]
-					.getAddress().getRow(), cells[i][j]
-					.getAddress().getColumn(), true);
+				cells[i][j].getContent(), i, j, true);
 			ObjectOutputStream outStream = new ObjectOutputStream(
 				sock.getOutputStream());
 			outStream.writeObject(cell);
