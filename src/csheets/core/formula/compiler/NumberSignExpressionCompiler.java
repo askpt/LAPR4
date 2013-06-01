@@ -31,6 +31,8 @@ import java.util.List;
 import antlr.ANTLRException;
 import antlr.collections.AST;
 import csheets.core.Cell;
+import csheets.core.IllegalValueTypeException;
+import csheets.core.UpdateCellContent;
 import csheets.core.Value;
 import csheets.core.formula.BinaryOperation;
 import csheets.core.formula.BinaryOperator;
@@ -40,10 +42,12 @@ import csheets.core.formula.FunctionCall;
 import csheets.core.formula.Literal;
 import csheets.core.formula.Reference;
 import csheets.core.formula.UnaryOperation;
+import csheets.core.formula.lang.Attribution;
 import csheets.core.formula.lang.CellReference;
 import csheets.core.formula.lang.Language;
 import csheets.core.formula.lang.RangeReference;
 import csheets.core.formula.lang.ReferenceOperation;
+import csheets.core.formula.lang.RelationalOperatorImpl;
 import csheets.core.formula.lang.UnknownElementException;
 
 /**
@@ -152,20 +156,61 @@ public class NumberSignExpressionCompiler implements ExpressionCompiler
 			// Convert binary operation
 			BinaryOperator operator = Language.getInstance().getBinaryOperator(node.getText());
 			if (operator instanceof RangeReference)
+                        {
 				return new ReferenceOperation(
 					(Reference)convert(cell, node.getFirstChild()),
 					(RangeReference)operator,
 					(Reference)convert(cell, node.getFirstChild().getNextSibling())
 				);
-			else 
+                        }
+                        else if(operator instanceof RelationalOperatorImpl)
+                        {
+                            return new RelationalOperatorImpl(
+                                    (Reference) convert(cell, node.getFirstChild()),
+                                    (RangeReference) operator,
+                                    (Reference) convert(cell, node.getFirstChild().getNextSibling())
+                                    );
+                        }
+                        /* verifies is operator is ':=' */
+                        else if(operator instanceof Attribution)
+                        {
+                            try
+                            { 
+                                CellReference cellRef = new CellReference(cell.getSpreadsheet(), node.getFirstChild().getText());
+                                Cell destinationCell = cellRef.getCell();   
+                                AST next = node.getFirstChild();
+                                Expression exp = convert(destinationCell, next.getNextSibling());
+                                Value val = exp.evaluate();
+                                UpdateCellContent updateCell = new UpdateCellContent();
+                                updateCell.update(destinationCell, val);
+                            }
+                            catch(ParseException e)
+                            {
+                                throw new FormulaCompilationException(e);
+                            }
+                            catch(IllegalValueTypeException e)
+                            {
+                                throw new FormulaCompilationException(e);
+                            }
+                            return new BinaryOperation(
+                                convert(cell, node.getFirstChild()),
+				operator,
+				convert(cell, node.getFirstChild().getNextSibling())
+                            );
+                        }
+                        else
+                        {
 				return new BinaryOperation(
 					convert(cell, node.getFirstChild()),
 					operator,
 					convert(cell, node.getFirstChild().getNextSibling())
 				);
+                        }
 		} 
                 else
+                {
 			// Shouldn't happen
 			throw new FormulaCompilationException();
+                }
 	}
 }

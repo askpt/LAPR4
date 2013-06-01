@@ -33,7 +33,7 @@ protected NumberSignFormulaParser(TokenBuffer tokenBuf, int k) {
 }
 
 public NumberSignFormulaParser(TokenBuffer tokenBuf) {
-  this(tokenBuf,1);
+  this(tokenBuf,4);
 }
 
 protected NumberSignFormulaParser(TokenStream lexer, int k) {
@@ -44,11 +44,11 @@ protected NumberSignFormulaParser(TokenStream lexer, int k) {
 }
 
 public NumberSignFormulaParser(TokenStream lexer) {
-  this(lexer,1);
+  this(lexer,4);
 }
 
 public NumberSignFormulaParser(ParserSharedInputState state) {
-  super(state,1);
+  super(state,4);
   tokenNames = _tokenNames;
   buildTokenTypeASTClassMap();
   astFactory = new ASTFactory(getTokenTypeToASTClassMap());
@@ -64,11 +64,43 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		AST expression_AST = null;
 		
 		match(NUMBERSIGN);
-		comparison();
-		astFactory.addASTChild(currentAST, returnAST);
+		{
+		if ((LA(1)==CELL_REF) && (LA(2)==ASSIGN)) {
+			assignment();
+			astFactory.addASTChild(currentAST, returnAST);
+		}
+		else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_1.member(LA(2)))) {
+			comparison();
+			astFactory.addASTChild(currentAST, returnAST);
+		}
+		else {
+			throw new NoViableAltException(LT(1), getFilename());
+		}
+		
+		}
 		match(Token.EOF_TYPE);
 		expression_AST = (AST)currentAST.root;
 		returnAST = expression_AST;
+	}
+	
+	public final void assignment() throws RecognitionException, TokenStreamException {
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		AST assignment_AST = null;
+		
+		AST tmp3_AST = null;
+		tmp3_AST = astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp3_AST);
+		match(CELL_REF);
+		AST tmp4_AST = null;
+		tmp4_AST = astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, tmp4_AST);
+		match(ASSIGN);
+		comparison();
+		astFactory.addASTChild(currentAST, returnAST);
+		assignment_AST = (AST)currentAST.root;
+		returnAST = assignment_AST;
 	}
 	
 	public final void comparison() throws RecognitionException, TokenStreamException {
@@ -92,49 +124,49 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case EQ:
 			{
-				AST tmp3_AST = null;
-				tmp3_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp3_AST);
+				AST tmp5_AST = null;
+				tmp5_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp5_AST);
 				match(EQ);
 				break;
 			}
 			case NEQ:
 			{
-				AST tmp4_AST = null;
-				tmp4_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp4_AST);
+				AST tmp6_AST = null;
+				tmp6_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp6_AST);
 				match(NEQ);
 				break;
 			}
 			case GT:
 			{
-				AST tmp5_AST = null;
-				tmp5_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp5_AST);
+				AST tmp7_AST = null;
+				tmp7_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp7_AST);
 				match(GT);
 				break;
 			}
 			case LT:
 			{
-				AST tmp6_AST = null;
-				tmp6_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp6_AST);
+				AST tmp8_AST = null;
+				tmp8_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp8_AST);
 				match(LT);
 				break;
 			}
 			case LTEQ:
 			{
-				AST tmp7_AST = null;
-				tmp7_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp7_AST);
+				AST tmp9_AST = null;
+				tmp9_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp9_AST);
 				match(LTEQ);
 				break;
 			}
 			case GTEQ:
 			{
-				AST tmp8_AST = null;
-				tmp8_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp8_AST);
+				AST tmp10_AST = null;
+				tmp10_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp10_AST);
 				match(GTEQ);
 				break;
 			}
@@ -173,18 +205,18 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		arithmetic_lowest();
 		astFactory.addASTChild(currentAST, returnAST);
 		{
-		_loop7:
+		_loop9:
 		do {
 			if ((LA(1)==AMP)) {
-				AST tmp9_AST = null;
-				tmp9_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp9_AST);
+				AST tmp11_AST = null;
+				tmp11_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp11_AST);
 				match(AMP);
 				arithmetic_lowest();
 				astFactory.addASTChild(currentAST, returnAST);
 			}
 			else {
-				break _loop7;
+				break _loop9;
 			}
 			
 		} while (true);
@@ -202,24 +234,24 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		arithmetic_low();
 		astFactory.addASTChild(currentAST, returnAST);
 		{
-		_loop11:
+		_loop13:
 		do {
 			if ((LA(1)==PLUS||LA(1)==MINUS)) {
 				{
 				switch ( LA(1)) {
 				case PLUS:
 				{
-					AST tmp10_AST = null;
-					tmp10_AST = astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp10_AST);
+					AST tmp12_AST = null;
+					tmp12_AST = astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp12_AST);
 					match(PLUS);
 					break;
 				}
 				case MINUS:
 				{
-					AST tmp11_AST = null;
-					tmp11_AST = astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp11_AST);
+					AST tmp13_AST = null;
+					tmp13_AST = astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp13_AST);
 					match(MINUS);
 					break;
 				}
@@ -233,7 +265,7 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 				astFactory.addASTChild(currentAST, returnAST);
 			}
 			else {
-				break _loop11;
+				break _loop13;
 			}
 			
 		} while (true);
@@ -251,24 +283,24 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		arithmetic_medium();
 		astFactory.addASTChild(currentAST, returnAST);
 		{
-		_loop15:
+		_loop17:
 		do {
 			if ((LA(1)==MULTI||LA(1)==DIV)) {
 				{
 				switch ( LA(1)) {
 				case MULTI:
 				{
-					AST tmp12_AST = null;
-					tmp12_AST = astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp12_AST);
+					AST tmp14_AST = null;
+					tmp14_AST = astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp14_AST);
 					match(MULTI);
 					break;
 				}
 				case DIV:
 				{
-					AST tmp13_AST = null;
-					tmp13_AST = astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp13_AST);
+					AST tmp15_AST = null;
+					tmp15_AST = astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp15_AST);
 					match(DIV);
 					break;
 				}
@@ -282,7 +314,7 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 				astFactory.addASTChild(currentAST, returnAST);
 			}
 			else {
-				break _loop15;
+				break _loop17;
 			}
 			
 		} while (true);
@@ -303,9 +335,9 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case POWER:
 		{
-			AST tmp14_AST = null;
-			tmp14_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp14_AST);
+			AST tmp16_AST = null;
+			tmp16_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp16_AST);
 			match(POWER);
 			arithmetic_high();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -350,9 +382,9 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case PERCENT:
 		{
-			AST tmp15_AST = null;
-			tmp15_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp15_AST);
+			AST tmp17_AST = null;
+			tmp17_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp17_AST);
 			match(PERCENT);
 			break;
 		}
@@ -394,15 +426,15 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case MINUS:
 		{
-			AST tmp16_AST = null;
-			tmp16_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp16_AST);
+			AST tmp18_AST = null;
+			tmp18_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp18_AST);
 			match(MINUS);
 			break;
 		}
+		case CELL_REF:
 		case LPAR:
 		case FUNCTION:
-		case CELL_REF:
 		case NAME:
 		case NUMBER:
 		case STRING:
@@ -474,16 +506,16 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		AST function_call_AST = null;
 		
-		AST tmp19_AST = null;
-		tmp19_AST = astFactory.create(LT(1));
-		astFactory.makeASTRoot(currentAST, tmp19_AST);
+		AST tmp21_AST = null;
+		tmp21_AST = astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, tmp21_AST);
 		match(FUNCTION);
 		{
 		switch ( LA(1)) {
+		case CELL_REF:
 		case MINUS:
 		case LPAR:
 		case FUNCTION:
-		case CELL_REF:
 		case NAME:
 		case NUMBER:
 		case STRING:
@@ -491,7 +523,7 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 			comparison();
 			astFactory.addASTChild(currentAST, returnAST);
 			{
-			_loop26:
+			_loop28:
 			do {
 				if ((LA(1)==SEMI)) {
 					match(SEMI);
@@ -499,7 +531,7 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop26;
+					break _loop28;
 				}
 				
 			} while (true);
@@ -530,23 +562,23 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case CELL_REF:
 		{
-			AST tmp22_AST = null;
-			tmp22_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp22_AST);
+			AST tmp24_AST = null;
+			tmp24_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp24_AST);
 			match(CELL_REF);
 			{
 			switch ( LA(1)) {
 			case COLON:
 			{
 				{
-				AST tmp23_AST = null;
-				tmp23_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp23_AST);
+				AST tmp25_AST = null;
+				tmp25_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp25_AST);
 				match(COLON);
 				}
-				AST tmp24_AST = null;
-				tmp24_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp24_AST);
+				AST tmp26_AST = null;
+				tmp26_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp26_AST);
 				match(CELL_REF);
 				break;
 			}
@@ -580,9 +612,9 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		}
 		case NAME:
 		{
-			AST tmp25_AST = null;
-			tmp25_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp25_AST);
+			AST tmp27_AST = null;
+			tmp27_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp27_AST);
 			match(NAME);
 			reference_AST = (AST)currentAST.root;
 			break;
@@ -604,18 +636,18 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case NUMBER:
 		{
-			AST tmp26_AST = null;
-			tmp26_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp26_AST);
+			AST tmp28_AST = null;
+			tmp28_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp28_AST);
 			match(NUMBER);
 			literal_AST = (AST)currentAST.root;
 			break;
 		}
 		case STRING:
 		{
-			AST tmp27_AST = null;
-			tmp27_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp27_AST);
+			AST tmp29_AST = null;
+			tmp29_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp29_AST);
 			match(STRING);
 			literal_AST = (AST)currentAST.root;
 			break;
@@ -635,6 +667,8 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		"<2>",
 		"NULL_TREE_LOOKAHEAD",
 		"NUMBERSIGN",
+		"CELL_REF",
+		"ASSIGN",
 		"EQ",
 		"NEQ",
 		"GT",
@@ -652,7 +686,6 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		"RPAR",
 		"FUNCTION",
 		"SEMI",
-		"CELL_REF",
 		"COLON",
 		"NAME",
 		"NUMBER",
@@ -671,5 +704,15 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		tokenTypeToASTClassMap=null;
 	};
 	
+	private static final long[] mk_tokenSet_0() {
+		long[] data = { 240156704L, 0L};
+		return data;
+	}
+	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
+	private static final long[] mk_tokenSet_1() {
+		long[] data = { 260046754L, 0L};
+		return data;
+	}
+	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	
 	}
