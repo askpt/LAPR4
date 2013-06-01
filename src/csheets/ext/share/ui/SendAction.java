@@ -2,10 +2,7 @@ package csheets.ext.share.ui;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
-
 import csheets.core.Cell;
-import csheets.ext.share.controller.SendController;
 import csheets.ui.ctrl.*;
 
 /**
@@ -17,6 +14,7 @@ import csheets.ui.ctrl.*;
  */
 public class SendAction extends FocusOwnerAction {
 
+    private static final long serialVersionUID = 1L;
     /** User Interface Controller */
     protected UIController uiController;
 
@@ -38,14 +36,10 @@ public class SendAction extends FocusOwnerAction {
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-	// SendUI sui = new SendUI();
-	// TODO create UI
-	String portTemp = JOptionPane.showInputDialog("Please input a port");
-	int port = Integer.parseInt(portTemp);
+	SendUI sui = new SendUI();
 	Cell[][] cells = focusOwner.getSelectedCells();
+	sui.createUI(cells);
 
-	SendController sc = new SendController();
-	sc.startServer(port, cells);
     }
 
     /**
