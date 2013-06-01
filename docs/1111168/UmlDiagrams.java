@@ -6,9 +6,18 @@
  * <img src="Diagrams/use_case.png">
  *
  * <p>
- * <b>equence Diagram for existing language</b>
+ * <b>Sequence Diagram for existing language</b>
  * </p>
  * <img src="Diagrams/sd_current_language.png">
+ *
+ * <p>
+ * <b>Sequence Diagram explaining the co-existence of '=' and '#' formulae languages</b>
+ * </p>
+ * <img src="Diagrams/sd_current_language.png">
+ * <p>
+ * <b>Sequence Diagram to implement the attribution operator ':='</b>
+ * </p>
+ * <img src="Diagrams/sd_cell_attribution.png">
  */
 /*
 @startuml Diagrams/use_case.png
@@ -98,5 +107,60 @@ Formula -> Expression: evaluate()
 CellEditor -> CellEditor: fireEditingStopped()
 @enduml
 
+@startuml Diagrams/sd_cell_attribution.png
+note left of NumberSignExpressionCompiler
+ to assign a value to a cell
+ we describe method convert() 
+end note
+note left of NumberSignExpressionCompiler
+ this method is recursive
+ therefore it is included
+ in a loop
+end note 
+loop recursive calls depending on the depth of the generated ANTLR AST
+ NumberSignExpressionCompiler -> ASTPair: getNumberOfChildren()
+ alt if numberOfChildren() == 0
+  NumberSignExpressionCompiler -> ASTPair: getType()
+  alt if node == NUMBER
+   NumberSignExpressionCompiler -> Literal: new()
+  else if node == STRING
+   NumberSignExpressionCompiler -> Literal: new()
+  else if node == CELL_REF
+   NumberSignExpressionCompiler -> CellReference: new()
+  end
+   NumberSignExpressionCompiler -> Language: getInstance()
+   NumberSignExpressionCompiler -> Language: getFunction()
+  opt if function != NULL
+   NumberSignExpressionCompiler -> ASTPair: getFirstChild()
+   loop recursive calls while getFirstChild() != NULL
+    NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, child)
+   end
+   NumberSignExpressionCompiler -> FunctionCall: new()
+  end
+  else if numberOfChildren == 1
+   NumberSignExpressionCompiler -> Language: getInstance()
+   NumberSignExpressionCompiler -> Language: getUnaryOperator(node.getText())
+   loop recursive calls while node.firstChild() != NULL
+    NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, node.firstChild())
+   end
+    NumberSignExpressionCompiler -> UnaryOperation: new()
+  else if numberOfChildren == 2
+   NumberSignExpressionCompiler -> Language: getInstance()
+   NumberSignExpressionCompiler -> Language: getBinaryOperator(node.getText())
+   alt operator is Attribution
+    NumberSignExpressionCompiler -> CellReference: new()
+    note left: new code to deal with ':='
+    NumberSignExpressionCompiler -> CellReference: getCell()
+    NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert()
+    NumberSignExpressionCompiler -> Expression: evaluate()
+    NumberSignExpressionCompiler -> UpdateCellContent: new()
+    UpdateCellContent -> Cell: updateContent(value)
+   else else
+    NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, node.getFirstChild())
+    NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, node.getNextSibling()) 
+   end
+ end
+end
+@enduml
 
 */
