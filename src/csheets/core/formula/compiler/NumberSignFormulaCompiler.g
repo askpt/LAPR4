@@ -26,6 +26,7 @@ header {package csheets.core.formula.compiler;}
  */}
 class NumberSignFormulaParser extends Parser;
 options {
+        k = 4;
 	buildAST = true;
 	defaultErrorHandler = false;
 }
@@ -37,8 +38,12 @@ options {
 	: ( expression | literal ) EOF
 	; */
 expression
-	: NUMBERSIGN! comparison EOF!
+	: NUMBERSIGN! (assignment | comparison)  EOF!
 	;
+
+assignment
+        : CELL_REF ASSIGN^ comparison
+        ;
 
 comparison
 	: concatenation
@@ -146,6 +151,7 @@ protected DIGIT : '0'..'9' ;
 /* Comparison operators */
 EQ		: "=" ;
 NUMBERSIGN      : "#" ;
+ASSIGN          : ":=" ;
 NEQ		: "<>" ;
 LTEQ	: "<=" ;
 GTEQ	: ">=" ;
