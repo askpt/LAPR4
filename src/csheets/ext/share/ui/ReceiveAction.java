@@ -2,10 +2,7 @@ package csheets.ext.share.ui;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
-
 import csheets.core.Cell;
-import csheets.ext.share.controller.ReceiveController;
 import csheets.ui.ctrl.*;
 
 /**
@@ -17,6 +14,7 @@ import csheets.ui.ctrl.*;
  */
 public class ReceiveAction extends FocusOwnerAction {
 
+    private static final long serialVersionUID = 1L;
     /** User Interface Controller */
     protected UIController uiController;
 
@@ -38,16 +36,9 @@ public class ReceiveAction extends FocusOwnerAction {
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-	// ReceiveUI = new ReceiveUI();
-	// TODO create sidebar UI (Receive)
-
-	String IP = JOptionPane.showInputDialog("Please input an IP");
-	String portTemp = JOptionPane.showInputDialog("Please input a port!");
-	int port = Integer.parseInt(portTemp);
+	ReceiveUI rui = new ReceiveUI();
 	Cell cellStart = focusOwner.getSelectedCell();
-
-	ReceiveController rc = new ReceiveController();
-	rc.startClient(IP, port, cellStart);
+	rui.createUI(cellStart);
     }
 
     /**

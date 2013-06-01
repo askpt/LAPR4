@@ -16,6 +16,8 @@ import csheets.ui.ctrl.UIController;
  */
 public class SharingMenu extends JMenu {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Creates a simple menu bar with the options to choose a Receive or a
      * Sharing Action
