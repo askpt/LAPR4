@@ -181,8 +181,7 @@ public class NumberSignExpressionCompiler implements ExpressionCompiler
                                 AST next = node.getFirstChild();
                                 Expression exp = convert(destinationCell, next.getNextSibling());
                                 Value val = exp.evaluate();
-                                UpdateCellContent updateCell = new UpdateCellContent();
-                                updateCell.update(destinationCell, val);
+                                UpdateCellContent.getInstance().triggerUpdate(destinationCell, val);
                             }
                             catch(ParseException e)
                             {

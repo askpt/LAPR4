@@ -151,10 +151,12 @@ loop recursive calls depending on the depth of the generated ANTLR AST
     NumberSignExpressionCompiler -> CellReference: new()
     note left: new code to deal with ':='
     NumberSignExpressionCompiler -> CellReference: getCell()
+    NumberSignExpressionCompiler -> ASTPair: getFirstChild()
     NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert()
-    NumberSignExpressionCompiler -> Expression: evaluate()
-    NumberSignExpressionCompiler -> UpdateCellContent: new()
-    UpdateCellContent -> Cell: updateContent(value)
+    NumberSignExpressionCompiler -> Expression: value = evaluate()
+    NumberSignExpressionCompiler -> UpdateCellContent: getInstance()
+    NumberSignExpressionCompiler -> UpdateCellContent: triggerUpdate()
+    UpdateCellContent -> Cell: setContent(value)
    else else
     NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, node.getFirstChild())
     NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, node.getNextSibling()) 
