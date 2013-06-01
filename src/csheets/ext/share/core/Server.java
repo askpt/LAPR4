@@ -2,6 +2,9 @@ package csheets.ext.share.core;
 
 import java.io.*;
 import java.net.*;
+import java.util.logging.*;
+
+import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 
@@ -46,7 +49,12 @@ public class Server implements Runnable {
      */
     public void startServer(int port, Cell[][] cells) {
 	Thread thr = new Thread(new Server(port, cells));
-	thr.start();
+	try {
+	    thr.start();
+	} catch (Exception e) {
+	    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
+	}
+
     }
 
     /**
@@ -95,7 +103,8 @@ public class Server implements Runnable {
 	    ServerSocket svr = new ServerSocket(port);
 	    send(cells, svr);
 	} catch (IOException e) {
-	    e.printStackTrace();
+	    JOptionPane.showMessageDialog(null, "Connection Error");
+	    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
 	}
     }
 }
