@@ -38,7 +38,7 @@ public class ReceiveUI {
 
 	while (portIsNotCorrect) {
 	    String portTemp = JOptionPane
-		    .showInputDialog("Please input a port (49152–65535)");
+		    .showInputDialog("Please input a port (49152 to 65535)");
 	    if (portTemp != null) {
 		portAsNumber = checkIfANumber(portTemp);
 		if (portAsNumber) {
