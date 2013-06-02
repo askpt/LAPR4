@@ -25,6 +25,9 @@
  * <b>Sequence Setup Diagram for the cell-assigment formulae language</b>
  * </p>
  * <img src="Diagrams/seq_setup_diagram_cell_attribution.png">
+ * <b>Class diagram</b>
+ * </p>
+ * <img src="Diagrams/class_diagram.png">
  */
 /*
 @startuml Diagrams/use_case.png
@@ -190,5 +193,58 @@ User -> System: inserts assignment expression
 User -> System: presses 'return'
 System -> System: compiles expression
 System -> User: displays result in the same and destination cell
+@enduml
+
+@startuml Diagrams/class_diagram.png
+CellEditor --o Cell
+CellEditor: fireEditingStopped()
+Cell <|-- CellImpl
+Cell: setContent()
+CellImpl: Formula formula
+CellImpl: getFormula(): Formula
+CellImpl: setContent(String content): void
+CellImpl: storeContent(): void
+CellImpl: fireContentChanged(): void
+CellImpl --o Formula
+CellImpl -- FormulaCompiler
+FormulaCompiler: getInstance()
+FormulaCompiler: compile(this, String content)
+FormulaCompiler o-- ExpressionCompiler
+ExpressionCompiler <|-- ExcelExpressionCompiler
+ExpressionCompiler <|-- NumberSignExpressionCompiler
+ExpressionCompiler: getStarter()
+ExpressionCompiler: compile(Cell cell, String source)
+NumberSignExpressionCompiler --o NumberSignFormulaLexer
+NumberSignExpressionCompiler -- Language
+NumberSignExpressionCompiler -- UpdateCellContent
+Cell -- UpdateCellContent
+NumberSignExpressionCompiler -- CellReference
+NumberSignFormulaLexer --o NumberSignFormulaParser
+NumberSignFormulaParser --o ASTPair
+NumberSignFormulaParserTokenTypes <|-- NumberSignFormulaParser
+FormulaCompiler -- Formula
+Formula --|> Expression
+Literal --|> Expression
+Expression o-- UnaryOperation
+NumberSignFormulaParser: expression()
+NumberSignFormulaParser: match(NUMBER_SIGN)
+NumberSignFormulaParser: comparison()
+NumberSignFormulaParser: match(EOF)
+NumberSignFormulaParser: getAST()
+NumberSignFormulaParser --|> antlr.LLkParser
+NumberSignExpressionCompiler: convert() 
+Formula: getReferences()
+Formula: evaluate()
+Expression: evaluate()
+ASTPair: getNumberOfChildren()
+ASTPair: getType()
+ASTPair: getFirstChild()
+Language: getInstance()
+Language: getFunction()
+Language: getUnaryOperator()
+Language: getBinaryOperator()
+CellReference: getCell()
+UpdateCellContent: getInstance()
+UpdateCellContent: triggerUpdate()
 @enduml
 */
