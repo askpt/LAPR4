@@ -29,7 +29,7 @@ public class Validate {
      * @return the result of the test
      */
     public static boolean checkPort(int port) {
-	return ((port > 49152) && (port < 65535));
+	return ((port >= 49152) && (port <= 65535));
     }
 
     /**
