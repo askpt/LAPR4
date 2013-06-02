@@ -3,7 +3,7 @@ package csheets.ext.share.core;
 /**
  * Class that will validate the various imput errors in extension program
  * 
- * @author André
+ * @author Andre
  * 
  */
 public class Validate {
