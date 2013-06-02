@@ -1,0 +1,74 @@
+package csheets.core.ext.share;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import csheets.ext.share.core.Validate;
+
+/**
+ * Class that will test the class Validate
+ * 
+ * @see Validate
+ * @author Andre
+ * 
+ */
+public class ValidateTest {
+
+    /**
+     * Test if the introduced ip is correct
+     */
+    @Test
+    public void testCheckIFIPIsCorrect() {
+	String ipTestValid1 = "localhost";
+	String ipTestInvalid1 = "localehoste";
+	String ipTestValid2 = "127.0.0.1";
+	String ipTestInvalid2 = "256.256.256.0";
+
+	assertFalse(Validate.checkIFIPIsCorrect(ipTestInvalid1));
+	assertFalse(Validate.checkIFIPIsCorrect(ipTestInvalid2));
+	assertTrue(Validate.checkIFIPIsCorrect(ipTestValid1));
+	assertTrue(Validate.checkIFIPIsCorrect(ipTestValid2));
+    }
+
+    /**
+     * Test if the introduced port is allowed. Must be between 49152 and 65535
+     */
+    @Test
+    public void testCheckPort() {
+	int portValid1 = 50000;
+	int portValid2 = 65535;
+	int portValid3 = 49152;
+	int portInvalid1 = 1;
+	int portInvalid2 = 49151;
+	int portInvalid3 = 65536;
+
+	assertFalse(Validate.checkPort(portInvalid1));
+	assertFalse(Validate.checkPort(portInvalid2));
+	assertFalse(Validate.checkPort(portInvalid3));
+	assertTrue(Validate.checkPort(portValid1));
+	assertTrue(Validate.checkPort(portValid2));
+	assertTrue(Validate.checkPort(portValid3));
+    }
+
+    /**
+     * Test if the introduced port is a number
+     */
+    @Test
+    public void testCheckIfANumber() {
+	String portValid1 = "12312";
+	String portValid2 = "11";
+	String portValid3 = "123456789";
+	String portInvalid1 = "a";
+	String portInvalid2 = "a1";
+	String portInvalid3 = "aadasd123";
+
+	assertFalse(Validate.checkIfANumber(portInvalid1));
+	assertFalse(Validate.checkIfANumber(portInvalid2));
+	assertFalse(Validate.checkIfANumber(portInvalid3));
+	assertTrue(Validate.checkIfANumber(portValid1));
+	assertTrue(Validate.checkIfANumber(portValid2));
+	assertTrue(Validate.checkIfANumber(portValid3));
+    }
+
+}
