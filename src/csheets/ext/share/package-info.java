@@ -290,6 +290,13 @@
  end package
 
  package csheets.ext.share.core
+
+ class Validate {
+ +{static}boolean checkIFIPIsCorrect(String IP)
+ +{static}boolean checkPort(int port)
+ +{static}boolean checkIfANumber(String port)
+ }
+
  class Client {
  -String IP
  -int port
@@ -337,9 +344,6 @@
 
  class ReceiveUI {
  +void createUI(Cell cellStart)
- -boolean checkIFIPIsCorrect(String IP)
- -boolean checkPort(int port)
- -boolean checkIfANumber(String port)
  }
 
  class SendAction {
@@ -354,8 +358,6 @@
  }
  class SendUI {
  +void createUI(Cell[][] cells)
- -boolean checkPort(int port)
- -boolean checkIfANumber(String port)
  }
 
  class SharingMenu {
@@ -368,9 +370,6 @@
  +UISharingExtension(Extension extension, UIController uiController)
  +JMenu getMenu()
  +JComponent getSideBar()
- -boolean checkIFIPIsCorrect(String IP)
- -boolean checkPort(int port)
- -boolean checkIfANumber(String port)
  }
  end package
  end package

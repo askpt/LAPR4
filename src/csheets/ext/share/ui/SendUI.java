@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 import csheets.ext.share.controller.SendController;
+import csheets.ext.share.core.Validate;
 
 /**
  * Create a user interface for the send action
@@ -27,10 +28,10 @@ public class SendUI {
 	    String portTemp = JOptionPane
 		    .showInputDialog("Please input a port (49152 to 65535)");
 	    if (portTemp != null) {
-		portAsNumber = checkIfANumber(portTemp);
+		portAsNumber = Validate.checkIfANumber(portTemp);
 		if (portAsNumber) {
 		    port = Integer.parseInt(portTemp);
-		    portIsNotCorrect = !checkPort(port);
+		    portIsNotCorrect = !Validate.checkPort(port);
 		}
 	    } else {
 		break;
@@ -41,27 +42,4 @@ public class SendUI {
 	    sc.startServer(port, cells);
 	}
     }
-
-    /**
-     * Check the port if is on allowed communication ports
-     * 
-     * @param port
-     *            port to be tested
-     * @return the result of the test
-     */
-    private boolean checkPort(int port) {
-	return ((port > 49152) && (port < 65535));
-    }
-
-    /**
-     * Check if the port passed is an number
-     * 
-     * @param port
-     *            port to be tested
-     * @return true if the port is a number
-     */
-    private boolean checkIfANumber(String port) {
-	return port.matches("^[0-9]+$");
-    }
-
 }
