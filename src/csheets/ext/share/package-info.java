@@ -42,9 +42,15 @@
  * <img src="doc-files/sd_receive_client.png">
  * 
  * <p>
- * <b>Sequence Diagram - Data beetween Client and Server</b>
+ * <b>Diagram to illustrate data communication beetween Client and Server</b>
  * </p>
  * <img src="doc-files/sd_client_server.png">
+ * 
+ * <p>
+ * <b> Class Diagram </b>
+ * </p>
+ * <img src="doc-files/class_diagram.png">
+ * 
  * @author Andre Silva
  */
 /*
@@ -231,5 +237,156 @@
 
  @enduml
 
+
+ @startuml doc-files/class_diagram.png
+
+ package java
+ package java.lang
+ interface Runnable {
+ }
+ end package
+
+ package java.io
+ interface Serializable {
+ }
+ end package
+ end package
+
+ package javax.swing
+ class JMenu {
+ }
+ end package
+
+
+ package csheets
+ package csheets.ui
+ package csheets.ui.ctrl
+ abstract class FocusOwnerAction {
+ }
+ end package
+ package csheets.ui.ext
+ abstract class UIExtension {
+ }
+ end package
+ end package
+ package csheets.ext
+ abstract class Extension {
+ }
+ package csheets.ext.share
+ class SharingExtension {
+ +{static}String NAME
+ +{static}int LOGGER_SIZE
+ +SharingExtension()
+ +UIExtension getUIExtension(UIController uiController)
+ }
+
+ package csheets.ext.share.controller
+ class ReceiveController {
+ +void startClient(String IP, int port, Cell cellStart)
+ }
+ class SendController {
+ +void startServer(int port, Cell[][] cells)
+ }
+ end package
+
+ package csheets.ext.share.core
+ class Client {
+ -String IP
+ -int port
+ -Cell cellStart
+ +Client()
+ -Client(String IP, int port, Cell cellStart)
+ +void startClient(String IP, int port, Cell cellStart)
+ -void receive(Cell cellStart, Socket cli)
+ +void run()
+ }
+
+ class Server {
+ -int port
+ -Cell[][] cells
+ +Server()
+ -Server(int port, Cell[][] cells)
+ +void startServer(int port, Cell[][] cells)
+ -void send(Cell[][] cells, ServerSocket svr)
+ +void run()
+ }
+ class CellNetwork {
+ -String content
+ -int row
+ -int column
+ -boolean isCell
+ +CellNetwork(String content, int row, int column, boolean isCell)
+ +boolean isCell()
+ +String getContent()
+ +int getRow()
+ +int getColumn()
+ }
+ end package
+
+ package csheets.ext.share.ui
+ class ReceiveAction {
+ -{static}long serialVersionUID
+ #UIController uiController
+ -{static}ReceiveAction instance
+ #{static}ReceiveAction getInstance()
+ +ReceiveAction(UIController uiController)
+ +void actionPerformed(ActionEvent event)
+ #String getName()
+ +void clickOnSidebar(String IP, int port)
+ }
+
+ class ReceiveUI {
+ +void createUI(Cell cellStart)
+ -boolean checkIFIPIsCorrect(String IP)
+ -boolean checkPort(int port)
+ -boolean checkIfANumber(String port)
+ }
+
+ class SendAction {
+ -{static}long serialVersionUID
+ #UIController uiController
+ #{static}SendAction instance
+ +{static}SendAction getInstance()
+ +SendAction(UIController uiController)
+ +void actionPerformed(ActionEvent event)
+ +void clickOnSidebar(int port)
+ #String getName()
+ }
+ class SendUI {
+ +void createUI(Cell[][] cells)
+ -boolean checkPort(int port)
+ -boolean checkIfANumber(String port)
+ }
+
+ class SharingMenu {
+ -{static}long serialVersionUID
+ +SharingMenu(UIController uiController)
+ }
+ class UISharingExtension {
+ -JComponent sidebar
+ -SharingMenu menu
+ +UISharingExtension(Extension extension, UIController uiController)
+ +JMenu getMenu()
+ +JComponent getSideBar()
+ -boolean checkIFIPIsCorrect(String IP)
+ -boolean checkPort(int port)
+ -boolean checkIfANumber(String port)
+ }
+ end package
+ end package
+ end package
+ end package
+
+
+
+ Extension <|-- SharingExtension
+ Runnable <|.. Client
+ Runnable <|.. Server
+ Serializable <|.. CellNetwork
+ FocusOwnerAction <|-- ReceiveAction
+ FocusOwnerAction <|-- SendAction
+ JMenu <|-- SharingMenu
+ UIExtension <|-- UISharingExtension
+ @enduml
  */
 package csheets.ext.share;
