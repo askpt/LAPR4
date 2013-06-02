@@ -8,6 +8,7 @@ import javax.swing.border.TitledBorder;
 
 import csheets.ext.Extension;
 import csheets.ext.share.SharingExtension;
+import csheets.ext.share.core.Validate;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 
@@ -74,9 +75,9 @@ public class UISharingExtension extends UIExtension {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 		    String portTemp = sendPort.getText();
-		    if (checkIfANumber(portTemp)) {
+		    if (Validate.checkIfANumber(portTemp)) {
 			int port = Integer.parseInt(portTemp);
-			if (checkPort(port)) {
+			if (Validate.checkPort(port)) {
 			    SendAction.getInstance().clickOnSidebar(port);
 			} else {
 			    JOptionPane.showMessageDialog(null,
@@ -105,11 +106,11 @@ public class UISharingExtension extends UIExtension {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 		    String portTemp = recPort.getText();
-		    if (checkIfANumber(portTemp)) {
+		    if (Validate.checkIfANumber(portTemp)) {
 			int port = Integer.parseInt(portTemp);
-			if (checkPort(port)) {
+			if (Validate.checkPort(port)) {
 			    String IP = recIP.getText();
-			    if (checkIFIPIsCorrect(IP)) {
+			    if (Validate.checkIFIPIsCorrect(IP)) {
 				ReceiveAction.getInstance().clickOnSidebar(IP,
 					port);
 			    } else {
@@ -154,40 +155,4 @@ public class UISharingExtension extends UIExtension {
 	}
 	return sidebar;
     }
-
-    /**
-     * Check if the introduced IP was valid
-     * 
-     * @param IP
-     *            IP to be checked
-     * @return true if IP is valid or if equal to localhost
-     */
-    private boolean checkIFIPIsCorrect(String IP) {
-	return IP
-		.matches("^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$")
-		|| IP.equalsIgnoreCase("localhost");
-    }
-
-    /**
-     * Check the port if is on allowed communication ports
-     * 
-     * @param port
-     *            port to be tested
-     * @return the result of the test
-     */
-    private boolean checkPort(int port) {
-	return ((port > 49152) && (port < 65535));
-    }
-
-    /**
-     * Check if the port passed is an number
-     * 
-     * @param port
-     *            port to be tested
-     * @return true if the port is a number
-     */
-    private boolean checkIfANumber(String port) {
-	return port.matches("^[0-9]+$");
-    }
-
 }
