@@ -102,6 +102,7 @@ public class Server implements Runnable {
 	try {
 	    ServerSocket svr = new ServerSocket(port);
 	    send(cells, svr);
+	    svr.close();
 	} catch (IOException e) {
 	    JOptionPane.showMessageDialog(null, "Connection Error");
 	    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
