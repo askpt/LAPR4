@@ -18,6 +18,13 @@
  * <b>Sequence Diagram to implement the attribution operator ':='</b>
  * </p>
  * <img src="Diagrams/sd_cell_attribution.png">
+ * <p>
+ * <b>Sequence Setup Diagram for the '#'-based formulae language</b>
+ * </p>
+ * <img src="Diagrams/seq_setup_diagram_insert_expr_number_signal.png">
+ * <b>Sequence Setup Diagram for the cell-assigment formulae language</b>
+ * </p>
+ * <img src="Diagrams/seq_setup_diagram_cell_attribution.png">
  */
 /*
 @startuml Diagrams/use_case.png
@@ -165,4 +172,23 @@ loop recursive calls depending on the depth of the generated ANTLR AST
 end
 @enduml
 
+@startuml Diagrams/seq_setup_diagram_insert_expr_number_signal.png
+actor User
+participant System
+User -> System: selects a cell
+User -> System: inserts expression starting with #
+User -> System: presses 'return'
+System -> System: compiles expression
+System -> User: displays result in the same cell
+@enduml
+
+@startuml Diagrams/seq_setup_diagram_cell_attribution.png
+actor User
+participant System
+User -> System: selects a cell
+User -> System: inserts assignment expression
+User -> System: presses 'return'
+System -> System: compiles expression
+System -> User: displays result in the same and destination cell
+@enduml
 */
