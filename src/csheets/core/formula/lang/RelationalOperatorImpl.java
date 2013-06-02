@@ -7,7 +7,7 @@ import csheets.core.formula.util.ExpressionVisitor;
 import java.util.SortedSet;
 
 /**
- *
+ * This class is a concrete RelationalOperatior to allow operations with :=
  * @author João Carreira
  */
 public class RelationalOperatorImpl extends RelationalOperator implements Reference
