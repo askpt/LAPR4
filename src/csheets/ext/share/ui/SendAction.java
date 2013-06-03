@@ -52,7 +52,6 @@ public class SendAction extends FocusOwnerAction {
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-	System.out.println(uiController.getActiveWorkbook());
 	SendUI sui = new SendUI();
 	Cell[][] cells = focusOwner.getSelectedCells();
 	sui.createUI(cells);
