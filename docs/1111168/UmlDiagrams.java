@@ -28,6 +28,14 @@
  * <b>Class diagram</b>
  * </p>
  * <img src="Diagrams/class_diagram.png">
+ *
+ * Week 2 - Persistence
+ * <b>Use case diagram (version A)</b>
+ * </p>
+ * <img src="Diagrams/use_case_persistence_v1.png">
+ * <b>Use case diagram (version B)</b>
+ * </p>
+ * <img src="Diagrams/use_case_persistence_v2.png">
  */
 /*
 @startuml Diagrams/use_case.png
@@ -247,4 +255,18 @@ CellReference: getCell()
 UpdateCellContent: getInstance()
 UpdateCellContent: triggerUpdate()
 @enduml
+
+@startuml use_case_persistence_v1.png
+left to right direction
+User --> (exports selected sheet \ncontent to database)
+User --> (exports and updates selected \nsheet content to database)
+User --> (imports data from database)
+@enduml 
+
+@startuml use_case_persistence_v2.png
+left to right direction
+User --> (exports selected sheet \ncontent to database) 
+User --> (imports data from database)
+(exports selected sheet \ncontent to database) .> (updates existing data) : extends
+@enduml 
 */
