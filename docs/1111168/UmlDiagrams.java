@@ -296,4 +296,16 @@ System -> System: updates data into database
 System -> User: shows 'successful export'
 @enduml
 
+@startuml Diagrams/class_diagram_persistance.png
+interface DBConnectAdapter
+DBConnectAdapter <|-- HsqlDBConnectAdaptee
+DBConnectAdapter <|-- DerbyDBConnectAdaptee
+DBConnectAdapter <|-- MysqlDBConnectAdaptee
+DBConnectAdapterFactory -- ExportDBController
+DBConnectAdapterFactory -- ImportDBController
+ExportDBController - DBFacade
+ImportDBController - DBFacade
+DBConnectAdapterFactory -- DBConnectAdapter
+@enduml
+
 */
