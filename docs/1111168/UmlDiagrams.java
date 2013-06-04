@@ -259,7 +259,7 @@ UpdateCellContent: triggerUpdate()
 @startuml use_case_persistence_v1.png
 left to right direction
 User --> (exports selected sheet \ncontent to database)
-User --> (exports and updates selected \nsheet content to database)
+User --> (updates selected \nsheet content in database)
 User --> (imports data from database)
 @enduml 
 
