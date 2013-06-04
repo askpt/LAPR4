@@ -269,4 +269,31 @@ User --> (exports selected sheet \ncontent to database)
 User --> (imports data from database)
 (exports selected sheet \ncontent to database) .> (updates existing data) : extends
 @enduml 
+
+@startuml Diagrams/system_diagram_exportDB.png
+actor User
+participant System
+User -> System: selects a range of cells
+User -> System: selects export option
+System -> System: checks available databases
+System -> User: shows available databases
+User -> System: selects a database
+User -> System: inputs access credentials
+System -> System: saves data into database
+System -> User: shows 'successful export'
+@enduml
+
+@startuml Diagrams/system_diagram_updateDB.png
+actor User
+participant System
+User -> System: selects a range of cells
+User -> System: selects export option
+System -> System: checks available databases
+System -> User: shows available databases
+User -> System: selects a database
+User -> System: inputs access credentials
+System -> System: updates data into database
+System -> User: shows 'successful export'
+@enduml
+
 */
