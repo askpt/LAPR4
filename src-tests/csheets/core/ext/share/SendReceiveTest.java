@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 import csheets.core.*;
-import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.share.core.*;
 
 /**
@@ -61,8 +60,12 @@ public class SendReceiveTest {
 	    // Start client and server
 	    svr.startServer(50000, cells);
 	    cli.startClient("localhost", 50000, cellFim);
+
+	    // To wait to the system transmition
+	    Thread.sleep(100);
+
 	    assertEquals(cellOri.getContent(), cellFim.getContent());
-	} catch (FormulaCompilationException e) {
+	} catch (Exception e) {
 	    fail("Exception Error!");
 	}
     }
