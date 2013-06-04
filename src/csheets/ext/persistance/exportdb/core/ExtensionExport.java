@@ -1,8 +1,7 @@
-package csheets.ext.exportdb;
+package csheets.ext.persistance.exportdb.core;
 
 import csheets.ext.Extension;
-import csheets.ext.exportdb.ui.UIExportExtension;
-import csheets.ext.exportdb.ui.UIExportExtension;
+import csheets.ext.persistance.exportdb.ui.UIExportExtension;
 import csheets.ext.simple.ui.UIExtensionExample;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
