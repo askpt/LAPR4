@@ -1,8 +1,8 @@
-package csheets.ext.exportdb.controllers;
+package csheets.ext.persistance.exportdb.controllers;
 
 
 import csheets.core.*;
-import csheets.ext.exportdb.persistance.ConnectionHSQLDB;
+import csheets.ext.persistance.exportdb.core.ConnectionHSQLDB;
 /**
  * This class represents the controller that do the connection to dataBase, call create and insert methods of dataBaseDriver
  * @author Tiago Pacheco

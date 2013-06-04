@@ -1,4 +1,4 @@
-package csheets.ext.exportdb.ui;
+package csheets.ext.persistance.exportdb.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -17,8 +17,8 @@ import javax.swing.JTextField;
 
 
 import csheets.core.Cell;
-import csheets.ext.exportdb.ThreadExport;
-import csheets.ext.exportdb.controllers.ControllerExport;
+import csheets.ext.persistance.exportdb.controllers.ControllerExport;
+import csheets.ext.persistance.exportdb.core.ThreadExport;
 
 /**
  * Representes the dialog with the user
