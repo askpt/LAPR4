@@ -37,8 +37,13 @@ options {
 /* content
 	: ( expression | literal ) EOF
 	; */
+	
 expression
-	: NUMBERSIGN! (assignment | comparison)  EOF!
+	: NUMBERSIGN! (sequence | assignment | comparison)  EOF!
+	;
+	
+sequence
+	: LBRA! (assignment | comparison) (SEMI^ (assignment | comparison))+  RBRA!
 	;
 
 assignment
@@ -179,6 +184,8 @@ COMMA	: ',' ;
 SEMI	: ';' ;
 LPAR	: '(' ;
 RPAR	: ')' ;
+LBRA	: '{' ;
+RBRA	: '}' ;
 
 
 /* White-space (ignored) */
