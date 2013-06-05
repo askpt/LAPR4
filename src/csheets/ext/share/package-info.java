@@ -136,8 +136,6 @@
  us -> sys : selectSharingMode()
  us -> sys : sendPort(port)
  us -> sys : sendCells(cells)
- sys -> sys : startServer()
- sys -> sys : send()
  sys --> us : return confirmation 
  @enduml
 
@@ -149,7 +147,6 @@
  us -> sys : selectSharingMode()
  us -> sys : sendPort(port)
  us -> sys : sendIP (IP)
- sys -> sys : receive()
  sys --> us : return confirmation
  @enduml
 
