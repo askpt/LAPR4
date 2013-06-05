@@ -14,28 +14,57 @@
  * <b>Sequence Diagram explaining the co-existence of '=' and '#' formulae languages</b>
  * </p>
  * <img src="Diagrams/sd_current_language.png">
+ * 
  * <p>
  * <b>Sequence Diagram to implement the attribution operator ':='</b>
  * </p>
+ * 
+ * <p>
  * <img src="Diagrams/sd_cell_attribution.png">
  * <p>
  * <b>Sequence Setup Diagram for the '#'-based formulae language</b>
+ *
  * </p>
  * <img src="Diagrams/seq_setup_diagram_insert_expr_number_signal.png">
  * <b>Sequence Setup Diagram for the cell-assigment formulae language</b>
  * </p>
+ * 
+ * <p>
  * <img src="Diagrams/seq_setup_diagram_cell_attribution.png">
  * <b>Class diagram</b>
  * </p>
  * <img src="Diagrams/class_diagram.png">
  *
  * Week 2 - Persistence
+ * <p>
  * <b>Use case diagram (version A)</b>
  * </p>
  * <img src="Diagrams/use_case_persistence_v1.png">
+ *
+ * <p>
  * <b>Use case diagram (version B)</b>
  * </p>
  * <img src="Diagrams/use_case_persistence_v2.png">
+ *
+ * <p>
+ * <b>System system diagram Export to Database</b>
+ * </p>
+ * <img src="Diagrams/system_diagram_exportDB.png">
+ *
+ * <p>
+ * <b>System system diagram Update to Database</b>
+ * </p>
+ * <img src="Diagrams/system_diagram_updateDB.png">
+ *
+ * <p>
+ * <b>Class Diagram (persistence) </b>
+ * </p>
+ * <img src="Diagrams/class_diagram_persistance.png">
+ *
+ * <p>
+ * <b>Use Case Realization - Database Export </b>
+ * </p>
+ * <img src="Diagrams/use_case_realization_DBexport.png">
  */
 /*
 @startuml Diagrams/use_case.png
@@ -308,4 +337,25 @@ ImportDBController - DBFacade
 DBConnectAdapterFactory -- DBConnectAdapter
 @enduml
 
+@startuml Diagrams/use_case_realization_DBexport.png
+UIExport -> ControllerExport: <<create>>
+ControllerExport -> DatabaseFacade: <<create>>
+UIExport --> ControllerExport: getDBList()
+ControllerExport --> DatabaseFacade: getDBList()
+UIExport -> ControllerExport: getCredentials(String url, String user, String pass)
+ControllerExport --> DatabaseFacade: urlConnect = getUrlConnection()
+ControllerExport --> DatabaseFacade: urlConnect = createConnection()
+DatabaseFacade --> DBConnectionAdaptarFactory: getInstance()
+DatabaseFacade --> DBConnectionAdaptarFactory: getDBTechnology()
+DatabaseFacade --> DBConnectionAdaptee: createConnection()
+ControllerExport --> DatabaseFacade: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
+ControllerExport --> DatabaseFacade: urlConnect = setData(String tableName, Cell [][]cells, int [][]pk)
+UIExport --> ControllerExport: startExport()
+note left of ControllerExport
+ thread launched 
+ at this point
+end note
+ControllerExport --> DatabaseFacade: startExport()
+DatabaseFacade --> DBConnectionAdaptee: createTable()
+@enduml
 */
