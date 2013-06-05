@@ -17,6 +17,7 @@ public class NumberSignCompilerTest {
 
     private static Workbook workbook;
     private static Spreadsheet sheetAttri;
+    private static Spreadsheet sheetSeq;
 
     /**
      * Create a new workbook for the program
@@ -32,6 +33,9 @@ public class NumberSignCompilerTest {
 
 	/** Change to the first spreadsheet */
 	sheetAttri = workbook.getSpreadsheet(0);
+
+	/** Change to the second spreadsheet */
+	sheetSeq = workbook.getSpreadsheet(1);
 
     }
 
@@ -67,7 +71,34 @@ public class NumberSignCompilerTest {
 	} catch (FormulaCompilationException e) {
 	    fail("Exception error!");
 	}
+    }
 
-	// fail("Not yet implemented");
+    /**
+     * Tests the sequence of expressions in the cell
+     */
+    @Test
+    public void testSequence() {
+	try {
+	    String expression = "#{a1:=1;a2:=2;a3:=3;b1:=a1=1;a4:=SUM(a1:a3)}";
+	    Cell cellOri1 = sheetSeq.getCell(new Address(0, 4));
+	    cellOri1.setContent(expression);
+	    Cell cellFim1_1 = sheetSeq.getCell(new Address(0, 0));
+	    Cell cellFim1_2 = sheetSeq.getCell(new Address(0, 1));
+	    Cell cellFim1_3 = sheetSeq.getCell(new Address(0, 2));
+	    Cell cellFim1_4 = sheetSeq.getCell(new Address(0, 3));
+	    Cell cellFim1_5 = sheetSeq.getCell(new Address(1, 0));
+	    Value espected1 = new Value(6);
+	    Value espected2 = new Value(true);
+
+	    assertEquals("1", cellFim1_1.getContent());
+	    assertEquals("2", cellFim1_2.getContent());
+	    assertEquals("3", cellFim1_3.getContent());
+	    assertEquals("6", cellFim1_4.getContent());
+	    assertEquals(0, espected2.compareTo(cellFim1_5.getValue()));
+	    assertEquals(0, espected1.compareTo(cellOri1.getValue()));
+
+	} catch (FormulaCompilationException e) {
+	    fail("Exception error!");
+	}
     }
 }
