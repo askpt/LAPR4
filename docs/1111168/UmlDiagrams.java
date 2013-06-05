@@ -326,15 +326,41 @@ System -> User: shows 'successful export'
 @enduml
 
 @startuml Diagrams/class_diagram_persistance.png
-interface DBConnectAdapter
-DBConnectAdapter <|-- HsqlDBConnectAdaptee
-DBConnectAdapter <|-- DerbyDBConnectAdaptee
-DBConnectAdapter <|-- MysqlDBConnectAdaptee
-DBConnectAdapterFactory -- ExportDBController
-DBConnectAdapterFactory -- ImportDBController
-ExportDBController - DBFacade
-ImportDBController - DBFacade
-DBConnectAdapterFactory -- DBConnectAdapter
+interface DBConnectionAdapter
+DBConnectionAdapter <|-- HsqlDBConnectAdaptee
+DBConnectionAdapter <|-- DerbyDBConnectAdaptee
+DBConnectionAdapter <|-- MysqlDBConnectAdaptee
+DBConnectionAdapterFactory -- ControllerExport
+DBConnectionAdapterFactory -- ControllerImport
+ControllerExport - DatabaseFacade
+ControllerImport - DatabaseFacade
+DBConnectionAdapterFactory -- DBConnectionAdapter
+ControllerExport: String urlConnect
+ControllerExport: getDBList()
+ControllerExport: getCredentials(String url, String user, String pass)
+ControllerExport: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
+ControllerImport: String urlConnect
+ControllerImport: getDBList()
+ControllerImport: getCredentials(String url, String user, String pass)
+ControllerImport: getTableList()
+ControllerImport: loadTable(String tableName)
+ControllerImport: startImport()
+ControllerImport: getTable()
+ControllerImport: showData()
+DatabaseFacade: getDBList()
+DatabaseFacade: getUrlConnection()
+DatabaseFacade: createConnection(String url, String user, String pass)
+DatabaseFacade: setDataToExport(String tableName, Cell [][]cells, int[][]pk)
+DatabaseFacade: exportData()
+DatabaseFacade: getTableList()
+DatabaseFacade: loadTable(String tableName)
+DatabaseFacade: getTableContent()
+DBConnectionAdapterFactory: getInstance()
+DBConnectionAdapterFactory: getDBTechnology(String urlConnect)
+DBConnectionAdapter: createConnection(String url, String user, String pass)
+DBConnectionAdapter: createTable(String tableName, Cell [][]cells, int [][]pk)
+DBConnectionAdapter: getTableList()
+DBConnectionAdapter: getTableContent()
 @enduml
 
 @startuml Diagrams/use_case_realization_DBexport.png
