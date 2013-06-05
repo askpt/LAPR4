@@ -9,11 +9,7 @@ import csheets.ext.share.core.*;
 
 /**
  * Test the connectivity of the spreadsheet
- * 
- * 
- * @see https
- *      www.bitbucket.org/Andre_1100859/lapr4_2dc_gdc1_s1/wiki/askpt/w1_rail_5-
- *      tests
+ *
  * @author Andre
  * 
  */
