@@ -10,7 +10,13 @@ import csheets.ui.ctrl.UIController;
  * Representes the UI extension menu of the export extension.
  * @author 1110333 Tiago Pacheco
  */
-public class ExportMenu extends JMenu {
+public class DatabaseMenu extends JMenu 
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1069502879234788510L;
 
 	/**
 	 * Creates a new simple menu.
@@ -19,11 +25,14 @@ public class ExportMenu extends JMenu {
 	 * A menu option is an action (in this case {@link csheets.ext.simple.ui.ExampleAction})
 	 * @param uiController the user interface controller
 	 */
-	public ExportMenu(UIController uiController) {
-		super("Export");
+	public DatabaseMenu(UIController uiController) 
+	{
+		super("Connect with database");
 		setMnemonic(KeyEvent.VK_E);
 
-		// Adds font actions
+		// Adds actions
 		add(new ExportAction(uiController));
+		add(new ImportAction(uiController));
+		add(new UpdateAction(uiController));
 	}	
 }

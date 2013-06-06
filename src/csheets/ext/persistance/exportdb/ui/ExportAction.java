@@ -11,7 +11,8 @@ import csheets.ui.ctrl.*;
  * 
  * @author 1110333 Tiago Pacheco
  */
-public class ExportAction extends FocusOwnerAction {
+public class ExportAction extends FocusOwnerAction 
+{
 
     /** The user interface controller */
     protected UIController uiController;
@@ -22,17 +23,20 @@ public class ExportAction extends FocusOwnerAction {
      * @param uiController
      *            the user interface controller
      */
-    public ExportAction(UIController uiController) {
-	this.uiController = uiController;
+    public ExportAction(UIController uiController) 
+    {
+    	this.uiController = uiController;
     }
 
     @Override
-    protected String getName() {
-	return "Export...";
+    protected String getName() 
+    {
+    	return "Export";
     }
 
     @Override
-    protected void defineProperties() {
+    protected void defineProperties() 
+    {
     }
 
     /**
@@ -43,15 +47,16 @@ public class ExportAction extends FocusOwnerAction {
      *            the event that was fired
      */
     @Override
-    public void actionPerformed(ActionEvent event) {
-
-	Cell[][] cells = focusOwner.getSelectedCells();
-
-	try {
-	    UIExport uiExp = new UIExport(cells);
-	} catch (Exception e2) {
-	    e2.printStackTrace();
-	}
-
+    public void actionPerformed(ActionEvent event) 
+    {
+    	Cell[][] cells = focusOwner.getSelectedCells();
+    	try 
+    	{
+    		UIExport uiExp = new UIExport(cells);
+    	} 
+    	catch (Exception e2) 
+    	{
+    		e2.printStackTrace();
+    	}
     }
 }

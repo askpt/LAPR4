@@ -25,13 +25,14 @@ import csheets.ext.persistance.exportdb.core.ThreadExport;
  * Receive the pharameters to create a connection to any dataBaseTechnology and execute thread
  * @author 1110333 Tiago Pacheco
  */
-public class UIExport extends JFrame{
+public class UIExport extends JFrame
+{
 	
-	private String [] databaseDrivers={"HSQLDB","Others"};
-	private JComboBox driversCombo;
-	private ControllerExport control;
-	private JButton ok=new JButton("Ok");
-	private JButton cancel=new JButton("Cancel");
+    private String [] databaseDrivers={"HSQLDB","Others"};
+    private JComboBox driversCombo;
+    private ControllerExport control;
+    private JButton ok=new JButton("Ok");
+    private JButton cancel=new JButton("Cancel");
     private Cell[][]cells;
     private JTextField userText;
     private JTextField passText;
@@ -39,26 +40,22 @@ public class UIExport extends JFrame{
     private JTextField databaseText;
     private ThreadExport threadExp;
 
-	public UIExport(Cell[][] cells) throws Exception
-	{
-		super("Export DataBase");
-		this.cells=cells;
-		
-		driversCombo=new JComboBox(databaseDrivers);
-		JPanel mainPanel=new JPanel(new BorderLayout());
+    public UIExport(Cell[][] cells) throws Exception
+    {
+        super("Export DataBase");
+        this.cells=cells;		
+	driversCombo=new JComboBox(databaseDrivers);
+	JPanel mainPanel=new JPanel(new BorderLayout());
         //labels with some requirements to export to database
-       
         JLabel labelDrivers=new JLabel("DataBase drivers");
         JLabel labelUser=new JLabel("UserName");
         JLabel labelPassword=new JLabel("Password");
         JLabel labelTable=new JLabel("Table's name");
   
-       
         userText=new JTextField(10);
         passText=new JTextField(10);
         tableText=new JTextField(10);
  
-        
         JPanel panel=new JPanel(new GridLayout(5,1));
         
         panel.add(labelDrivers);
@@ -70,32 +67,36 @@ public class UIExport extends JFrame{
         panel.add(labelTable);
         panel.add(tableText);
 
-        
         JPanel panelButton=new JPanel();
         panelButton.add(ok);
         panelButton.add(cancel);
         
         //okButton actionListener
-        ok.addActionListener(new java.awt.event.ActionListener() {
-
+        ok.addActionListener(new java.awt.event.ActionListener() 
+        {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent eve) {
+            public void actionPerformed(java.awt.event.ActionEvent eve) 
+            {
                 butOkActionPerformed(eve);
             }
         });
+        
         //cancelButton actionListener
-        cancel.addActionListener(new java.awt.event.ActionListener() {
-
+        cancel.addActionListener(new java.awt.event.ActionListener() 
+        {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent event) {
+            public void actionPerformed(java.awt.event.ActionEvent event) 
+            {
                 CancelActionPerformed(event);
             }
         });
+        
         //comboBox actionListener (not implemented)
-        driversCombo.addActionListener(new java.awt.event.ActionListener() {
-
+        driversCombo.addActionListener(new java.awt.event.ActionListener() 
+        {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent ev) {
+            public void actionPerformed(java.awt.event.ActionEvent ev) 
+            {
                comboDriverAction(ev);
             }
         });
@@ -103,38 +104,35 @@ public class UIExport extends JFrame{
     	Container c = getContentPane();
         mainPanel.add(panel);
         mainPanel.add(panelButton,BorderLayout.SOUTH);
-		c.add(mainPanel);
-		;
-		pack();
-		setVisible(true);
+	c.add(mainPanel);
+	;
+	pack();
+	setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        
-	}
-    private void butOkActionPerformed(ActionEvent event) {
-    
-    
-    	try {
-          
-        
-    	 		threadExp=new ThreadExport(cells, userText.getText(), passText.getText(), tableText.getText());
-           		threadExp.run();
-           
-       } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,"Try Again");
-       }
     }
-    private void CancelActionPerformed(ActionEvent event) {
+    
+    private void butOkActionPerformed(ActionEvent event) 
+    {
+    	try 
+        {
+            threadExp=new ThreadExport(cells, userText.getText(), passText.getText(), tableText.getText());
+            threadExp.run();
+        } 
+        catch (Exception ex) 
+        {
+            JOptionPane.showMessageDialog(null,"Try Again");
+        }
+    }
+    
+    private void CancelActionPerformed(ActionEvent event) 
+    {
         this.setVisible(false);
     }
 
-    private void comboDriverAction(ActionEvent event) {
-      
-        	
+    private void comboDriverAction(ActionEvent event) 
+    {
         
     }
-    
-   
-
 }
