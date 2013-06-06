@@ -1,7 +1,7 @@
 package csheets.ext.persistance.exportdb.core;
 
 import csheets.ext.Extension;
-import csheets.ext.persistance.exportdb.ui.UIExportExtension;
+import csheets.ext.persistance.exportdb.ui.UIDatabaseExtension;
 import csheets.ext.simple.ui.UIExtensionExample;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
@@ -13,7 +13,8 @@ import csheets.ui.ext.UIExtension;
  * @see Extension
  * @author 1110333 Tiago Pacheco
  */
-public class ExtensionExport extends Extension {
+public class ExtensionExport extends Extension 
+{
 
 	/** The name of the extension */
 	public static final String NAME = "Export";
@@ -21,7 +22,8 @@ public class ExtensionExport extends Extension {
 	/**
 	 * Creates a new Example extension.
 	 */
-	public ExtensionExport() {
+	public ExtensionExport() 
+	{
 		super(NAME);
 	}
 	
@@ -31,7 +33,8 @@ public class ExtensionExport extends Extension {
 	 * @param uiController the user interface controller
 	 * @return a user interface extension, or null if none is provided
 	 */
-	public UIExtension getUIExtension(UIController uiController) {
-		return new UIExportExtension(this, uiController);
+	public UIExtension getUIExtension(UIController uiController) 
+	{
+		return new UIDatabaseExtension(this, uiController);
 	}
 }

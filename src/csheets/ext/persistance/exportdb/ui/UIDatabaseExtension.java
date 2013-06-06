@@ -13,16 +13,18 @@ import csheets.ui.ext.*;
  * @see UIExtension
  * @author 1110333 Tiago Pacheco
  */
-public class UIExportExtension extends UIExtension {
+public class UIDatabaseExtension extends UIExtension 
+{
 
     /** The icon to display with the extension's name */
     private Icon icon;
 
     /** The menu of the extension */
-    private ExportMenu menu;
+    private DatabaseMenu menu;
 
-    public UIExportExtension(Extension extension, UIController uiController) {
-	super(extension, uiController);
+    public UIDatabaseExtension(Extension extension, UIController uiController) 
+    {
+    	super(extension, uiController);
     }
 
     /**
@@ -31,8 +33,9 @@ public class UIExportExtension extends UIExtension {
      * @return an icon with style
      */
     @Override
-    public Icon getIcon() {
-	return null;
+    public Icon getIcon() 
+    {
+    	return null;
     }
 
     /**
@@ -43,9 +46,10 @@ public class UIExportExtension extends UIExtension {
      * @return a JMenu component
      */
     @Override
-    public JMenu getMenu() {
+    public JMenu getMenu() 
+    {
 	if (menu == null)
-	    menu = new ExportMenu(uiController);
+	    menu = new DatabaseMenu(uiController);
 	return menu;
     }
 
@@ -55,8 +59,9 @@ public class UIExportExtension extends UIExtension {
      * @return a cell decorator, or null if the extension does not provide one
      */
     @Override
-    public CellDecorator getCellDecorator() {
-	return null;
+    public CellDecorator getCellDecorator() 
+    {
+    	return null;
     }
 
     /**
@@ -66,8 +71,9 @@ public class UIExportExtension extends UIExtension {
      * @return a table decorator, or null if the extension does not provide one
      */
     @Override
-    public TableDecorator getTableDecorator() {
-	return null;
+    public TableDecorator getTableDecorator() 
+    {
+    	return null;
     }
 
     /**
@@ -77,8 +83,9 @@ public class UIExportExtension extends UIExtension {
      *         one
      */
     @Override
-    public JToolBar getToolBar() {
-	return null;
+    public JToolBar getToolBar() 
+    {
+    	return null;
     }
 
     /**
@@ -87,7 +94,8 @@ public class UIExportExtension extends UIExtension {
      * @return a component, or null if the extension does not provide one
      */
     @Override
-    public JComponent getSideBar() {
+    public JComponent getSideBar() 
+    {
 	return null;
     }
 }
