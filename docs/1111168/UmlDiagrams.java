@@ -65,6 +65,16 @@
  * <b>Use Case Realization - Database Export </b>
  * </p>
  * <img src="Diagrams/use_case_realization_DBexport.png">
+ *
+ * <p>
+ * <b>Use Case Realization - Database Import </b>
+ * </p>
+ * <img src="Diagrams/use_case_realization_DBimport.png">
+ *
+ * <p>
+ * <b>Use Case Realization - Database Update </b>
+ * </p>
+ * <img src="Diagrams/use_case_realization_DBupdate.png">
  */
 /*
 @startuml Diagrams/use_case.png
@@ -364,7 +374,8 @@ DBConnectionAdapter: getTableContent()
 @enduml
 
 @startuml Diagrams/use_case_realization_DBexport.png
-UIExport -> ControllerExport: <<create>>
+UIExport -> ControllerExport: <<create(Observer this)>>
+ControllerExport -> ControllerExport: addObserver(Observer this)
 ControllerExport -> DatabaseFacade: <<create>>
 UIExport -> ControllerExport: getDBList()
 ControllerExport -> DatabaseFacade: getDBList()
@@ -386,7 +397,8 @@ DatabaseFacade -> DBConnectionAdaptee: createTable(String tableName, Cell [][]ce
 @enduml
 
 @startuml Diagrams/use_case_realization_DBimport.png
-UIImport -> ControllerImport: <<create>>
+UIImport -> ControllerImport:  <<create(Observer this)>>
+ControllerImport -> ControllerImport: addObserver(Observer this)
 ControllerImport -> DatabaseFacade: <<create>>
 UIImport -> ControllerImport: getDBList()
 ControllerImport -> DatabaseFacade: getDBList()
