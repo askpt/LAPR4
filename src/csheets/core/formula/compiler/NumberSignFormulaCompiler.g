@@ -92,8 +92,8 @@ atom
 
 function_call
 	:	FUNCTION^ 
-		( comparison ( SEMI! comparison )* )?
-		RPAR!
+		( comparison ( SEMI! (comparison|assignment) )* )?
+		(RPAR! | RBRA!) //FIXME fix the error with bracket
 	;
 
 reference
@@ -134,6 +134,16 @@ ALPHABETICAL
 				throw new RecognitionException(ex.toString());
 			}
 		}
+	|	("whiledo") LBRA! {
+			try {
+				Language.getInstance().getFunction(#getText());
+				$setType(FUNCTION);
+			} catch (Exception ex) {
+				throw new RecognitionException(ex.toString());
+			}
+		}	
+		
+		
 	|	/* ( LETTER ( LETTER | NUMBER )* EXCL )? */
 		( ABS )? LETTER ( LETTER )?
 		( ABS )? ( DIGIT )+ {

@@ -122,7 +122,7 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 					assignment();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
-				else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_3.member(LA(2)))) {
+				else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_2.member(LA(2)))) {
 					comparison();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
@@ -587,21 +587,34 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 			comparison();
 			astFactory.addASTChild(currentAST, returnAST);
 			{
-			_loop33:
+			_loop34:
 			do {
 				if ((LA(1)==SEMI)) {
 					match(SEMI);
-					comparison();
-					astFactory.addASTChild(currentAST, returnAST);
+					{
+					if ((_tokenSet_0.member(LA(1))) && (_tokenSet_2.member(LA(2)))) {
+						comparison();
+						astFactory.addASTChild(currentAST, returnAST);
+					}
+					else if ((LA(1)==CELL_REF) && (LA(2)==ASSIGN)) {
+						assignment();
+						astFactory.addASTChild(currentAST, returnAST);
+					}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					
+					}
 				}
 				else {
-					break _loop33;
+					break _loop34;
 				}
 				
 			} while (true);
 			}
 			break;
 		}
+		case RBRA:
 		case RPAR:
 		{
 			break;
@@ -612,7 +625,24 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		}
 		}
 		}
-		match(RPAR);
+		{
+		switch ( LA(1)) {
+		case RPAR:
+		{
+			match(RPAR);
+			break;
+		}
+		case RBRA:
+		{
+			match(RBRA);
+			break;
+		}
+		default:
+		{
+			throw new NoViableAltException(LT(1), getFilename());
+		}
+		}
+		}
 		function_call_AST = (AST)currentAST.root;
 		returnAST = function_call_AST;
 	}
@@ -626,23 +656,23 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case CELL_REF:
 		{
-			AST tmp27_AST = null;
-			tmp27_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp27_AST);
+			AST tmp28_AST = null;
+			tmp28_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp28_AST);
 			match(CELL_REF);
 			{
 			switch ( LA(1)) {
 			case COLON:
 			{
 				{
-				AST tmp28_AST = null;
-				tmp28_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp28_AST);
-				match(COLON);
-				}
 				AST tmp29_AST = null;
 				tmp29_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp29_AST);
+				astFactory.makeASTRoot(currentAST, tmp29_AST);
+				match(COLON);
+				}
+				AST tmp30_AST = null;
+				tmp30_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp30_AST);
 				match(CELL_REF);
 				break;
 			}
@@ -677,9 +707,9 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		}
 		case NAME:
 		{
-			AST tmp30_AST = null;
-			tmp30_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp30_AST);
+			AST tmp31_AST = null;
+			tmp31_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp31_AST);
 			match(NAME);
 			reference_AST = (AST)currentAST.root;
 			break;
@@ -701,18 +731,18 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case NUMBER:
 		{
-			AST tmp31_AST = null;
-			tmp31_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp31_AST);
+			AST tmp32_AST = null;
+			tmp32_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp32_AST);
 			match(NUMBER);
 			literal_AST = (AST)currentAST.root;
 			break;
 		}
 		case STRING:
 		{
-			AST tmp32_AST = null;
-			tmp32_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp32_AST);
+			AST tmp33_AST = null;
+			tmp33_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp33_AST);
 			match(STRING);
 			literal_AST = (AST)currentAST.root;
 			break;
@@ -777,19 +807,14 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
 	private static final long[] mk_tokenSet_1() {
-		long[] data = { 1073741058L, 0L};
+		long[] data = { 1073741186L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	private static final long[] mk_tokenSet_2() {
-		long[] data = { 1073741120L, 0L};
-		return data;
-	}
-	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
-	private static final long[] mk_tokenSet_3() {
 		long[] data = { 1073741248L, 0L};
 		return data;
 	}
-	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
+	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	
 	}
