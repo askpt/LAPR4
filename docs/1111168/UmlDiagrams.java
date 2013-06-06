@@ -345,10 +345,15 @@ DBConnectionAdapterFactory -- ControllerImport
 ControllerExport - DatabaseFacade
 ControllerImport - DatabaseFacade
 DBConnectionAdapterFactory -- DBConnectionAdapter
+ControllerExport: addObserver(Observer this)
 ControllerExport: String urlConnect
 ControllerExport: getDBList()
 ControllerExport: getCredentials(String url, String user, String pass)
 ControllerExport: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
+ControllerExport: getTableList()
+ControllerExport: setTableToUpdate()
+ControllerExport: startUpdate()
+ControllerExport: alertObservers()
 ControllerImport: String urlConnect
 ControllerImport: getDBList()
 ControllerImport: getCredentials(String url, String user, String pass)
@@ -365,12 +370,15 @@ DatabaseFacade: exportData()
 DatabaseFacade: getTableList()
 DatabaseFacade: loadTable(String tableName)
 DatabaseFacade: getTableContent()
+DatabaseFacade: setTableToUpdate()
+DatabaseFacade: update()
 DBConnectionAdapterFactory: getInstance()
 DBConnectionAdapterFactory: getDBTechnology(String urlConnect)
 DBConnectionAdapter: createConnection(String url, String user, String pass)
 DBConnectionAdapter: createTable(String tableName, Cell [][]cells, int [][]pk)
 DBConnectionAdapter: getTableList()
 DBConnectionAdapter: getTableContent()
+DBConnectionAdapter: updateTable()
 @enduml
 
 @startuml Diagrams/use_case_realization_DBexport.png
