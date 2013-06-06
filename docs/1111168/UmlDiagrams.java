@@ -392,7 +392,7 @@ ControllerExport -> DatabaseFacade: urlConnect = getUrlConnection()
 ControllerExport -> DatabaseFacade: urlConnect = createConnection(String url, String user, String pass)
 DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
 DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology(String urlConnect)
-DatabaseFacade -> DBConnectionAdaptee: createConnection(String url, String user, String pass)
+DatabaseFacade -> DBConnectionAdapter: createConnection(String url, String user, String pass)
 UIExport -> ControllerExport: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
 ControllerExport -> DatabaseFacade: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
 UIExport -> ControllerExport: startExport()
@@ -401,7 +401,7 @@ note left of ControllerExport
  at this point
 end note
 ControllerExport -> DatabaseFacade: exportData()
-DatabaseFacade -> DBConnectionAdaptee: createTable(String tableName, Cell [][]cells, int [][]pk)
+DatabaseFacade -> DBConnectionAdapter: createTable(String tableName, Cell [][]cells, int [][]pk)
 @enduml
 
 @startuml Diagrams/use_case_realization_DBimport.png
@@ -415,15 +415,15 @@ ControllerImport -> DatabaseFacade: urlConnect = getUrlConnection()
 ControllerImport -> DatabaseFacade: createConnection(String url, String user, String pass)
 DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
 DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology()
-DatabaseFacade -> DBConnectionAdaptee: createConnection(String url, String user, String pass)
+DatabaseFacade -> DBConnectionAdapter: createConnection(String url, String user, String pass)
 UIImport -> ControllerImport: getTableList()
 ControllerImport -> DatabaseFacade: getTableList()
-DatabaseFacade -> DBConnectionAdaptee: getTableList()
+DatabaseFacade -> DBConnectionAdapter: getTableList()
 UIImport -> ControllerImport: loadTable(String tableName)
 ControllerImport -> DatabaseFacade: loadTable(String tableName)
 UIImport -> ControllerImport: startImport()
 ControllerImport -> DatabaseFacade: getTableContent()
-DatabaseFacade -> DBConnectionAdaptee: getTableContent(String tableName)
+DatabaseFacade -> DBConnectionAdapter: getTableContent(String tableName)
 UIImport -> ControllerImport: getTable()
 note left of ControllerImport
  thread launched 
@@ -443,10 +443,10 @@ ControllerExport -> DatabaseFacade: urlConnect = getUrlConnection()
 ControllerExport -> DatabaseFacade: urlConnect = createConnection(String url, String user, String pass)
 DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
 DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology(String urlConnect)
-DatabaseFacade -> DBConnectionAdaptee: createConnection(String url, String user, String pass)
+DatabaseFacade -> DBConnectionAdapter: createConnection(String url, String user, String pass)
 UIExport -> ControllerExport: getTableList()
 ControllerExport -> DatabaseFacade: getTableList()
-DatabaseFacade -> DBConnectionAdaptee: getTableList()
+DatabaseFacade -> DBConnectionAdapter: getTableList()
 UIExport -> UIExport: targetTable = selectTable()
 UIExport -> ControllerExport: setDataToUpdate(String targetTable, Cell [][]cells, int [][]pk)
 ControllerExport -> DatabaseFacade: setDataToUpdate(String targetTable, Cell [][]cells, int [][]pk)
@@ -456,7 +456,7 @@ note left of ControllerExport
  at this point
 end note
 ControllerExport -> DatabaseFacade: update()
-DatabaseFacade -> DBConnectionAdaptee: updateTable(String targetTable, Cell [][]cells, int [][]pk)
+DatabaseFacade -> DBConnectionAdapter: updateTable(String targetTable, Cell [][]cells, int [][]pk)
 ControllerExport -> ControllerExport: alertObservers()
 @enduml
 
