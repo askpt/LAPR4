@@ -14,7 +14,6 @@ public class DBConnectionAdapterFactory
     /* private constructor (required in the singleton pattern */
     private DBConnectionAdapterFactory()
     {
-        
     }
     
     /**
