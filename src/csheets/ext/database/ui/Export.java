@@ -32,7 +32,7 @@ public class Export extends FocusOwnerAction
     @Override
     protected String getName() 
     {
-    	return "Export";
+    	return "Export to database";
     }
 
     /**
