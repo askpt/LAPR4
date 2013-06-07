@@ -61,6 +61,13 @@ loop recursive calls depending on the depth of the generated ANTLR AST
    loop recursive calls while getFirstChild() != NULL
     NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, child)
    end
+   
+   alt if function instanceof Whiledo
+   	loop recursive while condition argument of whiledo == true
+   	 NumberSignExpressionCompiler -> NumberSignExpressionCompiler : convert(cell, node)
+   	end
+   end
+   
    NumberSignExpressionCompiler -> FunctionCall: new()
   end
   else if numberOfChildren == 1
@@ -101,6 +108,72 @@ loop recursive calls depending on the depth of the generated ANTLR AST
 end
 @enduml
 
+@startuml doc-files/class_diagram.png
+class Whiledo {
+	+{static}FunctionParameter[] parameters
+	+Whiledo()
+	+String getIdentifier()
+	+Value applyTo(Expression[] args)
+	+FunctionParameter[] getParameters()
+	+boolean isVarArg()
+}
+interface Function {
+}
+
+CellEditor --o Cell
+CellEditor: fireEditingStopped()
+Cell <|-- CellImpl
+Cell: setContent()
+CellImpl: Formula formula
+CellImpl: getFormula(): Formula
+CellImpl: setContent(String content): void
+CellImpl: storeContent(): void
+CellImpl: fireContentChanged(): void
+CellImpl --o Formula
+CellImpl -- FormulaCompiler
+FormulaCompiler: getInstance()
+FormulaCompiler: compile(this, String content)
+FormulaCompiler o-- ExpressionCompiler
+ExpressionCompiler <|-- ExcelExpressionCompiler
+ExpressionCompiler <|-- NumberSignExpressionCompiler
+ExpressionCompiler: getStarter()
+ExpressionCompiler: compile(Cell cell, String source)
+NumberSignExpressionCompiler --o NumberSignFormulaLexer
+NumberSignExpressionCompiler -- Language
+NumberSignExpressionCompiler -- UpdateCellContent
+Cell -- UpdateCellContent
+NumberSignExpressionCompiler -- CellReference
+NumberSignFormulaLexer --o NumberSignFormulaParser
+NumberSignFormulaParser --o ASTPair
+NumberSignFormulaParserTokenTypes <|-- NumberSignFormulaParser
+FormulaCompiler -- Formula
+Formula --|> Expression
+Literal --|> Expression
+Expression o-- UnaryOperation
+NumberSignFormulaParser: expression()
+NumberSignFormulaParser: match(NUMBER_SIGN)
+NumberSignFormulaParser: comparison()
+NumberSignFormulaParser: match(EOF)
+NumberSignFormulaParser: getAST()
+NumberSignFormulaParser --|> antlr.LLkParser
+NumberSignExpressionCompiler: convert() 
+Formula: getReferences()
+Formula: evaluate()
+Expression: evaluate()
+ASTPair: getNumberOfChildren()
+ASTPair: getType()
+ASTPair: getFirstChild()
+Language: getInstance()
+Language: getFunction()
+Language: getUnaryOperator()
+Language: getBinaryOperator()
+CellReference: getCell()
+UpdateCellContent: getInstance()
+UpdateCellContent: triggerUpdate()
+Function <|.. Whiledo
+@enduml
+
+
 */
 
 /**
@@ -124,6 +197,11 @@ end
 *<b>Sequence Diagram - Implementation of loops</b>
 *</p>
 *<img src="doc-files/sd_cell_lang.png">
+*
+**<p>
+*<b>Class Diagram</b>
+*</p>
+*<img src="doc-files/class_diagram.png">
 *
 *
 * @author Andre
