@@ -18,6 +18,7 @@ public class NumberSignCompilerTest {
     private static Workbook workbook;
     private static Spreadsheet sheetAttri;
     private static Spreadsheet sheetSeq;
+    private static Spreadsheet sheetWhile;
 
     /**
      * Create a new workbook for the program
@@ -36,6 +37,9 @@ public class NumberSignCompilerTest {
 
 	/** Change to the second spreadsheet */
 	sheetSeq = workbook.getSpreadsheet(1);
+
+	/** Change to the third spreadsheet */
+	sheetWhile = workbook.getSpreadsheet(2);
 
     }
 
@@ -97,6 +101,29 @@ public class NumberSignCompilerTest {
 	    assertEquals(0, espected2.compareTo(cellFim1_5.getValue()));
 	    assertEquals(0, espected1.compareTo(cellOri1.getValue()));
 
+	} catch (FormulaCompilationException e) {
+	    fail("Exception error!");
+	}
+    }
+
+    /**
+     * Tests the whiledo formula
+     */
+    @Test
+    public void testWhileDo() {
+	try {
+	    Cell cellFim_1 = sheetWhile.getCell(new Address(0, 0));
+	    Cell cellFim_2 = sheetWhile.getCell(new Address(2, 0));
+	    cellFim_1.setContent("1");
+	    cellFim_2.setContent("1");
+	    String expression = "#whiledo{a1<10;a1:=a1+1;c1:=a1+1}";
+	    Cell cellOri = sheetWhile.getCell(new Address(2, 2));
+	    cellOri.setContent(expression);
+	    Value espected = new Value(11);
+
+	    assertEquals("10", cellFim_1.getContent());
+	    assertEquals("11", cellFim_2.getContent());
+	    assertEquals(0, espected.compareTo(cellOri.getValue()));
 	} catch (FormulaCompilationException e) {
 	    fail("Exception error!");
 	}
