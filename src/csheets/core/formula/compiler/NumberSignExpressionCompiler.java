@@ -39,10 +39,6 @@ import csheets.core.formula.lang.*;
  */
 public class NumberSignExpressionCompiler implements ExpressionCompiler {
 
-    private static Function funcThread;
-    private static FunctionCall funcCallThread;
-    private List<Expression> argsThread = new ArrayList<Expression>();
-
     /** The character that signals that a cell's content is a formula ('#') */
     /* changed from = to # */
     public static final char FORMULA_STARTER = '#';
@@ -124,32 +120,16 @@ public class NumberSignExpressionCompiler implements ExpressionCompiler {
 		while ((child = child.getNextSibling()) != null)
 		    args.add(convert(cell, child));
 	    }
+
 	    Expression[] argArray = args.toArray(new Expression[args.size()]);
 	    if (function instanceof Whiledo) {
-		argsThread = args;
-		funcThread = function;
-		Thread whileThread = new Thread(new Runnable() {
 
-		    @Override
-		    public void run() {
-			try {
-			    System.out.println("teste");
-			    Expression[] argArray = argsThread
-				    .toArray(new Expression[argsThread.size()]);
-
-			    funcCallThread = new FunctionCall(funcThread,
-				    argArray);
-
-			} catch (IllegalFunctionCallException e) {
-			}
-		    }
-		});
-		whileThread.start();
 		try {
-		    whileThread.join();
-		} catch (InterruptedException e) {
+		    while (argArray[0].evaluate().toBoolean()) {
+			convert(cell, node);
+		    }
+		} catch (IllegalValueTypeException e) {
 		}
-		return funcCallThread;
 	    }
 	    return new FunctionCall(function, argArray);
 	}
