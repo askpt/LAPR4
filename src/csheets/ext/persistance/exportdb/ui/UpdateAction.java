@@ -6,7 +6,7 @@ import csheets.core.Cell;
 import csheets.ui.ctrl.*;
 
 /**
- * An action of the import extension 
+ * An action of the update extension 
  * @author João Carreira
  */
 public class UpdateAction extends FocusOwnerAction 

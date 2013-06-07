@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,10 +27,10 @@ import csheets.ext.persistance.exportdb.core.ThreadExport;
  * Receive the pharameters to create a connection to any dataBaseTechnology and execute thread
  * @author 1110333 Tiago Pacheco
  */
-public class UIExport extends JFrame
+public class UIExport extends JFrame implements Observer
 {
 	
-    private String [] databaseDrivers={"HSQLDB","Others"};
+    private String [] databaseDrivers={"HSQL","Derby"};
     private JComboBox driversCombo;
     private ControllerExport control;
     private JButton ok=new JButton("Ok");
@@ -43,20 +45,24 @@ public class UIExport extends JFrame
     public UIExport(Cell[][] cells) throws Exception
     {
         super("Export DataBase");
-        this.cells=cells;		
-	driversCombo=new JComboBox(databaseDrivers);
-	JPanel mainPanel=new JPanel(new BorderLayout());
+        this.cells = cells;		
+        
+        control = new ControllerExport(this);
+        
+        driversCombo = new JComboBox(databaseDrivers);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        
         //labels with some requirements to export to database
-        JLabel labelDrivers=new JLabel("DataBase drivers");
-        JLabel labelUser=new JLabel("UserName");
-        JLabel labelPassword=new JLabel("Password");
-        JLabel labelTable=new JLabel("Table's name");
+        JLabel labelDrivers = new JLabel("DataBase drivers");
+        JLabel labelUser = new JLabel("UserName");
+        JLabel labelPassword = new JLabel("Password");
+        JLabel labelTable = new JLabel("Table's name");
   
-        userText=new JTextField(10);
-        passText=new JTextField(10);
-        tableText=new JTextField(10);
+        userText = new JTextField(10);
+        passText = new JTextField(10);
+        tableText = new JTextField(10);
  
-        JPanel panel=new JPanel(new GridLayout(5,1));
+        JPanel panel = new JPanel(new GridLayout(5,1));
         
         panel.add(labelDrivers);
         panel.add(driversCombo);
@@ -67,7 +73,7 @@ public class UIExport extends JFrame
         panel.add(labelTable);
         panel.add(tableText);
 
-        JPanel panelButton=new JPanel();
+        JPanel panelButton = new JPanel();
         panelButton.add(ok);
         panelButton.add(cancel);
         
@@ -117,7 +123,7 @@ public class UIExport extends JFrame
     {
     	try 
         {
-            threadExp=new ThreadExport(cells, userText.getText(), passText.getText(), tableText.getText());
+            threadExp = new ThreadExport(cells, userText.getText(), passText.getText(), tableText.getText());
             threadExp.run();
         } 
         catch (Exception ex) 
@@ -135,4 +141,12 @@ public class UIExport extends JFrame
     {
         
     }
+
+	@Override
+	public void update(Observable o, Object arg)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }
