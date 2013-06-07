@@ -118,9 +118,10 @@ UIExport -> ControllerExport: <<create(Observer this)>>
 ControllerExport -> ControllerExport: addObserver(Observer this)
 ControllerExport -> DatabaseFacade: <<create>>
 UIExport -> ControllerExport: getDBList()
-ControllerExport -> DatabaseFacade: getDBList()
+ControllerExport -> DBCsvReader: <<create>>
+ControllerExport -> DBCsvReader: getDBlist()
 UIExport -> ControllerExport: getCredentials(String url, String user, String pass)
-ControllerExport -> DatabaseFacade: urlConnect = getUrlConnection()
+ControllerExport -> Database: urlConnect = getUrlConnection()
 ControllerExport -> DatabaseFacade: urlConnect = createConnection(String url, String user, String pass)
 DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
 DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology(String urlConnect)
