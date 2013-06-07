@@ -3,11 +3,22 @@ package csheets.core.formula.lang;
 import csheets.core.*;
 import csheets.core.formula.*;
 
+/**
+ * A function that implements a loop statement where the first condition was the
+ * stop argument and the next arguments are the execution statements
+ * 
+ * @author Andre
+ * 
+ */
 public class Whiledo implements Function {
 
+    /**
+     * Create a new instance of function while do
+     */
     public Whiledo() {
     }
 
+    /** Parameters: condition, execution statements */
     public static final FunctionParameter[] parameters = new FunctionParameter[] { new FunctionParameter(
 	    Value.Type.UNDEFINED, "Iterations", false,
 	    "The iterators of expression.") };
@@ -28,7 +39,7 @@ public class Whiledo implements Function {
 	    }
 	    return args[i].evaluate();
 	}
-	return new Value();
+	return args[i + 1].evaluate();
     }
 
     @Override
