@@ -10,6 +10,8 @@ import java.io.Serializable;
  * 
  */
 public class CellNetwork implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     /** content of the cell */
     private final String content;
     /** row of the original cell */
