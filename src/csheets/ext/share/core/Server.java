@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.*;
 
-import javax.swing.JOptionPane;
-
 import csheets.core.Cell;
 
 /**
@@ -104,7 +102,6 @@ public class Server implements Runnable {
 	    send(cells, svr);
 	    svr.close();
 	} catch (IOException e) {
-	    JOptionPane.showMessageDialog(null, "Connection Error");
 	    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
 	}
     }

@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.*;
 
-import javax.swing.JOptionPane;
-
 import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
 
@@ -111,10 +109,8 @@ public class Client implements Runnable {
 	    Socket cli = new Socket(IP, port);
 	    receive(cellStart, cli);
 	} catch (UnknownHostException e) {
-	    JOptionPane.showMessageDialog(null, "Connection Error");
 	    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 	} catch (IOException e) {
-	    JOptionPane.showMessageDialog(null, "Connection Error");
 	    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 	} catch (ClassNotFoundException e) {
 	    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
