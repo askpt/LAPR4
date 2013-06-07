@@ -1,4 +1,4 @@
-package csheets.ext.persistance.exportdb.ui;
+package csheets.ext.database.ui;
 
 import java.awt.event.ActionEvent;
 
@@ -6,35 +6,38 @@ import csheets.core.Cell;
 import csheets.ui.ctrl.*;
 
 /**
- * An action of the export extension that exemplifies how to interact with the
- * spreadsheet.
+ * Export submenu
  * 
- * @author 1110333 Tiago Pacheco
+ * @author João Carreira
  */
-@Deprecated
-public class ExportAction extends FocusOwnerAction 
+public class Export extends FocusOwnerAction 
 {
 
-    /** The user interface controller */
+    /* The user interface controller */
     protected UIController uiController;
 
     /**
-     * Creates a new action.
-     * 
-     * @param uiController
-     *            the user interface controller
+     * Export action
+     * @param uiController 
      */
-    public ExportAction(UIController uiController) 
+    public Export(UIController uiController) 
     {
     	this.uiController = uiController;
     }
 
+    /**
+     * return name of the Export submenu
+     * @return 
+     */
     @Override
     protected String getName() 
     {
     	return "Export";
     }
 
+    /**
+     * 
+     */
     @Override
     protected void defineProperties() 
     {
@@ -50,8 +53,10 @@ public class ExportAction extends FocusOwnerAction
     @Override
     public void actionPerformed(ActionEvent event) 
     {
-    	Cell[][] cells = focusOwner.getSelectedCells();
-    	try 
+        /* select cells to export */
+    	Cell [][]cells = focusOwner.getSelectedCells();
+    	
+        try 
     	{
     		UIExport uiExp = new UIExport(cells);
     	} 

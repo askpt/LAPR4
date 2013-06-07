@@ -13,6 +13,7 @@ import csheets.ui.ext.UIExtension;
  * @see Extension
  * @author 1110333 Tiago Pacheco
  */
+@Deprecated
 public class ExtensionExport extends Extension 
 {
 

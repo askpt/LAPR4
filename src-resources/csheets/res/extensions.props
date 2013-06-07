@@ -6,4 +6,5 @@ csheets.ext.simple.ExtensionExample
 csheets.ext.comments.CommentsExtension
 csheets.ext.share.SharingExtension
 csheets.ext.persistance.exportdb.core.ExtensionExport
+csheets.ext.database.DatabaseExtension
 

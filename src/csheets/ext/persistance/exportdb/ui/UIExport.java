@@ -27,6 +27,7 @@ import csheets.ext.persistance.exportdb.core.ThreadExport;
  * Receive the pharameters to create a connection to any dataBaseTechnology and execute thread
  * @author 1110333 Tiago Pacheco
  */
+@Deprecated
 public class UIExport extends JFrame implements Observer
 {
 	
