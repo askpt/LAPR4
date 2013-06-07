@@ -21,21 +21,14 @@ public class Whiledo implements Function {
     public Value applyTo(Expression[] args) throws IllegalValueTypeException {
 	// arg[0] = conditionals
 	// arg[>0] = iterations
-
 	int i = 1;
 	while (args[0].evaluate().toBoolean()) {
-	    System.out.println(args[0].evaluate().toBoolean());
-	    for (i = 1; (i < ((args.length) - 1)); i++) {
+	    for (; i < (args.length - 1); i++) {
 		args[i].evaluate();
-		System.out.println("entrou for");
 	    }
-	    if (args[0].evaluate().toBoolean()) {
-		args[i].evaluate();
-		System.out.println("entrou if");
-	    }
+	    return args[i].evaluate();
 	}
-
-	return args[i].evaluate();
+	return new Value();
     }
 
     @Override
