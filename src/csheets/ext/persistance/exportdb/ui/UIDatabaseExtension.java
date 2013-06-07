@@ -13,6 +13,7 @@ import csheets.ui.ext.*;
  * @see UIExtension
  * @author 1110333 Tiago Pacheco
  */
+@Deprecated
 public class UIDatabaseExtension extends UIExtension 
 {
 
