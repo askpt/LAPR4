@@ -33,4 +33,15 @@ public class ControllerExport
     {
         observers.add(o);
     }
+
+    /**
+     * returns the list of supported databases 
+     * @return 
+     */
+    public String[] getDBlist() 
+    {
+        String str[] = {"", ""};
+        /* update this */
+        return str;
+    }
 }
