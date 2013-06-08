@@ -2,13 +2,15 @@ package csheets.ext.share.ui;
 
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import csheets.ext.Extension;
 import csheets.ext.share.SharingExtension;
-import csheets.ext.share.core.Validate;
+import csheets.ext.share.controller.ReceiveController;
+import csheets.ext.share.core.*;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 
@@ -135,11 +137,25 @@ public class UISharingExtension extends UIExtension {
 		    }
 		}
 	    });
+
+	    JButton recDiscoverServer = new JButton("Discover Servers");
+	    recDiscoverServer.addActionListener(new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+		    ReceiveController rec = new ReceiveController();
+		    List<Connections> connections = rec.findServers();
+		    // TODO add a JComboBox
+		}
+	    });
+
 	    receivePanel.add(recStaticIP);
 	    receivePanel.add(recIP);
 	    receivePanel.add(recStaticPort);
 	    receivePanel.add(recPort);
 	    receivePanel.add(recAction);
+	    receivePanel.add(recDiscoverServer);
 
 	    // Adds borders
 	    TitledBorder border = BorderFactory.createTitledBorder("Receiving");
