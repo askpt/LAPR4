@@ -80,9 +80,12 @@ DBCsvReader -- ControllerExport
 Database -- ControllerExport
 DBCsvReader -- ControllerImport
 Database -- ControllerImport
-ControllerExport: addObserver(Observer this)
+ControllerExport: ArrayList<Observer> observers
+ControllerExport: DatabaseFacade facade
+ControllerExport: ArrayList<Database> dbList
+ControllerExport: addObserver(Observer this): void
 ControllerExport: String urlConnect
-ControllerExport: getDBList()
+ControllerExport: getDBList(): String[]
 ControllerExport: getCredentials(String url, String user, String pass)
 ControllerExport: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
 ControllerExport: getTableList()
@@ -114,8 +117,14 @@ DBConnectionAdapter: createTable(String tableName, Cell [][]cells, int [][]pk)
 DBConnectionAdapter: getTableList()
 DBConnectionAdapter: getTableContent()
 DBConnectionAdapter: updateTable()
-DBCsvReader: getDBList()
-Database: getUrlConnection()
+DBCsvReader: ArrayList<Datababase> dbList
+DBCsvReader: String filePath
+DBCsvReader: File f
+DBCsvReader: getDBList(): ArrayList<Database>
+DBCsvReader: updateDBList(): void
+Database: String name
+Database: String url
+Database: getUrl()
 @enduml
 
 @startuml Diagrams/use_case_realization_DBexport.png
