@@ -27,7 +27,8 @@ import javax.swing.JTextField;
 public class UIExport extends JFrame implements Observer
 {
     /* database available drivers stored in a string and displayed in a combobox */
-    private String []dbDrivers;
+    private String [][]dbDrivers;
+    private String []dbNames;
     private JComboBox comboDrivers;
     
     /* controller object for GUI-controller pattern */
@@ -65,7 +66,12 @@ public class UIExport extends JFrame implements Observer
         
         /* getting the list of supported databases and putting it in the combo box */
         dbDrivers = ctrlExp.getDBlist();
-        comboDrivers = new JComboBox(dbDrivers);
+        dbNames = new String[dbDrivers.length];
+        for(int i = 0; i < dbDrivers.length; i++)
+        {
+            dbNames[i] = dbDrivers[i][0];
+        }
+        comboDrivers = new JComboBox(dbNames);
         
         /* main panel */
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -143,13 +149,19 @@ public class UIExport extends JFrame implements Observer
                     sysMsg.setText("You can't have any blank field!");
                     sysMsg.setForeground(Color.RED);
                 }
+                /* if all fields are filled tries to connect */
+                else
+                {
+                   int index = comboDrivers.getSelectedIndex();
+                   ctrlExp.getCredentials(dbDrivers[index][1], userTxt.getText(), pwd.getText());
+                   
+                }
             }
             /* button cancel */
             else
             {
                 dispose();
-            }
-                
+            }     
         }
     }
 

@@ -40,9 +40,9 @@ public class ControllerExport
 
     /**
      * returns the list of supported databases name
-     * @return 
+     * @return 2D array with database name and url
      */
-    public String[] getDBlist() throws FileNotFoundException 
+    public String[][] getDBlist() throws FileNotFoundException 
     {
         /* new DBCsvReader */
         DBCsvReader reader = new DBCsvReader();
@@ -51,13 +51,20 @@ public class ControllerExport
         dbList = reader.getDBList();
         
         /* String array to store only the name of the databases */
-        String []driversName = new String[dbList.size()];
+        String [][]driversName = new String[dbList.size()][2];
         int i = 0;
         for(; i < dbList.size(); i++)
         {
-            driversName[i] = dbList.get(i).getName();
+            driversName[i][0] = dbList.get(i).getName();
+            driversName[i][1] = dbList.get(i).getUrl();
         }
         /* returns all names of supported databases */
         return driversName;
+    }
+    
+    public void getCredentials(String url, String user, String pass)
+    {
+        /* test - erase here */
+        System.out.println(url + user + pass);
     }
 }
