@@ -28,6 +28,7 @@ public class DatabaseFacade
         DBConnectionAdapterFactory factory = DBConnectionAdapterFactory.getInstance();
         /* gets the corresponding adapter based on the adaptee class name */
         adapter = factory.getDBTechnology(adapteeName);
+        adapter.createConnection(url, user, pass);
         
         
     }

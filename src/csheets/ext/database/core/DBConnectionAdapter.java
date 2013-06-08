@@ -1,6 +1,7 @@
 package csheets.ext.database.core;
 
 import csheets.core.Cell;
+import java.sql.SQLException;
 
 /**
  * Database connection interface
@@ -15,7 +16,7 @@ public interface DBConnectionAdapter
      * @param user username
      * @param pass password
      */
-    public void createConnection(String url, String user, String pass);
+    public void createConnection(String url, String user, String pass) throws ClassNotFoundException, SQLException;
     
     /**
      * creates a new table in the database

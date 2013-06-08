@@ -63,7 +63,14 @@ public class ControllerExport
         return driversName;
     }
     
-    public void getCredentials(String url, String user, String pass, String adapteeName)
+    /**
+     * creates connection to a database
+     * @param url path to driver
+     * @param user username
+     * @param pass password
+     * @param adapteeName adaptee class name
+     */
+    public void connect(String url, String user, String pass, String adapteeName)
     {
         try
         {
