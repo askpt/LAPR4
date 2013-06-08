@@ -64,6 +64,14 @@ public class ControllerExport
     
     public void getCredentials(String url, String user, String pass)
     {
+        try
+        {
+            facade.createConnection(url, user, pass);
+        }
+        catch(Exception e)
+        {
+            
+        }
         /* test - erase here */
         System.out.println(url + user + pass);
     }
