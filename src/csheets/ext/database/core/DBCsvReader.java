@@ -48,7 +48,7 @@ public class DBCsvReader
         {
             String temp = fin.nextLine();
             String []temp2 = temp.split(";");
-            dbList.add(new Database(temp2[0], temp2[1]));
+            dbList.add(new Database(temp2[0], temp2[1], temp2[2]));
         }
     }
     

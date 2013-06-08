@@ -18,7 +18,9 @@ public class Console
         {
             System.out.println(array.get(i).getName());
             System.out.println(array.get(i).getUrl());
+            System.out.println(array.get(i).getAdapteeName());
         }
+        
         
         
     }
