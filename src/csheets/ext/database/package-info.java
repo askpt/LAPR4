@@ -71,12 +71,15 @@ System -> User: shows 'successful export'
 interface DBConnectionAdapter
 DBConnectionAdapter <|-- HsqlDBConnectAdaptee
 DBConnectionAdapter <|-- DerbyDBConnectAdaptee
-DBConnectionAdapter <|-- MysqlDBConnectAdaptee
 DBConnectionAdapterFactory -- ControllerExport
 DBConnectionAdapterFactory -- ControllerImport
-ControllerExport - DatabaseFacade
-ControllerImport - DatabaseFacade
+ControllerExport -- DatabaseFacade
+ControllerImport -- DatabaseFacade
 DBConnectionAdapterFactory -- DBConnectionAdapter
+DBCsvReader -- ControllerExport
+Database -- ControllerExport
+DBCsvReader -- ControllerImport
+Database -- ControllerImport
 ControllerExport: addObserver(Observer this)
 ControllerExport: String urlConnect
 ControllerExport: getDBList()
@@ -86,6 +89,7 @@ ControllerExport: getTableList()
 ControllerExport: setTableToUpdate()
 ControllerExport: startUpdate()
 ControllerExport: alertObservers()
+ControllerImport: addObserver(Observer this)
 ControllerImport: String urlConnect
 ControllerImport: getDBList()
 ControllerImport: getCredentials(String url, String user, String pass)
@@ -94,8 +98,7 @@ ControllerImport: loadTable(String tableName)
 ControllerImport: startImport()
 ControllerImport: getTable()
 ControllerImport: showData()
-DatabaseFacade: getDBList()
-DatabaseFacade: getUrlConnection()
+ControllerImport: alertObservers()
 DatabaseFacade: createConnection(String url, String user, String pass)
 DatabaseFacade: setDataToExport(String tableName, Cell [][]cells, int[][]pk)
 DatabaseFacade: exportData()
@@ -111,6 +114,8 @@ DBConnectionAdapter: createTable(String tableName, Cell [][]cells, int [][]pk)
 DBConnectionAdapter: getTableList()
 DBConnectionAdapter: getTableContent()
 DBConnectionAdapter: updateTable()
+DBCsvReader: getDBList()
+Database: getUrlConnection()
 @enduml
 
 @startuml Diagrams/use_case_realization_DBexport.png
