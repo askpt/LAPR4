@@ -143,10 +143,17 @@ public class UISharingExtension extends UIExtension {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 		    ReceiveController rec = new ReceiveController();
 		    List<Connections> connections = rec.findServers();
-		    // TODO add a JComboBox
+		    Object[] objs = new Object[connections.size()];
+		    for (int i = 0; (i < connections.size()); i++) {
+			objs[i] = connections.get(i);
+		    }
+		    Connections con = (Connections) JOptionPane
+			    .showInputDialog(sidebar, "Select a server",
+				    "Server Discover",
+				    JOptionPane.PLAIN_MESSAGE, null, objs, "");
+		    // TODO add the code to connect to the controller
 		}
 	    });
 
