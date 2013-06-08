@@ -1,2 +1,2 @@
-HSQL;hsql-url;HsqlConnectionAdaptee
-Derby;berby-url;DerbyConnectionAdaptee
+HSQL;jdbc:hsqldb:hsql://localhost/enrollments;user=user;password=pass;HsqlConnectionAdaptee
+Derby;invalid-url;DerbyConnectionAdaptee

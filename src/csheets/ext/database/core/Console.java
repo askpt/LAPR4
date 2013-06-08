@@ -21,6 +21,9 @@ public class Console
             System.out.println(array.get(i).getAdapteeName());
         }
         
+        DatabaseFacade df = new DatabaseFacade();
+        
+//        df.createConnection(null, null, null, null);
         
         
     }
