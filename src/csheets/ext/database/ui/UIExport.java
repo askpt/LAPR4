@@ -2,9 +2,11 @@ package csheets.ext.database.ui;
 
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerExport;
+import csheets.ext.database.core.Database;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JButton;
@@ -55,7 +57,7 @@ public class UIExport extends JFrame implements Observer
         /* creating a new controller */
         ctrlExp = new ControllerExport(this);
         
-        /* getting the list of supported databases */
+        /* getting the list of supported databases and putting it in the combo box */
         dbDrivers = ctrlExp.getDBlist();
         comboDrivers = new JComboBox(dbDrivers);
         
