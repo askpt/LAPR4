@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.ui.ctrl.UIController;
 
 /**
  * Class that implement the client in the extension
@@ -23,6 +24,10 @@ public class Client implements Runnable {
 	private int port;
 	/** the cell where the program will copy */
 	private Cell cellStart;
+
+	private UIController control;
+
+	private CellNetworkListener listener = new CellNetworkListener();
 
 	/**
 	 * Create a new client
@@ -89,11 +94,19 @@ public class Client implements Runnable {
 					cli.getInputStream());
 			CellNetwork cell = (CellNetwork) inStream.readObject();
 			if (cell.isCell()) {
+
 				this.cellStart
 						.getSpreadsheet()
 						.getCell(cellStartColumn + cell.getColumn(),
 								cellStartRow + cell.getRow())
 						.setContent(cell.getContent());
+
+				this.cellStart
+						.getSpreadsheet()
+						.getCell(cellStartColumn + cell.getColumn(),
+								cellStartRow + cell.getRow())
+						.addCellListener(listener);
+
 			} else {
 				isCell = false;
 			}
@@ -121,5 +134,10 @@ public class Client implements Runnable {
 		} catch (FormulaCompilationException e) {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 		}
+	}
+
+	public void updateCell(Cell cell, Socket sock, int column, int row) {
+		Cell cellChanged = control.getActiveSpreadsheet().getCell(column, row);
+
 	}
 }
