@@ -1,2 +1,2 @@
-HSQL;hsql-url
-Derby;berby-url
+HSQL;hsql-url;HsqlConnectionAdaptee
+Derby;berby-url;DerbyConnectionAdaptee

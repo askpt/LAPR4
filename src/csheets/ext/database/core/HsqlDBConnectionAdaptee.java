@@ -8,6 +8,7 @@ import csheets.core.Cell;
  */
 public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
 {
+    
 
     @Override
     public void createConnection(String url, String user, String pass) 

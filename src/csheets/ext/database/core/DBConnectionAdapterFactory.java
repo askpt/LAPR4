@@ -28,4 +28,9 @@ public class DBConnectionAdapterFactory
         }
         return uniqueInstance;
     }
+    
+    public DBConnectionAdapter getDBTechnology(String adapteeName) throws Exception
+    {
+        return (DBConnectionAdapter) Class.forName(adapteeName).newInstance();
+    }
 }

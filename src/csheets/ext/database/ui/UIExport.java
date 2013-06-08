@@ -153,7 +153,7 @@ public class UIExport extends JFrame implements Observer
                 else
                 {
                    int index = comboDrivers.getSelectedIndex();
-                   ctrlExp.getCredentials(dbDrivers[index][1], userTxt.getText(), pwd.getText());
+                   ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][2]);
                    
                 }
             }
