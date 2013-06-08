@@ -4,8 +4,11 @@ import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerExport;
 import csheets.ext.database.core.Database;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -40,6 +43,9 @@ public class UIExport extends JFrame implements Observer
     /* textfields for username, passord, database and table name */
     private JTextField userTxt, dbTxt, tableTxt;
     private JPasswordField pwd;
+    
+    /* label to display system information to the user */
+    JLabel sysMsg = new JLabel();
    
     /**
      * Export GUI constructor
@@ -70,6 +76,10 @@ public class UIExport extends JFrame implements Observer
         JLabel lblPwd = new JLabel("Password");
         JLabel lblTableName = new JLabel("Table name");
         
+        /* setting default system message text and color */
+        sysMsg.setText("Fill the required fields");
+        sysMsg.setForeground(Color.BLUE);
+        
         /* defining text fields */
         dbTxt = new JTextField(20);
         userTxt = new JTextField(20);
@@ -88,11 +98,17 @@ public class UIExport extends JFrame implements Observer
         anotherPanel.add(pwd);
         anotherPanel.add(lblTableName);
         anotherPanel.add(tableTxt);
+        anotherPanel.add(sysMsg);
         
         /* defining panel for buttons */
         JPanel panelBtn = new JPanel();
         panelBtn.add(btnOk);
         panelBtn.add(btnCancel);
+        
+        /* setting up action listeners */
+        HandlesEvent t = new HandlesEvent();
+        btnOk.addActionListener(t);
+        btnCancel.addActionListener(t);
         
         /* adding all object to build window */
         Container c = getContentPane();
@@ -106,6 +122,35 @@ public class UIExport extends JFrame implements Observer
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+    }
+    
+    /**
+     * handles event on different GUI objects
+     */
+    public class HandlesEvent implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e) 
+        {
+            /* button OK*/
+            if(e.getSource() == btnOk)
+            {
+                /* checks if all fields are filled */
+                if(userTxt.getText().trim().length() == 0
+                        || pwd.getPassword().length == 0
+                        || tableTxt.getText().trim().length() == 0)
+                {
+                    sysMsg.setText("You can't have any blank field!");
+                    sysMsg.setForeground(Color.RED);
+                }
+            }
+            /* button cancel */
+            else
+            {
+                dispose();
+            }
+                
+        }
     }
 
     @Override
