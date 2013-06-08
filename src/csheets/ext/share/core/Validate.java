@@ -42,4 +42,31 @@ public class Validate {
     public static boolean checkIfANumber(String port) {
 	return port.matches("^[0-9]+$");
     }
+
+    /**
+     * Removes the unnecessary trash from the datagram messages
+     * 
+     * @param message
+     *            the message that will be necessary remove the content
+     * @return the content of the message
+     */
+    public static String removeMessage(String message) {
+	String tmp = "";
+	int lenght = 0, i = 0;
+
+	while (message.charAt(i) != '-') {
+	    tmp = tmp + message.charAt(i);
+	    i++;
+	}
+	i++;
+	lenght = Integer.parseInt(tmp);
+	lenght += i;
+	tmp = "";
+
+	for (; i < lenght; i++) {
+	    tmp = tmp + message.charAt(i);
+	}
+
+	return tmp;
+    }
 }
