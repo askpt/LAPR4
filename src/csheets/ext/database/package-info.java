@@ -71,38 +71,31 @@ System -> User: shows 'successful export'
 interface DBConnectionAdapter
 DBConnectionAdapter <|-- HsqlDBConnectAdaptee
 DBConnectionAdapter <|-- DerbyDBConnectAdaptee
+DBConnectionAdapter <|-- MysqlDBConnectAdaptee
 DBConnectionAdapterFactory -- ControllerExport
 DBConnectionAdapterFactory -- ControllerImport
-ControllerExport -- DatabaseFacade
-ControllerImport -- DatabaseFacade
+ControllerExport - DatabaseFacade
+ControllerImport - DatabaseFacade
 DBConnectionAdapterFactory -- DBConnectionAdapter
-DBCsvReader -- ControllerExport
-Database -- ControllerExport
-DBCsvReader -- ControllerImport
-Database -- ControllerImport
-ControllerExport: ArrayList<Observer> observers
-ControllerExport: DatabaseFacade facade
-ControllerExport: ArrayList<Database> dbList
-ControllerExport: addObserver(Observer this): void
+ControllerExport: addObserver(Observer this)
 ControllerExport: String urlConnect
-ControllerExport: getDBList(): String[]
-ControllerExport: getCredentials(String url, String user, String pass)
+ControllerExport: getDBList()
+ControllerExport: connect(String url, String user, String pass, String adapteeName)
 ControllerExport: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
 ControllerExport: getTableList()
 ControllerExport: setTableToUpdate()
 ControllerExport: startUpdate()
 ControllerExport: alertObservers()
-ControllerImport: addObserver(Observer this)
 ControllerImport: String urlConnect
 ControllerImport: getDBList()
-ControllerImport: getCredentials(String url, String user, String pass)
+ControllerIxport: connect(String url, String user, String pass, String adapteeName)
 ControllerImport: getTableList()
 ControllerImport: loadTable(String tableName)
 ControllerImport: startImport()
 ControllerImport: getTable()
 ControllerImport: showData()
-ControllerImport: alertObservers()
-DatabaseFacade: createConnection(String url, String user, String pass)
+DatabaseFacade: getDBList()
+DatabaseFacade: createConnection(String url, String user, String pass, String adapteeName)
 DatabaseFacade: setDataToExport(String tableName, Cell [][]cells, int[][]pk)
 DatabaseFacade: exportData()
 DatabaseFacade: getTableList()
@@ -111,20 +104,12 @@ DatabaseFacade: getTableContent()
 DatabaseFacade: setTableToUpdate()
 DatabaseFacade: update()
 DBConnectionAdapterFactory: getInstance()
-DBConnectionAdapterFactory: getDBTechnology(String urlConnect)
+DBConnectionAdapterFactory: getDBTechnology(String adapteeName)
 DBConnectionAdapter: createConnection(String url, String user, String pass)
 DBConnectionAdapter: createTable(String tableName, Cell [][]cells, int [][]pk)
 DBConnectionAdapter: getTableList()
 DBConnectionAdapter: getTableContent()
 DBConnectionAdapter: updateTable()
-DBCsvReader: ArrayList<Datababase> dbList
-DBCsvReader: String filePath
-DBCsvReader: File f
-DBCsvReader: getDBList(): ArrayList<Database>
-DBCsvReader: updateDBList(): void
-Database: String name
-Database: String url
-Database: getUrl()
 @enduml
 
 @startuml Diagrams/use_case_realization_DBexport.png
