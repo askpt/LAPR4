@@ -22,15 +22,14 @@ public class DatabaseFacade
      * @param user username
      * @param pass password
      */
-    public void createConnection(String url, String user, String pass, String adapteeName) throws Exception
+    public void createConnection(String url, String user, String pass, String dbName) throws Exception
     {
         /* gets factory instance */
         DBConnectionAdapterFactory factory = DBConnectionAdapterFactory.getInstance();
         /* gets the corresponding adapter based on the adaptee class name */
-        adapter = factory.getDBTechnology(adapteeName);
+        adapter = factory.getDBTechnology(dbName);
         adapter.createConnection(url, user, pass);
-        
-        
+
     }
     
 }

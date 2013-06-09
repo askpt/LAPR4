@@ -51,13 +51,12 @@ public class ControllerExport
         dbList = reader.getDBList();
         
         /* String array to store only the name of the databases */
-        String [][]driversName = new String[dbList.size()][3];
+        String [][]driversName = new String[dbList.size()][2];
         int i = 0;
         for(; i < dbList.size(); i++)
         {
             driversName[i][0] = dbList.get(i).getName();
             driversName[i][1] = dbList.get(i).getUrl();
-            driversName[i][2] = dbList.get(i).getAdapteeName();
         }
         /* returns all names of supported databases */
         return driversName;
@@ -70,18 +69,17 @@ public class ControllerExport
      * @param pass password
      * @param adapteeName adaptee class name
      */
-    public void connect(String url, String user, String pass, String adapteeName)
+    public void connect(String url, String user, String pass, String dbName)
     {
         try
         {
-            facade.createConnection(url, user, pass, adapteeName);
+            facade.createConnection(url, user, pass, dbName);
         }
         /* replace below with proper exceptions */
         catch(Exception e)
         {
             
         }
-        /* test - erase here */
-        System.out.println(url + user + pass);
+        
     }
 }

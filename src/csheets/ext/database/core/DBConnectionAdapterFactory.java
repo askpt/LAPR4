@@ -29,8 +29,18 @@ public class DBConnectionAdapterFactory
         return uniqueInstance;
     }
     
-    public DBConnectionAdapter getDBTechnology(String adapteeName) throws Exception
+    public DBConnectionAdapter getDBTechnology(String dbName) throws Exception
     {
-        return (DBConnectionAdapter) Class.forName(adapteeName).newInstance();
+        //return (DBConnectionAdapter) Class.forName(adapteeName).newInstance();
+        if(dbName.startsWith("HSQL"))
+        {
+            return new HsqlDBConnectionAdaptee();
+        }
+        else
+        {
+            /* teste line */
+            System.out.println("Mega fail");
+            return null;
+        }
     }
 }

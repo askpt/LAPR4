@@ -28,7 +28,7 @@ public class UIExport extends JFrame implements Observer
 {
     /* database available drivers stored in a string and displayed in a combobox */
     private String [][]dbDrivers;
-    private String []dbNames;
+    private String []driversName;
     private JComboBox comboDrivers;
     
     /* controller object for GUI-controller pattern */
@@ -42,7 +42,7 @@ public class UIExport extends JFrame implements Observer
     private Cell [][]cells;
     
     /* textfields for username, passord, database and table name */
-    private JTextField userTxt, dbTxt, tableTxt;
+    private JTextField userTxt, dbTxt, tableTxt, urlTxt;
     private JPasswordField pwd;
     
     /* label to display system information to the user */
@@ -66,12 +66,12 @@ public class UIExport extends JFrame implements Observer
         
         /* getting the list of supported databases and putting it in the combo box */
         dbDrivers = ctrlExp.getDBlist();
-        dbNames = new String[dbDrivers.length];
+        driversName = new String[dbDrivers.length];
         for(int i = 0; i < dbDrivers.length; i++)
         {
-            dbNames[i] = dbDrivers[i][0];
+            driversName[i] = dbDrivers[i][0];
         }
-        comboDrivers = new JComboBox(dbNames);
+        comboDrivers = new JComboBox(driversName);
         
         /* main panel */
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -80,6 +80,7 @@ public class UIExport extends JFrame implements Observer
         JLabel lblDBdrivers = new JLabel("Database");
         JLabel lblUser = new JLabel("Username");
         JLabel lblPwd = new JLabel("Password");
+        JLabel lblUrl = new JLabel("URL");
         JLabel lblTableName = new JLabel("Table name");
         
         /* setting default system message text and color */
@@ -91,9 +92,10 @@ public class UIExport extends JFrame implements Observer
         userTxt = new JTextField(20);
         pwd = new JPasswordField("");
         tableTxt = new JTextField(20);
+        urlTxt = new JTextField(20);
         
         /* defining another panel */
-        JPanel anotherPanel = new JPanel(new GridLayout(5,1));
+        JPanel anotherPanel = new JPanel(new GridLayout(7,1));
         
         /* adding objects to another panel */
         anotherPanel.add(lblDBdrivers);
@@ -102,6 +104,8 @@ public class UIExport extends JFrame implements Observer
         anotherPanel.add(userTxt);
         anotherPanel.add(lblPwd);
         anotherPanel.add(pwd);
+        anotherPanel.add(lblUrl);
+        anotherPanel.add(urlTxt);
         anotherPanel.add(lblTableName);
         anotherPanel.add(tableTxt);
         anotherPanel.add(sysMsg);
@@ -146,14 +150,14 @@ public class UIExport extends JFrame implements Observer
                         || pwd.getPassword().length == 0
                         || tableTxt.getText().trim().length() == 0)
                 {
-                    sysMsg.setText("You can't have any blank field!");
+                    sysMsg.setText("Username/password required!");
                     sysMsg.setForeground(Color.RED);
                 }
                 /* if all fields are filled tries to connect */
                 else
                 {
                    int index = comboDrivers.getSelectedIndex();
-                   ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][2]);
+                   ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][0]);
                    
                 }
             }

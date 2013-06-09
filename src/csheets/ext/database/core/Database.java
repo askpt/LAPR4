@@ -6,7 +6,7 @@ package csheets.ext.database.core;
  */
 public class Database 
 {
-    private String name, url, adapteeName;
+    private String name, url; 
     
     /**
      * constructor
@@ -14,11 +14,10 @@ public class Database
      * @param url path to the driver
      * @param adapteeName adaptee class that can instantiate the connection object
      */
-    public Database(String name, String url, String adapteeName)
+    public Database(String name, String url)
     {
         this.name = name;
         this.url = url;
-        this.adapteeName = adapteeName;
     }
     
     /**
@@ -37,14 +36,5 @@ public class Database
     public String getUrl()
     {
         return this.url;
-    }
-    
-    /**
-     * getter for adaptee name
-     * @return 
-     */
-    public String getAdapteeName()
-    {
-        return this.adapteeName;
     }
 }
