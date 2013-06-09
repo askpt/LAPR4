@@ -11,27 +11,33 @@ import java.sql.SQLException;
  */
 public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
 {
-    private String driverPath = "org.hsqldb.jbdcDriver";
+    private String driverPath = "org.hsqldb.jdbcDriver";
     private Connection connection;
-    private String url, user, pwd;
+    private String url, standardPath = "jdbc:hsqldb:file:", user, pwd;
     
     
 
     @Override
     public void createConnection(String url, String user, String pass) throws ClassNotFoundException, SQLException
     {
+           
         try{
             Class.forName(driverPath);
-            connection = DriverManager.getConnection(url, user, pass);
-            System.out.println("success");
+            String completePath = standardPath + url;
+            connection = DriverManager.getConnection(completePath, user, pass);
+            
+            /* test line -- DELETE AFTERWARDS */
+            System.out.println("HSQLAdaptee: connected!");
         }
         catch(ClassNotFoundException e)
         {
-            System.out.println("class not found");
+             /* test line -- DELETE AFTERWARDS */
+            System.out.println("HSQLAdaptee: class not found");
         }
         catch(SQLException e)
         {
-            System.out.println("sql error");
+            /* test line -- DELETE AFTERWARDS */
+            System.out.println("HSQLAdaptee: sql error");
         }
     }
 

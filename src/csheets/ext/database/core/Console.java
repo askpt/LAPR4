@@ -2,6 +2,8 @@ package csheets.ext.database.core;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A console-based test class
@@ -16,14 +18,20 @@ public class Console
         array = test.getDBList();
         for(int i = 0; i < array.size(); i++)
         {
-            System.out.println(array.get(i).getName());
-            System.out.println(array.get(i).getUrl());
-            System.out.println(array.get(i).getAdapteeName());
+//            System.out.println(array.get(i).getName());
+//            System.out.println(array.get(i).getUrl());
+//            System.out.println(array.get(i).getAdapteeName());
         }
         
+        System.out.println("CONSOLE: Trying to connect");
         DatabaseFacade df = new DatabaseFacade();
-        
-//        df.createConnection(null, null, null, null);
+        try 
+        {
+            df.createConnection("/Users/joaocarreira/Desktop/hsqltest", "joao", "pass", "HSQL");
+           
+        } catch (Exception ex) {
+          
+        }
         
         
     }
