@@ -71,4 +71,17 @@ public class ValidateTest {
 	assertTrue(Validate.checkIfANumber(portValid3));
     }
 
+    /**
+     * Test if the method to remove a message from datagram works
+     */
+    @Test
+    public void testRemoveMessage() {
+	String ori1 = "3-ola";
+	String esp1 = "ola";
+	String ori2 = "7-benfica";
+	String esp2 = "benfica";
+
+	assertEquals(esp1, Validate.removeMessage(ori1));
+	assertEquals(esp2, Validate.removeMessage(ori2));
+    }
 }
