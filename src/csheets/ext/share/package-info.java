@@ -42,6 +42,11 @@
  * <img src="doc-files/sd_receive_client.png">
  * 
  * <p>
+ * <b>Sequence Diagram - Discover Servers</b>
+ * </p>
+ * <img src="doc-files/sd_cli_discover.png">
+ * 
+ * <p>
  * <b>Diagram to illustrate data communication beetween Client and Server</b>
  * </p>
  * <img src="doc-files/sd_client_server.png">
@@ -156,7 +161,9 @@
  participant SendAction as sa
  participant SendController as sc
  participant Server as svr
+ participant ServerDiscover as svrDisc
 
+ activate svrDisc
  activate sui
  activate sa
  us -> sui : insert(port)
@@ -170,9 +177,12 @@
  sc -> svr : create
  activate svr
  sc -> svr : startServer(port, cells)
+ svr -> svrDisc : findClients(port)
+ svrDisc -> svrDisc : broadcast()
  note right svr
  Using TCP sockets
  end note
+
  svr -> svr : send(cells, svr)
  deactivate svr
  deactivate sc
@@ -383,6 +393,29 @@
  FocusOwnerAction <|-- SendAction
  JMenu <|-- SharingMenu
  UIExtension <|-- UISharingExtension
+ @enduml
+
+
+ @startuml doc-files/sd_cli_discover.png
+ actor user as us
+ participant "UIExtension : UISharingExtension" as rui
+ participant ReceiveController as rc
+ participant ClientDiscover as cliDisc
+
+ activate rui
+ activate cliDisc
+ us -> rui : find Servers
+ Create rc
+ rui -> rc : create
+ activate rc
+ rui -> rc : findServers()
+ rc -> cliDisc : findServers()
+ cliDisc -> cliDisc : search()
+ cliDisc --> rc : return connections
+ rc --> rui : return connections
+ rui -> rui : show
+
+ deactivate rc
  @enduml
  */
 package csheets.ext.share;
