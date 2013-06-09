@@ -22,7 +22,7 @@ public class Server implements Runnable {
 	/** server socket */
 	private ServerSocket svr;
 
-	private CellNetworkListener listener = new CellNetworkListener();
+	private CellNetworkListenerServer listener = new CellNetworkListenerServer();
 	private static Server instance = null;
 
 	/**

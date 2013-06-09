@@ -27,7 +27,7 @@ public class Client implements Runnable {
 
 	private UIController control;
 
-	private CellNetworkListener listener = new CellNetworkListener();
+	private CellNetworkListenerClient listener = new CellNetworkListenerClient();
 
 	/**
 	 * Create a new client
