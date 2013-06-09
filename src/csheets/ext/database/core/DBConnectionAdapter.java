@@ -24,7 +24,7 @@ public interface DBConnectionAdapter
      * @param cells cells to be added to the table
      * @param pk primary key
      */
-    public void createTable(String tableName, Cell [][]cells, int [][]pk);
+    public void createTable(String tableName, Cell [][]cells);
     
     /**
      * returns all the tables availabe int he database

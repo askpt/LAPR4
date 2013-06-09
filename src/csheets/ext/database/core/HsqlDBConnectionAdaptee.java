@@ -4,6 +4,9 @@ import csheets.core.Cell;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Creates a connection to a HSQL database
@@ -14,8 +17,6 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
     private String driverPath = "org.hsqldb.jdbcDriver";
     private Connection connection;
     private String url, user, pwd;
-    
-    
 
     @Override
     public void createConnection(String url, String user, String pass) throws ClassNotFoundException, SQLException
@@ -45,9 +46,59 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
     }
 
     @Override
-    public void createTable(String tableName, Cell[][] cells, int[][] pk) 
+    public void createTable(String tableName, Cell[][] cells) 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /* defining row and column number */
+        int numberOfColumns = cells[0].length;
+        int numberOfRows = cells.length;
+        
+        /* beginning the construction of the sql statement */
+        String stat = "CREATE TABLE " + tableName + "(id INTEGER IDENTITY, ";
+        
+        /* the first line of the exported cells is the name of each column */
+        String []columnsName = new String[cells[0].length];
+        
+        /* cycle to build the columns name string */
+        for(int i = 0; i < cells[0].length; i++)
+        {
+            /* if it's not the last column */
+            if(i != (cells[0].length) - 1)
+            {
+                columnsName[i] = cells[0][i].getContent() + " VARCHAR(200), ";
+            }
+            /* if it's the last column must close with bracket */
+            else
+            {
+                columnsName[i] = cells[0][i].getContent() + " VARCHAR(200))";
+            }
+        }
+        
+        /* in the end of this cycle we should have the final sql statement 
+         for table creation */
+        for(int i = 0; i < columnsName.length; i++)
+        {
+            stat += columnsName[i];
+        }
+        
+        /* sql statement */
+        Statement st = null;
+//        String str = "CREATE TABLE "+ tableName + "( id INTEGER IDENTITY, str_col "
+//                    + "VARCHAR(256), num_col INTEGER)";
+        
+        /* creates the table based on the sql statement */
+        try 
+        {
+            st = connection.createStatement();
+            int i = st.executeUpdate(stat);
+        } 
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /* */
+        
+        
     }
 
     @Override

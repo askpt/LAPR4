@@ -1,5 +1,6 @@
 package csheets.ext.database.controller;
 
+import csheets.core.Cell;
 import csheets.ext.database.core.DBCsvReader;
 import csheets.ext.database.core.Database;
 import csheets.ext.database.core.DatabaseFacade;
@@ -16,6 +17,11 @@ public class ControllerExport
     private ArrayList<Observer> observers;
     private DatabaseFacade facade;
     private ArrayList<Database> dbList;
+    
+    public ControllerExport() 
+    {
+       
+    }
     
     /**
      * Constructor with observer
@@ -80,6 +86,13 @@ public class ControllerExport
         {
             
         }
-        
     }
+    
+   
+    public void setDataToExport(Cell [][]cells, String user, String pass, String tableName)
+    {
+        facade.exportData(cells, tableName);
+    }
+    
+    
 }

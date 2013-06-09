@@ -3,6 +3,7 @@ package csheets.ext.database.ui;
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerExport;
 import csheets.ext.database.core.Database;
+import csheets.ext.database.core.ThreadExport;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -48,6 +49,9 @@ public class UIExport extends JFrame implements Observer
     
     /* label to display system information to the user */
     JLabel sysMsg = new JLabel();
+    
+    /* export thread */
+    ThreadExport thrExp;
    
     /**
      * Export GUI constructor
@@ -163,8 +167,18 @@ public class UIExport extends JFrame implements Observer
                 /* if all fields are filled tries to connect */
                 else
                 {
+                   /* the combo index indicates which database will be used */
                    int index = comboDrivers.getSelectedIndex();
+                   /* connects to a database */
                    ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][0]);
+                   /* setting data to be exported */
+                   ctrlExp.setDataToExport(cells, userTxt.getText(), pwd.getText(), tableTxt.getText());
+                   
+                  
+                   
+                   /* creating a new thread to export data */
+                   //thrExp = new ThreadExport(cells, dbDrivers[index][1], userTxt.getText(), pwd.getText(), tableTxt.getText());
+                   //thrExp.run();
                    
                 }
             }
