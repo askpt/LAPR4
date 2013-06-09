@@ -13,7 +13,7 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
 {
     private String driverPath = "org.hsqldb.jdbcDriver";
     private Connection connection;
-    private String url, standardPath = "jdbc:hsqldb:file:", user, pwd;
+    private String url, user, pwd;
     
     
 
@@ -23,8 +23,11 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
            
         try{
             Class.forName(driverPath);
-            String completePath = standardPath + url;
-            connection = DriverManager.getConnection(completePath, user, pass);
+            
+            /* test line -- DELETE AFTERWARDS */
+            System.out.println(url);
+            
+            connection = DriverManager.getConnection(url, user, pass);
             
             /* test line -- DELETE AFTERWARDS */
             System.out.println("HSQLAdaptee: connected!");

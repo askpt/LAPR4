@@ -37,6 +37,7 @@ public class UIExport extends JFrame implements Observer
     /* buttons */
     private JButton btnOk = new JButton("OK");
     private JButton btnCancel = new JButton("Cancel");
+    private JButton btnUrl = new JButton("Get URL");
     
     /* selected cells to export in a 2D array*/
     private Cell [][]cells;
@@ -88,16 +89,14 @@ public class UIExport extends JFrame implements Observer
         sysMsg.setForeground(Color.BLUE);
         
         /* defining text fields */
-        dbTxt = new JTextField(20);
-        userTxt = new JTextField(20);
+        dbTxt = new JTextField(30);
+        userTxt = new JTextField(30);
         pwd = new JPasswordField("");
-        tableTxt = new JTextField(20);
-        urlTxt = new JTextField(20);
+        tableTxt = new JTextField(30);
+        urlTxt = new JTextField(30);
         
         /* defining another panel */
         JPanel anotherPanel = new JPanel(new GridLayout(7,1));
-        
-        /* adding objects to another panel */
         anotherPanel.add(lblDBdrivers);
         anotherPanel.add(comboDrivers);
         anotherPanel.add(lblUser);
@@ -114,11 +113,13 @@ public class UIExport extends JFrame implements Observer
         JPanel panelBtn = new JPanel();
         panelBtn.add(btnOk);
         panelBtn.add(btnCancel);
+        panelBtn.add(btnUrl);
         
         /* setting up action listeners */
         HandlesEvent t = new HandlesEvent();
         btnOk.addActionListener(t);
         btnCancel.addActionListener(t);
+        btnUrl.addActionListener(t);
         
         /* adding all object to build window */
         Container c = getContentPane();
@@ -142,15 +143,21 @@ public class UIExport extends JFrame implements Observer
         @Override
         public void actionPerformed(ActionEvent e) 
         {
+            /* default url button */
+            if(e.getSource() == btnUrl)
+            {
+                urlTxt.setText(dbDrivers[comboDrivers.getSelectedIndex()][1]);
+            }
+            
             /* button OK*/
-            if(e.getSource() == btnOk)
+            else if(e.getSource() == btnOk)
             {
                 /* checks if all fields are filled */
                 if(userTxt.getText().trim().length() == 0
                         || pwd.getPassword().length == 0
                         || tableTxt.getText().trim().length() == 0)
                 {
-                    sysMsg.setText("Username/password required!");
+                    sysMsg.setText("Username/password/tablename required!");
                     sysMsg.setForeground(Color.RED);
                 }
                 /* if all fields are filled tries to connect */
@@ -162,7 +169,7 @@ public class UIExport extends JFrame implements Observer
                 }
             }
             /* button cancel */
-            else
+            else if(e.getSource() == btnCancel)
             {
                 dispose();
             }     

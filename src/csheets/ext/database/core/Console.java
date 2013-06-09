@@ -27,7 +27,7 @@ public class Console
         DatabaseFacade df = new DatabaseFacade();
         try 
         {
-            df.createConnection("/Users/joaocarreira/Desktop/hsqltest", "joao", "pass", "HSQL");
+            df.createConnection("jdbc:hsqldb:file:src-resources/csheets/ext/database/hsqltest/hsql", "joao", "pass", "HSQL");
            
         } catch (Exception ex) {
           
