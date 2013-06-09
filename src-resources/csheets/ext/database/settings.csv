@@ -1,2 +1,2 @@
-HSQL;jdbc:hsql:file:TempDB
-Berby;jdbc:derby:I dont Know What the path is
+HSQL;jdbc:hsqldb:file:src-resources/csheets/ext/database/hsqltest/hsql
+Derby;add-correct-path
