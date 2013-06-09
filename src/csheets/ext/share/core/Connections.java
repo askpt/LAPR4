@@ -48,7 +48,7 @@ public class Connections {
 
     @Override
     public String toString() {
-	return "IP= " + IP + ":" + port;
+	return IP + ":" + port;
     }
 
     @Override
