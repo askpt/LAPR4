@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import csheets.core.Cell;
 import csheets.ext.share.controller.ReceiveController;
+import csheets.ext.share.core.Connections;
 import csheets.ui.ctrl.*;
 
 /**
@@ -80,5 +81,18 @@ public class ReceiveAction extends FocusOwnerAction {
 	Cell cellStart = focusOwner.getSelectedCell();
 	ReceiveController rc = new ReceiveController();
 	rc.startClient(IP, port, cellStart);
+    }
+
+    /**
+     * Method that will get the active cell and sends that information to the
+     * controller
+     * 
+     * @param connection
+     *            the connection details
+     */
+    public void clickOnSidebar(Connections connection) {
+	Cell cellStart = focusOwner.getSelectedCell();
+	ReceiveController rc = new ReceiveController();
+	rc.startClient(connection, cellStart);
     }
 }
