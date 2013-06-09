@@ -1,5 +1,7 @@
 package csheets.ext.database.core;
 
+import csheets.core.Cell;
+
 /**
  * A class that deals with all the data going into and from the databases
  * (UML facade pattern)
@@ -8,6 +10,9 @@ package csheets.ext.database.core;
 public class DatabaseFacade
 {
     private DBConnectionAdapter adapter;
+    private String tableName;
+    private Cell [][]cells;
+    private int []pk;
     
     /**
      * constructor
@@ -29,7 +34,14 @@ public class DatabaseFacade
         /* gets the corresponding adapter based on the adaptee class name */
         adapter = factory.getDBTechnology(dbName);
         adapter.createConnection(url, user, pass);
-
+    }
+    
+   
+    public void exportData(Cell [][]cells, String tableName)
+    {
+        this.tableName = tableName;
+        this.cells = cells;
+        adapter.createTable(tableName, cells);
     }
     
 }

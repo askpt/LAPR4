@@ -165,7 +165,7 @@ public class ConsoleHsqlTest
 
         try 
         {
-            db = new ConsoleHsqlTest("res/csheets/ext/database/hsql_db");
+            db = new ConsoleHsqlTest("src-resources/csheets/ext/database/embebbed_db/hsql_db");
         } 
         catch (Exception ex1) 
         {
@@ -199,6 +199,8 @@ public class ConsoleHsqlTest
                 "INSERT INTO sample_table(str_col,num_col) VALUES('Honda', 300)");
             db.update(
                 "INSERT INTO sample_table(str_col,num_col) VALUES('GM', 400)");
+            db.update(
+                "INSERT INTO sample_table(str_col,num_col) VALUES('Ferrari', 600)");
 
             /* doing a query */
             db.query("SELECT * FROM sample_table WHERE num_col < 250");

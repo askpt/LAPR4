@@ -1,2 +1,2 @@
-HSQL;jdbc:hsqldb:file:src-resources/csheets/ext/database/hsqltest/hsql
-Derby;add-correct-path
+HSQL;jdbc:hsqldb:file:src-resources/csheets/ext/database/embebbed_db/hsql_db
+Derby;this path is not correct

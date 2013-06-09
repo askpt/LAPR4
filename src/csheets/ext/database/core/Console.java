@@ -1,6 +1,7 @@
 package csheets.ext.database.core;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,14 +24,26 @@ public class Console
 //            System.out.println(array.get(i).getAdapteeName());
         }
         
-        System.out.println("CONSOLE: Trying to connect");
-        DatabaseFacade df = new DatabaseFacade();
-        try 
-        {
-            df.createConnection("jdbc:hsqldb:file:src-resources/csheets/ext/database/hsqltest/hsql", "joao", "pass", "HSQL");
-           
-        } catch (Exception ex) {
-          
+//        System.out.println("CONSOLE: Trying to connect");
+//        DatabaseFacade df = new DatabaseFacade();
+//        try 
+//        {
+//            df.createConnection("jdbc:hsqldb:file:/Users/joaocarreira/Desktop/hsqltest", "joao", "pass", "HSQL");
+//           
+//           
+//        } catch (Exception ex) {
+//          
+//        }
+        
+        
+        HsqlDBConnectionAdaptee hsql = new HsqlDBConnectionAdaptee();
+        try {
+            hsql.createConnection("jdbc:hsqldb:file:/Users/joaocarreira/Desktop/hsqltest/hsql", "joao", "pass");
+            //hsql.createTable(null, null, null);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("class not found");
+        } catch (SQLException ex) {
+           System.out.println("sql exception");
         }
         
         
