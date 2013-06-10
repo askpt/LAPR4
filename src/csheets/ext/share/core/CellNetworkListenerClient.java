@@ -35,6 +35,7 @@ public class CellNetworkListenerClient implements CellListener {
 		this.flag = true;
 
 		this.cell = cell;
+		System.out.println("Entrou");
 
 	}
 

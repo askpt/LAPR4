@@ -57,7 +57,8 @@ public class ThreadServer implements Runnable {
 	 * @throws IOException
 	 *             throw this exception if the I/O have errors
 	 */
-	private void send(Cell[][] cells, Socket sock) throws IOException {
+	private synchronized void send(Cell[][] cells, Socket sock)
+			throws IOException {
 		boolean isAlive = true;
 		while (isAlive) {
 
@@ -84,7 +85,8 @@ public class ThreadServer implements Runnable {
 		}
 	}
 
-	private void receiveUpdates(Cell cellUpdated, Socket cli) throws Exception {
+	private synchronized void receiveUpdates(Cell cellUpdated, Socket cli)
+			throws Exception {
 		while (true) {
 			DataInputStream in = new DataInputStream(sock.getInputStream());
 			if (in.readUTF().equals("send me updated data")) {
@@ -92,23 +94,53 @@ public class ThreadServer implements Runnable {
 				ObjectInputStream inStream = new ObjectInputStream(
 						cli.getInputStream());
 				CellNetwork cell = (CellNetwork) inStream.readObject();
-				System.out.println(cell.getContent());
 
 				for (int i = 0; i < cells.length; i++) {
 					for (int j = 0; j < cells[i].length; j++) {
-						if (cell.getColumn() == cells[i][j].getAddress()
+						if (cells[i][j].getAddress().getColumn() == cell
 								.getColumn()
-								&& cell.getRow() == cells[i][j].getAddress()
+								&& cells[i][j].getAddress().getRow() == cell
 										.getRow()) {
+							cells[i][j].getSpreadsheet()
+
+							.getCell(cell.getColumn(), cell.getRow())
+									.setContent(cell.getContent());
 							cells[i][j].setContent(cell.getContent());
+							// sendAllClients(cells[i][j], cli);
 
 						}
 					}
 				}
 
 			}
-			// cli.close();
+
 		}
+
+	}
+
+	private synchronized void sendAllClients(Cell cellUpdated, Socket sock)
+			throws IOException, InterruptedException {
+
+		Thread.sleep(100);
+		if (Server.getInstance().getListener().getFlag() == true) {
+
+			OutputStream out = sock.getOutputStream();
+			DataOutputStream outStream = new DataOutputStream(out);
+			outStream.writeUTF("send me updated data");
+			DataInputStream in = new DataInputStream(sock.getInputStream());
+
+			CellNetwork cell = new CellNetwork(cellUpdated.getContent(),
+					cellUpdated.getAddress().getRow(), cellUpdated.getAddress()
+							.getColumn(), true);
+
+			ObjectOutputStream objectOut = new ObjectOutputStream(
+					sock.getOutputStream());
+			objectOut.writeObject(cell);
+			System.out.println("cheguei");
+			System.out.println(cell.getContent());
+			Server.getInstance().getListener().setFlag(false);
+		}
+
 	}
 
 	/**
@@ -117,6 +149,7 @@ public class ThreadServer implements Runnable {
 	@Override
 	public void run() {
 		try {
+
 			send(cells, sock);
 
 			receiveUpdates(cellUpdated, sock);
@@ -125,6 +158,7 @@ public class ThreadServer implements Runnable {
 			JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
+			e.printStackTrace();
 
 		}
 	}

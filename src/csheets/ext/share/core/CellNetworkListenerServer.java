@@ -27,7 +27,6 @@ public class CellNetworkListenerServer implements CellListener {
 	public void valueChanged(Cell cell) {
 
 		this.flag = true;
-		this.cell = cell;
 
 	}
 
