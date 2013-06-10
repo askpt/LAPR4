@@ -42,6 +42,7 @@ public class DatabaseFacade
         this.tableName = tableName;
         this.cells = cells;
         adapter.createTable(tableName, cells);
+        adapter.disconnet();
     }
     
 }

@@ -85,8 +85,6 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
         
         /* sql statement */
         Statement st = null;
-//        String str = "CREATE TABLE "+ tableName + "( id INTEGER IDENTITY, str_col "
-//                    + "VARCHAR(256), num_col INTEGER)";
         
         /* creates the table based on the sql statement */
         try 
@@ -156,6 +154,22 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
     }
 
     @Override
+    public void disconnet() 
+    {
+        Statement st;
+        try 
+        {
+            st = connection.createStatement();
+            st.execute("SHUTDOWN");
+            connection.close();    
+        } 
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
     public void getTableList() 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -172,5 +186,4 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }
