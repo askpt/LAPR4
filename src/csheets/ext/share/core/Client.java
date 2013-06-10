@@ -151,9 +151,8 @@ public class Client implements Runnable {
 
 		boolean isAlive = true;
 		while (isAlive) {
-
-			if (listener.getFlag() == true) {
-
+			Thread.sleep(100);
+			if (listener.getFlag()) {
 				Thread.sleep(100);
 				cellUpdated = listener.getCell();
 				OutputStream out = sock.getOutputStream();
@@ -172,9 +171,7 @@ public class Client implements Runnable {
 				objectOut.writeObject(cell);
 				listener.setFlag(false);
 
-				if (in.readUTF().equals("Close yourself")) {
-					isAlive = false;
-				}
+				isAlive = false;
 			}
 
 		}
@@ -218,9 +215,10 @@ public class Client implements Runnable {
 			} else
 				cli = new Socket(connection.getIP(), connection.getPort());
 			receive(cellStart, cli);
-
-			sendToServer(cellStart, cli);
-			// receiveUpdates(cellStart, cli);
+			while (true) {
+				sendToServer(cellStart, cli);
+				// receiveUpdates(cellStart, cli);
+			}
 
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");

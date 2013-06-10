@@ -26,7 +26,7 @@ public class CellNetworkListenerClient implements CellListener {
 	@Override
 	public void valueChanged(Cell cell) {
 		this.flag = true;
-		// this.cell = cell;
+		this.cell = cell;
 
 	}
 
