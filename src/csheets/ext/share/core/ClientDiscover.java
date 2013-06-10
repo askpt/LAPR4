@@ -64,7 +64,7 @@ public class ClientDiscover implements Runnable {
 			connections = new ArrayList<Connections>();
 			byte[] sendData = new byte[1024];
 			byte[] receiveData = new byte[1024];
-			int i = 2;
+			int i = 5000;
 			while (i > 0) {
 				String sentence = "18-send me connection";
 				sendData = sentence.getBytes();
