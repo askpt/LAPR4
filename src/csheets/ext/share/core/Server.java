@@ -36,14 +36,6 @@ public class Server implements Runnable {
 	private Server() {
 	}
 
-	public void setUpdated(boolean flag) {
-		changesClient = flag;
-	}
-
-	public boolean getFlag() {
-		return changesClient;
-	}
-
 	public static synchronized Server getInstance() {
 		if (instance == null)
 			instance = new Server();

@@ -83,8 +83,9 @@ public class Client implements Runnable {
 	 * @throws FormulaCompilationException
 	 *             throw if the cell does not respect the formula compiler
 	 */
-	private void receive(Cell cellStart, Socket cli) throws IOException,
-			ClassNotFoundException, FormulaCompilationException {
+	private synchronized void receive(Cell cellStart, Socket cli)
+			throws IOException, ClassNotFoundException,
+			FormulaCompilationException {
 		boolean isCell = true;
 		int cellStartRow = cellStart.getAddress().getRow();
 		int cellStartColumn = cellStart.getAddress().getColumn();
@@ -124,6 +125,7 @@ public class Client implements Runnable {
 		while (isAlive) {
 
 			if (listener.getFlag() == true) {
+
 				Thread.sleep(100);
 				cellUpdated = listener.getCell();
 				OutputStream out = sock.getOutputStream();
@@ -132,23 +134,47 @@ public class Client implements Runnable {
 				DataInputStream in = new DataInputStream(sock.getInputStream());
 
 				CellNetwork cell = new CellNetwork(cellUpdated.getContent(),
-						cellUpdated.getAddress().getRow(), cellUpdated
-								.getAddress().getColumn(), true);
+						cellUpdated.getAddress().getRow()
+								- cellStart.getAddress().getRow(), cellUpdated
+								.getAddress().getColumn()
+								- cellStart.getAddress().getColumn(), true);
 
 				ObjectOutputStream objectOut = new ObjectOutputStream(
 						sock.getOutputStream());
 				objectOut.writeObject(cell);
+				listener.setFlag(false);
 
 				if (in.readUTF().equals("Close yourself")) {
 					isAlive = false;
 				}
 			}
 
-			// sock.close();
+		}
+
+	}
+
+	public synchronized void receiveUpdates(Cell cellUpdated, Socket sock)
+			throws IOException, FormulaCompilationException,
+			ClassNotFoundException {
+		while (true) {
+			this.cellStart = cellUpdated;
+			DataInputStream in = new DataInputStream(sock.getInputStream());
+			if (in.readUTF().equals("send me updated data")) {
+
+				ObjectInputStream inStream = new ObjectInputStream(
+						sock.getInputStream());
+				CellNetwork cell = (CellNetwork) inStream.readObject();
+				int row = cell.getRow();
+				int column = cell.getColumn();
+				System.out.println(cell.getContent());
+				this.cellStart
+						.getSpreadsheet()
+						.getCell(cell.getColumn() + column, cell.getRow() + row)
+						.setContent(cell.getContent());
+
+			}
 
 		}
-		listener.setFlag(false);
-
 	}
 
 	/**
@@ -162,14 +188,7 @@ public class Client implements Runnable {
 			receive(cellStart, cli);
 
 			sendToServer(cellStart, cli);
-
-			/*
-			 * while (listener.getFlag() == true) {
-			 * 
-			 * sendToServer(listener.getCell(), sock); listener.setFlag(false);
-			 * 
-			 * }
-			 */
+			// receiveUpdates(cellStart, cli);
 
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");
