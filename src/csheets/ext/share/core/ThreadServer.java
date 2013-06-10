@@ -7,7 +7,6 @@ import java.util.logging.*;
 import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
-import csheets.ui.ctrl.UIController;
 
 /**
  * Class that implement the server in the extension
@@ -21,11 +20,9 @@ public class ThreadServer implements Runnable {
 	/** the cells we will pass throw network */
 	private Cell[][] cells;
 	/** server socket */
-	private Socket sock, cli;
+	private Socket sock;
 
 	private Cell cellUpdated;
-
-	private UIController uicontrol;
 
 	/**
 	 * Create a new server
@@ -85,6 +82,14 @@ public class ThreadServer implements Runnable {
 		}
 	}
 
+	/**
+	 * Method that will be on a loop to listen message from client when client
+	 * send a message it will update server information
+	 * 
+	 * @param cellUpdated
+	 * @param cli
+	 * @throws Exception
+	 */
 	private synchronized void receiveUpdates(Cell cellUpdated, Socket cli)
 			throws Exception {
 		while (true) {
@@ -106,7 +111,7 @@ public class ThreadServer implements Runnable {
 							.getCell(cell.getColumn(), cell.getRow())
 									.setContent(cell.getContent());
 							cells[i][j].setContent(cell.getContent());
-							// sendAllClients(cells[i][j], cli);
+							// sendAllClients(cells, sock);
 
 						}
 					}
@@ -118,29 +123,40 @@ public class ThreadServer implements Runnable {
 
 	}
 
-	private synchronized void sendAllClients(Cell cellUpdated, Socket sock)
+	/**
+	 * method to send changes to all clients Not called yet because don't be
+	 * operation
+	 * 
+	 * @param cells
+	 * @param sock
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+
+	private synchronized void sendAllClients(Cell[][] cells, Socket sock)
 			throws IOException, InterruptedException {
 
-		Thread.sleep(100);
-		if (Server.getInstance().getListener().getFlag() == true) {
-
+		boolean isAlive = true;
+		while (isAlive) {
 			OutputStream out = sock.getOutputStream();
-			DataOutputStream outStream = new DataOutputStream(out);
-			outStream.writeUTF("send me updated data");
-			DataInputStream in = new DataInputStream(sock.getInputStream());
+			DataOutputStream outStreamMessage = new DataOutputStream(out);
+			outStreamMessage.writeUTF("send me updated data");
+			for (int i = 0; i < cells.length; i++) {
+				for (int j = 0; j < cells[i].length; j++) {
+					CellNetwork cell = new CellNetwork(
+							cells[i][j].getContent(), i, j, true);
+					ObjectOutputStream outStream = new ObjectOutputStream(
+							sock.getOutputStream());
+					outStream.writeObject(cell);
+				}
+			}
 
-			CellNetwork cell = new CellNetwork(cellUpdated.getContent(),
-					cellUpdated.getAddress().getRow(), cellUpdated.getAddress()
-							.getColumn(), true);
-
-			ObjectOutputStream objectOut = new ObjectOutputStream(
+			CellNetwork cell = new CellNetwork("", 0, 0, false);
+			ObjectOutputStream outStream = new ObjectOutputStream(
 					sock.getOutputStream());
-			objectOut.writeObject(cell);
-			System.out.println("cheguei");
-			System.out.println(cell.getContent());
-			Server.getInstance().getListener().setFlag(false);
-		}
+			outStream.writeObject(cell);
 
+		}
 	}
 
 	/**

@@ -6,6 +6,10 @@
  * </p>
  * <img src="doc-files/use_case_diagram.png">
  * 
+ *  * <p>
+ * <b>Use Case Diagram (week 2)</b>
+ * </p>
+ * <img src="docs/1110333/w2_rail_5/diagrams/UseCaseDiagram.png">
  * <p>
  * <b>Startup Sequence Diagram - Startup Extension</b>
  * </p>
@@ -224,23 +228,52 @@
  participant Server as svr
  participant Network as net
  participant Client as cli
+ participant CellNetworkListener as listener
+ participant ThreadServer as threadsvr
+ participant ThreadClient as threadcli
 
+ svr->threadsvr : new ThreadServer()
  cli -> net : out("send me data")
- net -> svr : in ("send me data")
+ net -> threadsvr : in ("send me data")
  alt if in=send me data
  loop for i < cells.size && while isCell
  loop for j < cells[i].size
- svr->net : out(cell) 
+ threadsvr->net : out(cell) 
  net -> cli : in (cell)
+ cli->listener : addListner(cell)
  end 
  end
  end
- cli -> net : out("Close yourself")
+ threadsvr -> net : out("Close yourself")
  cli -> cli : close()
- net -> svr : in ("Close yourself")
+ net -> threadsvr : in ("Close yourself")
  alt if in=Close yourself
- svr -> svr : close()
+ threadsvr -> threadsvr : close()
  end
+
+ loop
+ listener->cli : contentChanged(cell)
+ cli-> net : out("send me updated data")
+ net-> threadsvr: in("send me updated data")
+
+ alt [if in="send me updated data"]
+ loop
+
+
+ cli->net :sendToServer(cell)
+ cli-> threadcli : new ThreadClient ()
+ net->svr : receiveUpdates(cell)
+ svr-> svr : update(cell)
+ svr-> net : sendAllClients(cell)
+ net->threadcli : receiveUpdates(cell)
+ threadcli->threadcli : update(cell)
+
+
+ end
+ end
+
+
+
 
  @enduml
 
@@ -303,27 +336,106 @@
  +{static}boolean checkPort(int port)
  +{static}boolean checkIfANumber(String port)
  }
+ class Server {
+ -int port
+ -Cell[][] cells
+ -ServerSocket svr
+ -String Ip
+ -boolean changesClient
+ -CellNetworkListenerServer listener
+ -{static}Server instance
+ -Server()
+ +{static}Server getInstance()
+ +CellNetworkListenerServer getListener()
+ -Server(int port, Cell[][] cells, ServerSocket svr)
+ +void startServer(int port, Cell[][] cells)
+ +void run()
+ }
+ interface Runnable {
+ }
+ Runnable <|.. Server
 
  class Client {
  -String IP
  -int port
  -Cell cellStart
+ -Connections connection
+ -CellNetworkListenerClient listener
  +Client()
  -Client(String IP, int port, Cell cellStart)
+ -Client(Connections connection, Cell cellStart)
  +void startClient(String IP, int port, Cell cellStart)
+ +void startClient(Connections connection, Cell cellStart)
  -void receive(Cell cellStart, Socket cli)
+ +void sendToServer(Cell cellUpdated, Socket sock)
  +void run()
  }
+ interface Runnable {
+ }
+ Runnable <|.. Client
 
- class Server {
+ class ThreadServer {
  -int port
  -Cell[][] cells
- +Server()
- -Server(int port, Cell[][] cells)
- +void startServer(int port, Cell[][] cells)
- -void send(Cell[][] cells, ServerSocket svr)
+ -Socket sock
+ -Cell cellUpdated
+ -ThreadServer()
+ +ThreadServer(int port, Cell[][] cells, Socket sock)
+ -void send(Cell[][] cells, Socket sock)
+ -void receiveUpdates(Cell cellUpdated, Socket cli)
+ -void sendAllClients(Cell[][] cells, Socket sock)
  +void run()
  }
+ interface Runnable {
+ }
+ Runnable <|.. ThreadServer
+
+ class CellNetworkListenerClient {
+ -boolean flag
+ -Cell cell
+ +void setFlag(boolean flag)
+ +void setCell(Cell cell)
+ +Cell getCell()
+ +boolean getFlag()
+ +void valueChanged(Cell cell)
+ +void contentChanged(Cell cell)
+ +void dependentsChanged(Cell cell)
+ +void cellCleared(Cell cell)
+ +void cellCopied(Cell cell, Cell source)
+ }
+ interface CellListener {
+ }
+ CellListener <|.. CellNetworkListenerClient
+
+ class ThreadClient {
+ -int port
+ -Cell cellStart
+ -Socket sock
+ -ThreadClient()
+ +ThreadClient(int port, Cell cellStart, Socket sock)
+ -void receiveUpdates(Cell cellStart, Socket cli)
+ +void run()
+ }
+ interface Runnable {
+ }
+ Runnable <|.. ThreadClient
+
+ class CellNetworkListenerServer {
+ -boolean flag
+ -Cell cell
+ +void setFlag(boolean flag)
+ +void setCell(Cell cell)
+ +Cell getCell()
+ +boolean getFlag()
+ +void valueChanged(Cell cell)
+ +void contentChanged(Cell cell)
+ +void dependentsChanged(Cell cell)
+ +void cellCleared(Cell cell)
+ +void cellCopied(Cell cell, Cell source)
+ }
+ interface CellListener {
+ }
+ CellListener <|.. CellNetworkListenerServer
  class CellNetwork {
  -String content
  -int row
@@ -393,6 +505,22 @@
  FocusOwnerAction <|-- SendAction
  JMenu <|-- SharingMenu
  UIExtension <|-- UISharingExtension
+
+ class ThreadClient {
+ -int port
+ -Cell cellStart
+ -Socket sock
+ -ThreadClient()
+ +ThreadClient(int port, Cell cellStart, Socket sock)
+ -void receiveUpdates(Cell cellStart, Socket cli)
+ +void run()
+ }
+ interface Runnable {
+ }
+ Runnable <|.. ThreadClient
+
+
+
  @enduml
 
 
