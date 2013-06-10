@@ -57,6 +57,7 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
         
         /* the first line of the exported cells is the name of each column */
         String []columnsName = new String[cells[0].length];
+        String []columnsNameCopy = new String[cells[0].length];
         
         /* cycle to build the columns name string */
         for(int i = 0; i < cells[0].length; i++)
@@ -65,11 +66,13 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
             if(i != (cells[0].length) - 1)
             {
                 columnsName[i] = cells[0][i].getContent() + " VARCHAR(200), ";
+                columnsNameCopy[i] = cells[0][i].getContent();
             }
             /* if it's the last column must close with bracket */
             else
             {
                 columnsName[i] = cells[0][i].getContent() + " VARCHAR(200))";
+                columnsNameCopy[i] = cells[0][i].getContent();
             }
         }
         
@@ -96,9 +99,60 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
             Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        /* */
+        /* now beggins the "insert into" sql statement */
+        String insertStat = "insert into " + tableName + "(";
+        for(int i = 0; i < columnsNameCopy.length; i++)
+        {
+            if(i != columnsNameCopy.length - 1)
+            {
+                insertStat += columnsNameCopy[i] + ",";
+            }
+            else
+            {
+                insertStat += columnsNameCopy[i] + ")";
+            }
+        }
+        /* continuing concatenation */
+        insertStat += " VALUES(";
         
+        /* creating a number of insert statements equal to number of rows -1 */
+        String []insertVector = new String[numberOfRows - 1];
+        for(int i = 0; i < insertVector.length; i++)
+        {
+            insertVector[i] = insertStat;
+        }
         
+        /* concatenating the respecting insert statements */
+        for(int i = 1; i < numberOfRows; i++)
+        {
+            for(int j = 0; j < numberOfColumns; j++)
+            {
+                if(j != numberOfColumns - 1)
+                {
+                    insertVector[i - 1] += "'" + cells[i][j].getContent() + "',"; 
+                }
+                else
+                {
+                    insertVector[i - 1] += "'" + cells[i][j].getContent() + "')";
+                    //break;
+                }
+            }
+        }
+        
+        /* inserting values into the table */
+        for(int i = 0; i < insertVector.length; i++)
+        {
+            Statement insertSt = null;
+            try 
+            {
+                insertSt = connection.createStatement();
+                int j = st.executeUpdate(insertVector[i].toString());
+            }
+            catch (SQLException ex) 
+            {
+                Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override
