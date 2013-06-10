@@ -7,6 +7,7 @@ import csheets.core.Cell;
  * (using the adapter pattern)
  * @author João Carreira
  */
+@Deprecated
 public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
 {
 
