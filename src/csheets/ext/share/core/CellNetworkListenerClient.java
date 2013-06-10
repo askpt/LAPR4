@@ -3,18 +3,39 @@ package csheets.ext.share.core;
 import csheets.core.*;
 
 public class CellNetworkListenerClient implements CellListener {
-	boolean flag = false;
+	private boolean flag = false;
+	private Cell cell;
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+
+	}
+
+	public void setCell(Cell cell) {
+		this.cell = cell;
+	}
+
+	public Cell getCell() {
+		return cell;
+	}
+
+	public boolean getFlag() {
+		return flag;
+	}
 
 	@Override
 	public void valueChanged(Cell cell) {
 		this.flag = true;
-		System.out.println("Celula alterada: " + cell.getAddress());
+		// this.cell = cell;
+
 	}
 
 	@Override
 	public void contentChanged(Cell cell) {
 		this.flag = true;
-		System.out.println("Celula alterada: " + cell.getContent());
+
+		this.cell = cell;
+
 	}
 
 	@Override

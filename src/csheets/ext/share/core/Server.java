@@ -22,7 +22,12 @@ public class Server implements Runnable {
 	/** server socket */
 	private ServerSocket svr;
 
+	private String Ip;
+
+	private boolean changesClient = false;
+
 	private CellNetworkListenerServer listener = new CellNetworkListenerServer();
+
 	private static Server instance = null;
 
 	/**
@@ -31,10 +36,22 @@ public class Server implements Runnable {
 	private Server() {
 	}
 
+	public void setUpdated(boolean flag) {
+		changesClient = flag;
+	}
+
+	public boolean getFlag() {
+		return changesClient;
+	}
+
 	public static synchronized Server getInstance() {
 		if (instance == null)
 			instance = new Server();
 		return instance;
+	}
+
+	public CellNetworkListenerServer getListener() {
+		return listener;
 	}
 
 	/**
@@ -87,6 +104,7 @@ public class Server implements Runnable {
 	public void run() {
 		try {
 			while (true) {
+
 				Socket sock = svr.accept();
 				Thread thr = new Thread(new ThreadServer(port, cells, sock));
 				thr.start();

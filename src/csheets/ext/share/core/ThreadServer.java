@@ -7,6 +7,7 @@ import java.util.logging.*;
 import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
+import csheets.ui.ctrl.UIController;
 
 /**
  * Class that implement the server in the extension
@@ -20,7 +21,11 @@ public class ThreadServer implements Runnable {
 	/** the cells we will pass throw network */
 	private Cell[][] cells;
 	/** server socket */
-	private Socket sock;
+	private Socket sock, cli;
+
+	private Cell cellUpdated;
+
+	private UIController uicontrol;
 
 	/**
 	 * Create a new server
@@ -76,7 +81,33 @@ public class ThreadServer implements Runnable {
 			if (in.readUTF().equals("Close yourself")) {
 				isAlive = false;
 			}
-			sock.close();
+		}
+	}
+
+	private void receiveUpdates(Cell cellUpdated, Socket cli) throws Exception {
+		while (true) {
+			DataInputStream in = new DataInputStream(sock.getInputStream());
+			if (in.readUTF().equals("send me updated data")) {
+
+				ObjectInputStream inStream = new ObjectInputStream(
+						cli.getInputStream());
+				CellNetwork cell = (CellNetwork) inStream.readObject();
+				System.out.println(cell.getContent());
+
+				for (int i = 0; i < cells.length; i++) {
+					for (int j = 0; j < cells[i].length; j++) {
+						if (cell.getColumn() == cells[i][j].getAddress()
+								.getColumn()
+								&& cell.getRow() == cells[i][j].getAddress()
+										.getRow()) {
+							cells[i][j].setContent(cell.getContent());
+
+						}
+					}
+				}
+
+			}
+			// cli.close();
 		}
 	}
 
@@ -87,10 +118,14 @@ public class ThreadServer implements Runnable {
 	public void run() {
 		try {
 			send(cells, sock);
-		} catch (IOException e) {
+
+			receiveUpdates(cellUpdated, sock);
+
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
+
 		}
 	}
 }
