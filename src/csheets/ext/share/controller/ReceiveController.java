@@ -46,11 +46,8 @@ public class ReceiveController {
 	 *            cell where we paste the content of the shared cells
 	 */
 	public void startClient(Connections connection, Cell cellStart) {
-		throw new UnsupportedOperationException("Not implemented yet!");
-		// TODO finish the code
-		/*
-		 * Client cli = new Client(); cli.startClient(connection, cellStart);
-		 */
+		Client cli = new Client();
+		cli.startClient(connection, cellStart);
 	}
 
 }

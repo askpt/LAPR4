@@ -24,12 +24,14 @@ public class Client implements Runnable {
 	private int port;
 	/** the cell where the program will copy */
 	private Cell cellStart;
+	/** the connection to the servert */
+	private Connections connection;
 
 	private ServerSocket svr;
 
 	private UIController control;
 
-	private CellNetworkListenerClient listener = new CellNetworkListenerClient();
+	private final CellNetworkListenerClient listener = new CellNetworkListenerClient();
 
 	/**
 	 * Create a new client
@@ -54,6 +56,19 @@ public class Client implements Runnable {
 	}
 
 	/**
+	 * Create internaly a new client
+	 * 
+	 * @param connection
+	 *            the connection to the server
+	 * @param cellStart
+	 *            the cell where the program will copy
+	 */
+	private Client(Connections connection, Cell cellStart) {
+		this.connection = connection;
+		this.cellStart = cellStart;
+	}
+
+	/**
 	 * Method that will start the client and receive cells throw network
 	 * 
 	 * @param IP
@@ -65,6 +80,19 @@ public class Client implements Runnable {
 	 */
 	public void startClient(String IP, int port, Cell cellStart) {
 		Thread thr = new Thread(new Client(IP, port, cellStart));
+		thr.start();
+	}
+
+	/**
+	 * Method that will start the client and receive cells throw network
+	 * 
+	 * @param connection
+	 *            the connection to the server
+	 * @param cellStart
+	 *            cell where we paste the content of the shared cells
+	 */
+	public void startClient(Connections connection, Cell cellStart) {
+		Thread thr = new Thread(new Client(connection, cellStart));
 		thr.start();
 	}
 
@@ -184,7 +212,11 @@ public class Client implements Runnable {
 	public void run() {
 		try {
 
-			Socket cli = new Socket(IP, port);
+			Socket cli;
+			if (IP != null) {
+				cli = new Socket(IP, port);
+			} else
+				cli = new Socket(connection.getIP(), connection.getPort());
 			receive(cellStart, cli);
 
 			sendToServer(cellStart, cli);
