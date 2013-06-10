@@ -12,5 +12,7 @@ echo Copiar as dependencias
 cp ../lib/antlr.jar ../dist/antlr.jar
 cp ../lib/hsqldb.jar ../dist/hsqldb.jar
 
+cp -R ../src-resources src-resources
+
 # echo Removing temporary files...
 # rm -R jar
