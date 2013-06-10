@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
-import csheets.ui.ctrl.UIController;
 
 /**
  * Class that implement the client in the extension
@@ -24,12 +23,8 @@ public class Client implements Runnable {
 	private int port;
 	/** the cell where the program will copy */
 	private Cell cellStart;
-	/** the connection to the servert */
+	/** the connection to the server */
 	private Connections connection;
-
-	private ServerSocket svr;
-
-	private UIController control;
 
 	private final CellNetworkListenerClient listener = new CellNetworkListenerClient();
 
@@ -146,6 +141,11 @@ public class Client implements Runnable {
 		// cli.close();
 	}
 
+	/*
+	 * Method that when changes occurred on cells of client's share, listener
+	 * changes a flag value and this method can run and send that update to the
+	 * server
+	 */
 	public synchronized void sendToServer(Cell cellUpdated, Socket sock)
 			throws IOException, InterruptedException {
 
@@ -158,7 +158,6 @@ public class Client implements Runnable {
 				OutputStream out = sock.getOutputStream();
 				DataOutputStream outStream = new DataOutputStream(out);
 				outStream.writeUTF("send me updated data");
-				DataInputStream in = new DataInputStream(sock.getInputStream());
 
 				CellNetwork cell = new CellNetwork(cellUpdated.getContent(),
 						cellUpdated.getAddress().getRow()
@@ -178,30 +177,6 @@ public class Client implements Runnable {
 
 	}
 
-	public synchronized void receiveUpdates(Cell cellUpdated, Socket sock)
-			throws IOException, FormulaCompilationException,
-			ClassNotFoundException {
-		while (true) {
-			this.cellStart = cellUpdated;
-			DataInputStream in = new DataInputStream(sock.getInputStream());
-			if (in.readUTF().equals("send me updated data")) {
-
-				ObjectInputStream inStream = new ObjectInputStream(
-						sock.getInputStream());
-				CellNetwork cell = (CellNetwork) inStream.readObject();
-				int row = cell.getRow();
-				int column = cell.getColumn();
-				System.out.println(cell.getContent());
-				this.cellStart
-						.getSpreadsheet()
-						.getCell(cell.getColumn() + column, cell.getRow() + row)
-						.setContent(cell.getContent());
-
-			}
-
-		}
-	}
-
 	/**
 	 * The running thread
 	 */
@@ -215,9 +190,14 @@ public class Client implements Runnable {
 			} else
 				cli = new Socket(connection.getIP(), connection.getPort());
 			receive(cellStart, cli);
+
 			while (true) {
 				sendToServer(cellStart, cli);
-				// receiveUpdates(cellStart, cli);
+				/* TODO */
+				// Thread thr = new Thread(new ThreadClient(port, cellStart,
+				// cli));
+				// thr.start();
+
 			}
 
 		} catch (UnknownHostException e) {

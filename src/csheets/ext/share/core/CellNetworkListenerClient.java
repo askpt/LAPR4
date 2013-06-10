@@ -2,6 +2,12 @@ package csheets.ext.share.core;
 
 import csheets.core.*;
 
+/**
+ * Class that will detect changes on cliet's cells
+ * 
+ * @author Tiago
+ * 
+ */
 public class CellNetworkListenerClient implements CellListener {
 	private boolean flag = false;
 	private Cell cell;
@@ -35,7 +41,6 @@ public class CellNetworkListenerClient implements CellListener {
 		this.flag = true;
 
 		this.cell = cell;
-		System.out.println("Entrou");
 
 	}
 

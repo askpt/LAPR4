@@ -100,6 +100,7 @@ public class Server implements Runnable {
 				Socket sock = svr.accept();
 				Thread thr = new Thread(new ThreadServer(port, cells, sock));
 				thr.start();
+
 			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");

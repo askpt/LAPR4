@@ -2,6 +2,13 @@ package csheets.ext.share.core;
 
 import csheets.core.*;
 
+/**
+ * Class that will detect changes on server's cells
+ * 
+ * @author Tiago
+ * 
+ */
+
 public class CellNetworkListenerServer implements CellListener {
 	private boolean flag = false;
 	private Cell cell = null;
