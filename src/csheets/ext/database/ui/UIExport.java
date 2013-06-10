@@ -10,6 +10,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -156,6 +158,13 @@ public class UIExport extends JFrame implements Observer
             /* button OK*/
             else if(e.getSource() == btnOk)
             {
+                /* checks if there's at least two rows to proceed with export */
+                 if(cells.length < 2)
+                {
+                    JOptionPane.showMessageDialog(null, "Error: you must select at least\ntwo rows to export!");
+                    dispose();
+                }
+                 
                 /* checks if all fields are filled */
                 if(userTxt.getText().trim().length() == 0
                         || pwd.getPassword().length == 0
@@ -179,6 +188,9 @@ public class UIExport extends JFrame implements Observer
                    /* creating a new thread to export data */
                    thrExp = new ThreadExport(cells, dbDrivers[index][1], userTxt.getText(), pwd.getText(), tableTxt.getText(), dbDrivers[index][0], ctrlExp);
                    thrExp.run();
+                   dispose();
+                   
+                  
                 }
             }
             /* button cancel */

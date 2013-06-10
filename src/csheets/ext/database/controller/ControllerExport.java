@@ -5,6 +5,7 @@ import csheets.ext.database.core.DBCsvReader;
 import csheets.ext.database.core.Database;
 import csheets.ext.database.core.DatabaseFacade;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observer;
 
@@ -12,7 +13,7 @@ import java.util.Observer;
  * The controller for UIExport
  * @author João Carreira
  */
-public class ControllerExport 
+public class ControllerExport implements Subject
 {
     private ArrayList<Observer> observers;
     private DatabaseFacade facade;
@@ -33,15 +34,6 @@ public class ControllerExport
         addObserver(o);
         /* instantiating new facade */
         facade = new DatabaseFacade();
-    }
-
-    /**
-     * adds Observer o to arraylist
-     * @param o 
-     */
-    private void addObserver(Observer o) 
-    {
-        observers.add(o);
     }
 
     /**
@@ -75,16 +67,20 @@ public class ControllerExport
      * @param pass password
      * @param adapteeName adaptee class name
      */
-    public void connect(String url, String user, String pass, String dbName)
+    public void connect(String url, String user, String pass, String dbName) throws Exception
     {
         try
         {
             facade.createConnection(url, user, pass, dbName);
         }
         /* replace below with proper exceptions */
-        catch(Exception e)
+        catch(SQLException e)
         {
-            
+            this.notifyObserver("Error connecting to database!");
+        }
+        catch(ClassNotFoundException e)
+        {
+            this.notifyObserver("Error: database driver not found!");
         }
     }
     
@@ -98,5 +94,34 @@ public class ControllerExport
     public void setDataToExport(Cell [][]cells, String user, String pass, String tableName)
     {
         facade.exportData(cells, tableName);
+    }
+
+    /**
+     * adds Observer o to arraylist
+     * @param o Observer object
+     */
+    public void addObserver(Observer o) 
+    {
+        observers.add(o);
+    }
+    
+    /**
+     * removes Observer o from arraylist
+     * @param o Observer object
+     */
+    @Override
+    public void removerObserver(Observer o) 
+    {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObserver(String str) 
+    {
+        int i = 0;
+        for(; i < observers.size(); i++)
+        {
+            observers.get(i).update(null, str);
+        }
     }
 }

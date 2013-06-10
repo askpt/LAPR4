@@ -1,6 +1,7 @@
 package csheets.ext.database.core;
 
 import csheets.core.Cell;
+import java.sql.SQLException;
 
 /**
  * A class that deals with all the data going into and from the databases
@@ -27,7 +28,7 @@ public class DatabaseFacade
      * @param user username
      * @param pass password
      */
-    public void createConnection(String url, String user, String pass, String dbName) throws Exception
+    public void createConnection(String url, String user, String pass, String dbName) throws SQLException, ClassNotFoundException, Exception
     {
         /* gets factory instance */
         DBConnectionAdapterFactory factory = DBConnectionAdapterFactory.getInstance();
@@ -36,7 +37,11 @@ public class DatabaseFacade
         adapter.createConnection(url, user, pass);
     }
     
-   
+   /**
+    * exports data to a database
+    * @param cells cells to be exported
+    * @param tableName table's name in the database
+    */
     public void exportData(Cell [][]cells, String tableName)
     {
         this.tableName = tableName;
