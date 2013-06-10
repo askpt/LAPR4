@@ -25,6 +25,8 @@ public class Client implements Runnable {
 	/** the cell where the program will copy */
 	private Cell cellStart;
 
+	private ServerSocket svr;
+
 	private UIController control;
 
 	private CellNetworkListenerClient listener = new CellNetworkListenerClient();
@@ -112,7 +114,41 @@ public class Client implements Runnable {
 			}
 		}
 		outStream.writeUTF("Close yourself");
-		cli.close();
+		// cli.close();
+	}
+
+	public synchronized void sendToServer(Cell cellUpdated, Socket sock)
+			throws IOException, InterruptedException {
+
+		boolean isAlive = true;
+		while (isAlive) {
+
+			if (listener.getFlag() == true) {
+				Thread.sleep(100);
+				cellUpdated = listener.getCell();
+				OutputStream out = sock.getOutputStream();
+				DataOutputStream outStream = new DataOutputStream(out);
+				outStream.writeUTF("send me updated data");
+				DataInputStream in = new DataInputStream(sock.getInputStream());
+
+				CellNetwork cell = new CellNetwork(cellUpdated.getContent(),
+						cellUpdated.getAddress().getRow(), cellUpdated
+								.getAddress().getColumn(), true);
+
+				ObjectOutputStream objectOut = new ObjectOutputStream(
+						sock.getOutputStream());
+				objectOut.writeObject(cell);
+
+				if (in.readUTF().equals("Close yourself")) {
+					isAlive = false;
+				}
+			}
+
+			// sock.close();
+
+		}
+		listener.setFlag(false);
+
 	}
 
 	/**
@@ -121,8 +157,20 @@ public class Client implements Runnable {
 	@Override
 	public void run() {
 		try {
+
 			Socket cli = new Socket(IP, port);
 			receive(cellStart, cli);
+
+			sendToServer(cellStart, cli);
+
+			/*
+			 * while (listener.getFlag() == true) {
+			 * 
+			 * sendToServer(listener.getCell(), sock); listener.setFlag(false);
+			 * 
+			 * }
+			 */
+
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
@@ -133,11 +181,8 @@ public class Client implements Runnable {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 		} catch (FormulaCompilationException e) {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+		} catch (InterruptedException e) {
+			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 		}
-	}
-
-	public void updateCell(Cell cell, Socket sock, int column, int row) {
-		Cell cellChanged = control.getActiveSpreadsheet().getCell(column, row);
-
 	}
 }
