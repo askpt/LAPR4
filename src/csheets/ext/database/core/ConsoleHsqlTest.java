@@ -25,7 +25,7 @@ import java.sql.Statement;
  * 5) once launched, select the following:
  * TYPE: HSQL database engine standalone
  * DRIVER: org.hsqldb.jdbcDriver
- * URL: jdbc:hsqldb:file:res/csheets/ext/database/hsql_db
+ * URL: jdbc:hsqldb:file:src-resources/csheets/ext/database/embebbed_db/hsql_db
  * USER: user
  * PASS: pass
  * 

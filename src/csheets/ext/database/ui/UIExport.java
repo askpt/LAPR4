@@ -169,13 +169,16 @@ public class UIExport extends JFrame implements Observer
                 {
                    /* the combo index indicates which database will be used */
                    int index = comboDrivers.getSelectedIndex();
+                   
+                   /* the following comented code DOES NOT use a thread to export data */
                    /* connects to a database */
-                   ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][0]);
+                   //ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][0]);
                    /* setting data to be exported */
-                   ctrlExp.setDataToExport(cells, userTxt.getText(), pwd.getText(), tableTxt.getText());
+                   //ctrlExp.setDataToExport(cells, userTxt.getText(), pwd.getText(), tableTxt.getText());
+                   
                    /* creating a new thread to export data */
-                   //thrExp = new ThreadExport(cells, dbDrivers[index][1], userTxt.getText(), pwd.getText(), tableTxt.getText());
-                   //thrExp.run();  
+                   thrExp = new ThreadExport(cells, dbDrivers[index][1], userTxt.getText(), pwd.getText(), tableTxt.getText(), dbDrivers[index][0], ctrlExp);
+                   thrExp.run();
                 }
             }
             /* button cancel */

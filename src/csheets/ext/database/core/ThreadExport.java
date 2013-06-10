@@ -14,7 +14,7 @@ import csheets.ext.database.controller.ControllerExport;
 public class ThreadExport implements Runnable
 {
     private Cell[][] cells;
-    private String url, user, pass, tableName;
+    private String url, user, pass, tableName, dbName;
     private ControllerExport ctrlExp;
 
     public ThreadExport(Cell [][]cells, String url, String user, String pass, String tableName)
@@ -26,13 +26,24 @@ public class ThreadExport implements Runnable
         this.tableName = tableName;
     }
     
+    public ThreadExport(Cell [][]cells, String url, String user, String pass, String tableName, String dbName, ControllerExport ctrlExp)
+    {
+        this.cells = cells;
+        this.url = url;
+        this.user = user;
+        this.pass = pass;
+        this.tableName = tableName;
+        this.dbName = dbName;
+        this.ctrlExp = ctrlExp;
+    }
+    
     @Override
     public void run() 
     {
-        ctrlExp = new ControllerExport();
+        //ctrlExp = new ControllerExport();
         try
         {
-            ctrlExp.connect(url, user, pass, tableName);
+            ctrlExp.connect(url, user, pass, dbName);
             ctrlExp.setDataToExport(cells, user, pass, tableName);
         }
         catch(Exception e)
