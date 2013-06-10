@@ -173,13 +173,9 @@ public class UIExport extends JFrame implements Observer
                    ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][0]);
                    /* setting data to be exported */
                    ctrlExp.setDataToExport(cells, userTxt.getText(), pwd.getText(), tableTxt.getText());
-                   
-                  
-                   
                    /* creating a new thread to export data */
                    //thrExp = new ThreadExport(cells, dbDrivers[index][1], userTxt.getText(), pwd.getText(), tableTxt.getText());
-                   //thrExp.run();
-                   
+                   //thrExp.run();  
                 }
             }
             /* button cancel */

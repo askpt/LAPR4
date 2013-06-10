@@ -22,9 +22,13 @@ public interface DBConnectionAdapter
      * creates a new table in the database
      * @param tableName table's name
      * @param cells cells to be added to the table
-     * @param pk primary key
      */
     public void createTable(String tableName, Cell [][]cells);
+    
+    /**
+     * closes connection from the database
+     */
+    public void disconnet();
     
     /**
      * returns all the tables availabe int he database
