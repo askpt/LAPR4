@@ -40,7 +40,6 @@ public class ThreadExport implements Runnable
     @Override
     public void run() 
     {
-        //ctrlExp = new ControllerExport();
         try
         {
             ctrlExp.connect(url, user, pass, dbName);
@@ -48,7 +47,7 @@ public class ThreadExport implements Runnable
         }
         catch(Exception e)
         {
-            
+            e.printStackTrace();
         }
     }
     

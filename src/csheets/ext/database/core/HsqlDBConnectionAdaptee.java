@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * Creates a connection to a HSQL database
@@ -21,27 +22,28 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
     @Override
     public void createConnection(String url, String user, String pass) throws ClassNotFoundException, SQLException
     {
-           
         try{
             Class.forName(driverPath);
-            
-            /* test line -- DELETE AFTERWARDS */
-            System.out.println(url);
-            
+//            /* test line -- DELETE AFTERWARDS */
+//            System.out.println(url);
             connection = DriverManager.getConnection(url, user, pass);
-            
-            /* test line -- DELETE AFTERWARDS */
-            System.out.println("HSQLAdaptee: connected!");
+//            /* test line -- DELETE AFTERWARDS */
+//            System.out.println("HSQLAdaptee: connected!");
         }
         catch(ClassNotFoundException e)
         {
-             /* test line -- DELETE AFTERWARDS */
-            System.out.println("HSQLAdaptee: class not found");
+//             /* test line -- DELETE AFTERWARDS */
+//            System.out.println("HSQLAdaptee: class not found");
+            
+            /* keep this until observer is implemented */
+            JOptionPane.showMessageDialog(null, "Error: class not found!");
         }
         catch(SQLException e)
         {
-            /* test line -- DELETE AFTERWARDS */
-            System.out.println("HSQLAdaptee: sql error");
+//            /* test line -- DELETE AFTERWARDS */
+//            System.out.println("HSQLAdaptee: sql error");
+            /* keep this until observer is implemented */
+            JOptionPane.showMessageDialog(null, "Error: connection to database!");
         }
     }
 
@@ -91,10 +93,14 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
         {
             st = connection.createStatement();
             int i = st.executeUpdate(stat);
+            /* keep this until observer is implemented */
+            JOptionPane.showMessageDialog(null, "Data succesfully exported!");
         } 
         catch (SQLException ex) 
         {
             Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+            /* keep this until observer is implemented */
+            JOptionPane.showMessageDialog(null, "Error: table already exists");
         }
         
         /* now beggins the "insert into" sql statement */
@@ -149,10 +155,13 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
             catch (SQLException ex) 
             {
                 Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+                /* keep this until observer is implemented */
+                JOptionPane.showMessageDialog(null, "Error: data not inserted");
             }
         }
         
-        System.out.println("CREATE TABLE: done");
+        /* test msg -- DELETE THIS */
+//        System.out.println("CREATE TABLE: done");
     }
 
     @Override
