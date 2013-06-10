@@ -151,6 +151,8 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
                 Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        System.out.println("CREATE TABLE: done");
     }
 
     @Override

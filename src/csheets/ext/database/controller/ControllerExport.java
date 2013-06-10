@@ -88,11 +88,15 @@ public class ControllerExport
         }
     }
     
-   
+    /**
+     * sets data to be exported
+     * @param cells cells to be exported
+     * @param user username
+     * @param pass password
+     * @param tableName table name
+     */
     public void setDataToExport(Cell [][]cells, String user, String pass, String tableName)
     {
         facade.exportData(cells, tableName);
     }
-    
-    
 }
