@@ -8,6 +8,7 @@ import csheets.core.Cell;
  * (direct application of the adapter pattern)
  * @author João Carreira
  */
+@Deprecated
 public interface DBConnectionAdapter 
 {
     public void createConnection();

@@ -6,6 +6,7 @@ import csheets.core.Cell;
  * Factory of connection adapters
  * @author João Carreira
  */
+@Deprecated
 public class DBConnectionAdapterFactory 
 {
     /* DBConnectionAdapterFactory is a singleton */

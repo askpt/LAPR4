@@ -16,6 +16,7 @@ import csheets.core.Cell;
  * This class do the connection to hsqldb, create table, insert values and create query
  * @author 1110333 Tiago Pacheco
  */
+@Deprecated
 public class ConnectionHSQLDB implements BasicDataBase{
 	
 	

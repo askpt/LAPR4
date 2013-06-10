@@ -9,6 +9,7 @@ import csheets.ui.ctrl.*;
  * An action of the update extension 
  * @author João Carreira
  */
+@Deprecated
 public class UpdateAction extends FocusOwnerAction 
 {
 	private static final long serialVersionUID = 1L;

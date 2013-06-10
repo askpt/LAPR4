@@ -10,6 +10,7 @@ import csheets.ext.persistance.exportdb.ui.UIExport;
  *
  */
 
+@Deprecated
 public class ControllerExport 
 {
 	private String url="jdbc:hsqldb:" + "db_file_name_prefix";

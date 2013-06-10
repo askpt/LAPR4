@@ -9,6 +9,7 @@ import csheets.ui.ctrl.*;
  * An action of the import extension 
  * @author João Carreira
  */
+@Deprecated
 public class ImportAction extends FocusOwnerAction 
 {
 	private static final long serialVersionUID = 1L;

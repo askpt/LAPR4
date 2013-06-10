@@ -8,6 +8,7 @@ import csheets.ext.persistance.exportdb.controllers.ControllerExport;
  * Representes the thread
  * @author 1110333 Tiago Pacheco
  */
+@Deprecated
 public class ThreadExport implements Runnable {
 
 	private Cell[][]cells;

@@ -7,6 +7,7 @@ import csheets.core.Cell;
  * The classes that will implement this interface will specify this methods to any driver
  * @author 1110333 Tiago Pacheco
  */
+@Deprecated
 public interface BasicDataBase {
 	
 	 public void connect(String url, String user, String pass) throws Exception;
