@@ -36,9 +36,11 @@ public class DBConnectionFactory
         {
             return new HsqlDBConnection();
         }
-        else
+        else if (dbName.startsWith("Derby"))
         {
-            return null;
+            return new DerbyConnection();
+        }else{
+        	return null;
         }
     }
 }
