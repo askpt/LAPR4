@@ -11,6 +11,7 @@ jar cmf makejar.mf ../dist/csheets.jar -C ../tmp-build csheets
 echo Copiar as dependencias
 cp ../lib/antlr.jar ../dist/antlr.jar
 cp ../lib/hsqldb.jar ../dist/hsqldb.jar
+cp ../lib/derby.jar ../dist/derby.jar
 
 cp -R ../src-resources src-resources
 
