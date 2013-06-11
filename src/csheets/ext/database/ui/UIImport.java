@@ -2,6 +2,7 @@ package csheets.ext.database.ui;
 
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerExport;
+import csheets.ext.database.controller.ControllerImport;
 import csheets.ext.database.core.Database;
 import csheets.ext.database.core.ThreadExport;
 import java.awt.BorderLayout;
@@ -29,56 +30,57 @@ import javax.swing.JTextField;
  */
 public class UIImport extends JFrame implements Observer
 {
-    /* database available drivers stored in a string and displayed in a combobox */
+    /* select cells to import in a 2D array */
+    private Cell [][]cells;
+    
+    /* controller object for GUI-controller pattern */
+    private ControllerImport ctrlImp;
+   
+    /* database available drivers sotred in a string and displayed in a combobox */
     private String [][]dbDrivers;
     private String []driversName;
     private JComboBox comboDrivers;
     
-    /* controller object for GUI-controller pattern */
-    private ControllerExport ctrlExp;
-    
     /* buttons */
     private JButton btnOk = new JButton("OK");
     private JButton btnCancel = new JButton("Cancel");
-    private JButton btnUrl = new JButton("Get URL");
+    private JButton btnUrl = new JButton("Get url");
     
-    /* selected cells to export in a 2D array*/
-    private Cell [][]cells;
-    
-    /* textfields for username, passord, database and table name */
-    private JTextField userTxt, dbTxt, tableTxt, urlTxt;
+    /* textfield for username, password and url */
+    private JTextField userTxt, urlTxt; 
     private JPasswordField pwd;
     
     /* label to display system information to the user */
     JLabel sysMsg = new JLabel();
     
-    /* export thread */
-    ThreadExport thrExp;
-   
     /**
-     * Export GUI constructor
-     * @param cells
+     * constructor of the GUI
+     * @param cells cells 
      * @throws Exception 
      */
-    public UIImport(Cell[][] cells) throws Exception
+    UIImport(Cell[][] cells) throws Exception
     {
         /* window title */
-        super("Import information from the database");
+        super("Import information from a database");
         
         /* saving argument of this function is class variable */
         this.cells = cells;
         
         /* creating a new controller */
-        ctrlExp = new ControllerExport(this);
+        ctrlImp = new ControllerImport(this);
         
         /* getting the list of supported databases and putting it in the combo box */
-        dbDrivers = ctrlExp.getDBlist();
+        dbDrivers = ctrlImp.getDBlist();
         driversName = new String[dbDrivers.length];
         for(int i = 0; i < dbDrivers.length; i++)
         {
             driversName[i] = dbDrivers[i][0];
         }
         comboDrivers = new JComboBox(driversName);
+        
+        
+        
+        
         
         /* main panel */
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -88,21 +90,18 @@ public class UIImport extends JFrame implements Observer
         JLabel lblUser = new JLabel("Username");
         JLabel lblPwd = new JLabel("Password");
         JLabel lblUrl = new JLabel("URL");
-        JLabel lblTableName = new JLabel("Table name");
         
         /* setting default system message text and color */
-        sysMsg.setText("Fill the required fields");
-        sysMsg.setForeground(Color.BLUE);
+        sysMsg.setText("Connect to a database");
+        sysMsg.setForeground(Color.RED);
         
         /* defining text fields */
-        dbTxt = new JTextField(30);
         userTxt = new JTextField(30);
         pwd = new JPasswordField("");
-        tableTxt = new JTextField(30);
         urlTxt = new JTextField(30);
         
         /* defining another panel */
-        JPanel anotherPanel = new JPanel(new GridLayout(7,1));
+        JPanel anotherPanel = new JPanel(new GridLayout(5,1));
         anotherPanel.add(lblDBdrivers);
         anotherPanel.add(comboDrivers);
         anotherPanel.add(lblUser);
@@ -111,23 +110,21 @@ public class UIImport extends JFrame implements Observer
         anotherPanel.add(pwd);
         anotherPanel.add(lblUrl);
         anotherPanel.add(urlTxt);
-        anotherPanel.add(lblTableName);
-        anotherPanel.add(tableTxt);
         anotherPanel.add(sysMsg);
         
-        /* defining panel for buttons */
+        /* defining a panel for buttons */
         JPanel panelBtn = new JPanel();
         panelBtn.add(btnOk);
         panelBtn.add(btnCancel);
         panelBtn.add(btnUrl);
         
-        /* setting up action listeners */
+         /* setting up action listeners */
         HandlesEvent t = new HandlesEvent();
         btnOk.addActionListener(t);
         btnCancel.addActionListener(t);
         btnUrl.addActionListener(t);
         
-        /* adding all object to build window */
+        /* adding all objects to build the window */
         Container c = getContentPane();
         mainPanel.add(anotherPanel);
         mainPanel.add(panelBtn, BorderLayout.SOUTH);
@@ -140,7 +137,7 @@ public class UIImport extends JFrame implements Observer
         setLocationRelativeTo(null);
         setResizable(false);
     }
-    
+
     /**
      * handles event on different GUI objects
      */
@@ -152,46 +149,11 @@ public class UIImport extends JFrame implements Observer
             /* default url button */
             if(e.getSource() == btnUrl)
             {
-                urlTxt.setText(dbDrivers[comboDrivers.getSelectedIndex()][1]);
+               
             }
-            
             /* button OK*/
             else if(e.getSource() == btnOk)
             {
-                /* checks if there's at least two rows to proceed with export */
-                 if(cells.length < 2)
-                {
-                    JOptionPane.showMessageDialog(null, "Error: you must select at least\ntwo rows to export!");
-                    dispose();
-                }
-                 
-                /* checks if all fields are filled */
-                if(userTxt.getText().trim().length() == 0
-                        || pwd.getPassword().length == 0
-                        || tableTxt.getText().trim().length() == 0)
-                {
-                    sysMsg.setText("Username/password/tablename required!");
-                    sysMsg.setForeground(Color.RED);
-                }
-                /* if all fields are filled tries to connect */
-                else
-                {
-                   /* the combo index indicates which database will be used */
-                   int index = comboDrivers.getSelectedIndex();
-                   
-                   /* the following comented code DOES NOT use a thread to export data */
-                   /* connects to a database */
-                   //ctrlExp.connect(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbDrivers[index][0]);
-                   /* setting data to be exported */
-                   //ctrlExp.setDataToExport(cells, userTxt.getText(), pwd.getText(), tableTxt.getText());
-                   
-                   /* creating a new thread to export data */
-                   thrExp = new ThreadExport(cells, dbDrivers[index][1], userTxt.getText(), pwd.getText(), tableTxt.getText(), dbDrivers[index][0], ctrlExp);
-                   thrExp.run();
-                   dispose();
-                   
-                  
-                }
             }
             /* button cancel */
             else if(e.getSource() == btnCancel)
@@ -200,11 +162,12 @@ public class UIImport extends JFrame implements Observer
             }     
         }
     }
-
+    
+    
     @Override
-    public void update(Observable o, Object arg) 
+    public void update(Observable o, Object o1) 
     {
-        /* TODO auto-generated code */
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
