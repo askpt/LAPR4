@@ -31,7 +31,7 @@ public class DatabaseMenu extends JMenu
 
             // menu options
             add(new Export(uiController));
-            //add(new Import(uiController));
+            add(new Import(uiController));
             //add(new Update(uiController));
 	}	
 }
