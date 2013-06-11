@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * Creates a connection to a HSQL database
  * @author João Carreira
  */
-public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
+public class HsqlDBConnection implements DBConnectionStrategy
 {
     private String driverPath = "org.hsqldb.jdbcDriver";
     private Connection connection;
@@ -98,7 +98,7 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
         } 
         catch (SQLException ex) 
         {
-            Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
             /* keep this until observer is implemented */
             JOptionPane.showMessageDialog(null, "Error: table already exists");
         }
@@ -154,7 +154,7 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
             }
             catch (SQLException ex) 
             {
-                Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
                 /* keep this until observer is implemented */
                 JOptionPane.showMessageDialog(null, "Error: data not inserted");
             }
@@ -176,7 +176,7 @@ public class HsqlDBConnectionAdaptee implements DBConnectionAdapter
         } 
         catch (SQLException ex) 
         {
-            Logger.getLogger(HsqlDBConnectionAdaptee.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

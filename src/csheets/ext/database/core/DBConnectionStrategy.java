@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * (applying the adapter pattern)
  * @author João Carreira
  */
-public interface DBConnectionAdapter 
+public interface DBConnectionStrategy 
 {
     /**
      * creates a connection to a database driver

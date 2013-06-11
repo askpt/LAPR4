@@ -36,7 +36,7 @@ public class Console
 //        }
         
         
-        HsqlDBConnectionAdaptee hsql = new HsqlDBConnectionAdaptee();
+        HsqlDBConnection hsql = new HsqlDBConnection();
         try {
             hsql.createConnection("jdbc:hsqldb:file:/Users/joaocarreira/Desktop/hsqltest/hsql", "joao", "pass");
             //hsql.createTable(null, null, null);
