@@ -54,11 +54,11 @@ public class Import extends FocusOwnerAction
     public void actionPerformed(ActionEvent event) 
     {
         /* select cells to import */
-    	Cell [][]cells = focusOwner.getSelectedCells();
+    	Cell cell = focusOwner.getSelectedCell();
     	
         try 
     	{
-    		UIImport uiImp = new UIImport(cells);
+    		UIImport uiImp = new UIImport(cell);
     	} 
     	catch (Exception e2) 
     	{
