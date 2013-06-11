@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public class DatabaseFacade
 {
-    private DBConnectionAdapter adapter;
+    private DBConnectionStrategy adapter;
     private String tableName;
     private Cell [][]cells;
     private int []pk;
@@ -31,7 +31,7 @@ public class DatabaseFacade
     public void createConnection(String url, String user, String pass, String dbName) throws SQLException, ClassNotFoundException, Exception
     {
         /* gets factory instance */
-        DBConnectionAdapterFactory factory = DBConnectionAdapterFactory.getInstance();
+        DBConnectionFactory factory = DBConnectionFactory.getInstance();
         /* gets the corresponding adapter based on the adaptee class name */
         adapter = factory.getDBTechnology(dbName);
         adapter.createConnection(url, user, pass);
