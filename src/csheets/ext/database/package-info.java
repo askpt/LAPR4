@@ -156,31 +156,30 @@
  DatabaseFacade -> DBConnectionStrategy: disconnect()
  @enduml
 
- @startuml doc-files/use_case_realization_DBimport.png
+@startuml doc-files/use_case_realization_DBimport.png
  UIImport -> ControllerImport:  <<create(Observer this)>>
  ControllerImport -> ControllerImport: addObserver(Observer this)
  ControllerImport -> DatabaseFacade: <<create>>
  UIImport -> ControllerImport: getDBList()
  ControllerImport -> DatabaseFacade: getDBList()
- UIImport -> ControllerImport: setCredentials(String url, String user, String pass)
- ControllerImport -> DatabaseFacade: urlConnect = getUrlConnection()
+ UIImport -> ControllerImport: <<Thread.run>>\n\tstart()
+ UIImport -> ControllerImport: connect(String url, String user, String pass, String dbName)
  ControllerImport -> DatabaseFacade: createConnection(String url, String user, String pass)
  DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
  DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology()
  DatabaseFacade -> DBConnectionAdapter: createConnection(String url, String user, String pass)
- UIImport -> ControllerImport: getTableList()
+ UIImport -> UITableSelect: <<create>>
+ UITableSelect -> ControllerImport: getTableList()
  ControllerImport -> DatabaseFacade: getTableList()
  DatabaseFacade -> DBConnectionAdapter: getTableList()
- UIImport -> ControllerImport: loadTable(String tableName)
+ DatabaseFacade -> DBConnectionAdapter: queryToArray() 
+
+ UITableSelect -> ControllerImport: loadTable(String tableName)
  ControllerImport -> DatabaseFacade: loadTable(String tableName)
  UIImport -> ControllerImport: startImport()
  ControllerImport -> DatabaseFacade: getTableContent()
  DatabaseFacade -> DBConnectionAdapter: getTableContent(String tableName)
  UIImport -> ControllerImport: getTable()
- note left of ControllerImport
- thread launched 
- at this point
- end note
  UIImport -> UIImport: showData()
  @enduml
 
