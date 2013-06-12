@@ -1,12 +1,12 @@
 package csheets.ext.database.core;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.*;
 
 import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
-import java.util.ArrayList;
 
 public class DerbyConnection implements DBConnectionStrategy {
 
@@ -37,9 +37,7 @@ public class DerbyConnection implements DBConnectionStrategy {
 		int numberOfRows = cells.length;
 
 		/* beginning the construction of the sql statement */
-		String stat = "CREATE TABLE "
-				+ tableName
-				+ "(id INTEGER generated always as identity constraint pkId primary key, ";
+		String stat = "CREATE TABLE " + tableName + "(linha INTEGER, ";
 
 		/* the first line of the exported cells is the name of each column */
 		String[] columnsName = new String[cells[0].length];
@@ -84,7 +82,7 @@ public class DerbyConnection implements DBConnectionStrategy {
 		}
 
 		/* now beggins the "insert into" sql statement */
-		String insertStat = "insert into " + tableName + "(";
+		String insertStat = "insert into " + tableName + "(linha,";
 		for (int i = 0; i < columnsNameCopy.length; i++) {
 			if (i != (columnsNameCopy.length - 1)) {
 				insertStat += columnsNameCopy[i] + ",";
@@ -98,7 +96,9 @@ public class DerbyConnection implements DBConnectionStrategy {
 		/* creating a number of insert statements equal to number of rows -1 */
 		String[] insertVector = new String[numberOfRows - 1];
 		for (int i = 0; i < insertVector.length; i++) {
-			insertVector[i] = insertStat;
+			String temp = Integer
+					.toString(cells[i][0].getAddress().getRow() + 1);
+			insertVector[i] = insertStat + temp + ",";
 		}
 
 		/* concatenating the respecting insert statements */
@@ -110,7 +110,6 @@ public class DerbyConnection implements DBConnectionStrategy {
 				} else {
 					insertVector[i - 1] += "'" + cells[i][j].getContent()
 							+ "')";
-					// break;
 				}
 			}
 		}
@@ -139,12 +138,11 @@ public class DerbyConnection implements DBConnectionStrategy {
 					Level.SEVERE, null, ex);
 		}
 	}
-        
-        @Override
-        public ArrayList queryToArray() 
-        {
-            return null;
-        }
+
+	@Override
+	public ArrayList queryToArray() {
+		return null;
+	}
 
 	@Override
 	public String[] getTableList(ArrayList list) {
