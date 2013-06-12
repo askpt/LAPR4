@@ -39,8 +39,10 @@ public class CellNetworkListenerServer implements CellListener {
 
 	@Override
 	public void contentChanged(Cell cell) {
+
 		this.flag = true;
 		this.cell = cell;
+		Server.getInstance().getListener().setFlag(true);
 
 	}
 
