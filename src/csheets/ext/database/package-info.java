@@ -141,20 +141,19 @@
  UIExport -> ControllerExport: getDBList()
  ControllerExport -> DBCsvReader: <<create>>
  ControllerExport -> DBCsvReader: getDBlist()
- UIExport -> ControllerExport: connect(String url, String user, String pass, String adapteeName)
- ControllerExport -> DatabaseFacade: urlConnect = createConnection(String url, String user, String pass, String adapteeName)
- DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
- DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology(String adapteeName)
- DatabaseFacade -> DBConnectionAdapter: createConnection(String url, String user, String pass)
- UIExport -> ControllerExport: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
- ControllerExport -> DatabaseFacade: setDataToExport(String tableName, Cell [][]cells, int [][]pk)
- UIExport -> ControllerExport: startExport()
- note left of ControllerExport
- thread launched 
- at this point
- end note
- ControllerExport -> DatabaseFacade: exportData()
- DatabaseFacade -> DBConnectionAdapter: createTable(String tableName, Cell [][]cells, int [][]pk)
+  note left of ControllerExport
+   thread launched 
+   at this point
+  end note
+ UIExport -> ControllerExport: <<Thread.run>>\n\tstart()
+ ControllerExport -> DatabaseFacade: createConnection(String url, String user, String pass, String adapteeName)
+ DatabaseFacade -> DBConnectionFactory: getInstance()
+ DatabaseFacade -> DBConnectionFactory: getDBTechnology(String adapteeName)
+ DatabaseFacade -> DBConnectionStrategy: createConnection(String url, String user, String pass)
+ UIExport -> ControllerExport: setDataToExport(Cell [][]cells, String user, String pass, String tableName)
+ ControllerExport -> DatabaseFacade: exportData(Cell [][]cells, String tableName)
+ DatabaseFacade -> DBConnectionStrategy: createTable(String tableName, Cell [][]cells)
+ DatabaseFacade -> DBConnectionStrategy: disconnect()
  @enduml
 
  @startuml doc-files/use_case_realization_DBimport.png
