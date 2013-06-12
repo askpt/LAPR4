@@ -14,22 +14,23 @@ import csheets.core.Cell;
  * @author Tiago
  * 
  */
-public class ThreadClient implements Runnable {
-	/** the connection port */
-	private int port;
+public class ThreadServerReceiving implements Runnable {
+
 	/** the cells we will pass throw network */
 	private Cell cellStart;
 	/** server socket */
 	private Socket sock;
 
+	private Cell[][] cells;
+
 	/**
 	 * Create a new server
 	 */
-	private ThreadClient() {
+	private ThreadServerReceiving() {
 	}
 
-	public ThreadClient(int port, Cell cellStart, Socket sock) {
-		this.port = port;
+	public ThreadServerReceiving(Cell[][] cells, Cell cellStart, Socket sock) {
+
 		this.cellStart = cellStart;
 		this.sock = sock;
 	}
@@ -41,34 +42,38 @@ public class ThreadClient implements Runnable {
 	 * @param cli
 	 * @throws Exception
 	 */
-	private synchronized void receiveUpdates(Cell cellStart, Socket cli)
+	private synchronized void receiveUpdates(Cell cellUpdated, Socket cli)
 			throws Exception {
 		while (true) {
 			Thread.sleep(100);
-			boolean isCell = true;
-			int cellStartRow = cellStart.getAddress().getRow();
-			int cellStartColumn = cellStart.getAddress().getColumn();
 
 			DataInputStream in = new DataInputStream(sock.getInputStream());
 			if (in.readUTF().equals("send me updated data")) {
 
-				while (isCell) {
-					ObjectInputStream inStream = new ObjectInputStream(
-							cli.getInputStream());
-					CellNetwork cell = (CellNetwork) inStream.readObject();
-					if (cell.isCell()) {
+				ObjectInputStream inStream = new ObjectInputStream(
+						cli.getInputStream());
+				CellNetwork cell = (CellNetwork) inStream.readObject();
 
-						this.cellStart
-								.getSpreadsheet()
-								.getCell(cellStartColumn + cell.getColumn(),
-										cellStartRow + cell.getRow())
-								.setContent(cell.getContent());
+				for (int i = 0; i < Server.getInstance().getCells().length; i++) {
+					for (int j = 0; j < Server.getInstance().getCells()[i].length; j++) {
+						if (Server.getInstance().getCells()[i][j].getAddress()
+								.getColumn() == cell.getColumn()
+								&& Server.getInstance().getCells()[i][j]
+										.getAddress().getRow() == cell.getRow()) {
+							Server.getInstance().getCells()[i][j]
+									.getSpreadsheet()
 
-					} else {
-						isCell = false;
+									.getCell(cell.getColumn(), cell.getRow())
+									.setContent(cell.getContent());
+							Server.getInstance().getCells()[i][j]
+									.setContent(cell.getContent());
+
+						}
 					}
 				}
+
 			}
+
 		}
 
 	}

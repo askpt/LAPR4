@@ -2,6 +2,7 @@ package csheets.ext.share.core;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.logging.*;
 
 import javax.swing.JOptionPane;
@@ -22,9 +23,7 @@ public class Server implements Runnable {
 	/** server socket */
 	private ServerSocket svr;
 
-	private String Ip;
-
-	private boolean changesClient = false;
+	private ArrayList<Socket> sockets = new ArrayList<Socket>();
 
 	private CellNetworkListenerServer listener = new CellNetworkListenerServer();
 
@@ -60,6 +59,10 @@ public class Server implements Runnable {
 		this.svr = svr;
 	}
 
+	public Cell[][] getCells() {
+		return cells;
+	}
+
 	/**
 	 * Method that will start the server and share the cells throw network
 	 * 
@@ -78,15 +81,19 @@ public class Server implements Runnable {
 			}
 			svr = new ServerSocket(port);
 			this.cells = cells;
-			// TODO introduce the boolean check if server stopped
+
 			Thread thr = new Thread(getInstance());
 			thr.start();
-			// svr.close();
+
 			ServerDiscover.getInstance().findClients(port);
 		} catch (Exception e) {
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
 		}
 
+	}
+
+	public ArrayList<Socket> getSockets() {
+		return sockets;
 	}
 
 	/**
@@ -96,12 +103,14 @@ public class Server implements Runnable {
 	public void run() {
 		try {
 			while (true) {
-
 				Socket sock = svr.accept();
+				sockets.add(sock);
+				System.out.println(sock);
 				Thread thr = new Thread(new ThreadServer(port, cells, sock));
 				thr.start();
 
 			}
+
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);

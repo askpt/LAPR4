@@ -149,10 +149,9 @@ public class Client implements Runnable {
 	public synchronized void sendToServer(Cell cellUpdated, Socket sock)
 			throws IOException, InterruptedException {
 
-		boolean isAlive = true;
-		while (isAlive) {
+		while (true) {
 			Thread.sleep(100);
-			if (listener.getFlag()) {
+			if (listener.getFlag() == true) {
 				Thread.sleep(100);
 				cellUpdated = listener.getCell();
 				OutputStream out = sock.getOutputStream();
@@ -170,7 +169,6 @@ public class Client implements Runnable {
 				objectOut.writeObject(cell);
 				listener.setFlag(false);
 
-				isAlive = false;
 			}
 
 		}
@@ -190,15 +188,10 @@ public class Client implements Runnable {
 			} else
 				cli = new Socket(connection.getIP(), connection.getPort());
 			receive(cellStart, cli);
+			Thread thr = new Thread(new ThreadClient(port, cellStart, cli));
+			thr.start();
 
-			while (true) {
-				sendToServer(cellStart, cli);
-				/* TODO */
-				// Thread thr = new Thread(new ThreadClient(port, cellStart,
-				// cli));
-				// thr.start();
-
-			}
+			sendToServer(cellStart, cli);
 
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");
@@ -211,7 +204,8 @@ public class Client implements Runnable {
 		} catch (FormulaCompilationException e) {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 		} catch (InterruptedException e) {
-			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
