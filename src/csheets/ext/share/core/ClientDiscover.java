@@ -57,20 +57,20 @@ public class ClientDiscover implements Runnable {
 	 */
 	private void search() {
 		try {
-			DatagramSocket clientSocket;
-			clientSocket = new DatagramSocket();
+			MulticastSocket clientSocket;
+			clientSocket = new MulticastSocket();
 			clientSocket.setBroadcast(true);
 			InetAddress IPAddress = InetAddress.getByName("255.255.255.255");
 			connections = new ArrayList<Connections>();
 			byte[] sendData = new byte[1024];
 			byte[] receiveData = new byte[1024];
 			int i = 5000;
+			String sentence = "18-send me connection";
+			sendData = sentence.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData,
+					sentence.length(), IPAddress, 9876);
+			clientSocket.send(sendPacket);
 			while (i > 0) {
-				String sentence = "18-send me connection";
-				sendData = sentence.getBytes();
-				DatagramPacket sendPacket = new DatagramPacket(sendData,
-						sentence.length(), IPAddress, 9876);
-				clientSocket.send(sendPacket);
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,
 						receiveData.length);
 				clientSocket.receive(receivePacket);
