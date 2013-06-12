@@ -151,7 +151,7 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public void getTableContent() {
+	public String[][] getTableContent(String tableName) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not supported yet.");
 	}

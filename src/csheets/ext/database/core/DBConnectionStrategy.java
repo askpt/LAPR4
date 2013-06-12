@@ -48,7 +48,7 @@ public interface DBConnectionStrategy
     /**
      * returns the data of a given table
      */
-    public void getTableContent();
+    public String[][] getTableContent(String tableName);
     
     /**
      * updates a given table

@@ -58,5 +58,14 @@ public class DatabaseFacade
     {
         return adapter.getTableList(adapter.queryToArray());
     }
+
+    /**
+     * loads data from a table of the database
+     * @param tableName name of the table
+     */
+    public String[][] loadTable(String tableName) 
+    {
+        return adapter.getTableContent(tableName);
+    }
     
 }
