@@ -2,6 +2,7 @@ package csheets.ext.database.core;
 
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerImport;
+import csheets.ext.database.ui.UITableSelect;
 
 /**
  * The thread responsible for the import of table information from a database
@@ -9,7 +10,7 @@ import csheets.ext.database.controller.ControllerImport;
  */
 public class ThreadImportTables implements Runnable
 {
-    private String dbName;
+    private String url, user, pass, dbName;
     private ControllerImport ctrlImp;
     
     /**
@@ -22,8 +23,11 @@ public class ThreadImportTables implements Runnable
      * @param dbName database name
      * @param ctrlImp ControllerImport object
      */
-    public ThreadImportTables(String dbName, ControllerImport ctrlImp)
+    public ThreadImportTables(String url, String user, String pass, String dbName, ControllerImport ctrlImp)
     {
+        this.url = url;
+        this.user = user;
+        this.pass = pass;
         this.dbName = dbName;
         this.ctrlImp = ctrlImp;
     }
@@ -33,11 +37,23 @@ public class ThreadImportTables implements Runnable
     {
         try
         {
-            
+            /* connects with database */
+            ctrlImp.connect(url, user, pass, dbName);
+            /* launches the select table window */
+            UITableSelect ts = new UITableSelect(dbName, ctrlImp);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+    }
+    
+        /**
+     * gets the controller import
+     * @return ControllerImport object
+     */
+    public ControllerImport getControllerImport()
+    {
+        return ctrlImp;
     }
 }

@@ -3,8 +3,11 @@ package csheets.ext.database.core;
 import csheets.core.Cell;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -181,9 +184,50 @@ public class HsqlDBConnection implements DBConnectionStrategy
     }
     
     @Override
-    public void getTableList() 
+    public synchronized ArrayList queryToArray(String str) 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       /* SQL statement */
+       Statement stat = null;
+       /* SQL result set */
+       ResultSet resSet = null;
+       /* ArrayList to save results from the query */
+       ArrayList array = new ArrayList();
+       
+       try 
+       {
+            stat = connection.createStatement();
+            resSet = stat.executeQuery(str);
+            stat.close();
+            ResultSetMetaData metaData = resSet.getMetaData();
+            int cols = metaData.getColumnCount();
+            Object obj = null;
+            
+            for(; resSet.next(); )
+            {
+                for(int i = 0; i < cols; i++)
+                {
+                    obj = resSet.getObject(i + 1);
+                    array.add(obj);
+                }
+            }  
+       } 
+       catch (SQLException ex) 
+       {
+            Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       return array;
+    }
+    
+    @Override
+    public String[] getTableList(ArrayList list) 
+    {
+        int size = list.size();
+        String []temp = new String[size];
+        for(int i = 0; i < size; i++)
+        {
+            temp[i] = list.get(i).toString();
+        }
+        return temp;
     }
 
     @Override
@@ -196,5 +240,8 @@ public class HsqlDBConnection implements DBConnectionStrategy
     public void updateTable() 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }  
+
+    
+
 }

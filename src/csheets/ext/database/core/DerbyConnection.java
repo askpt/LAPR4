@@ -6,6 +6,7 @@ import java.util.logging.*;
 import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
+import java.util.ArrayList;
 
 public class DerbyConnection implements DBConnectionStrategy {
 
@@ -138,9 +139,16 @@ public class DerbyConnection implements DBConnectionStrategy {
 					Level.SEVERE, null, ex);
 		}
 	}
+        
+        @Override
+        public ArrayList queryToArray(String str) 
+        {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
 
 	@Override
-	public void getTableList() {
+	public String[] getTableList(ArrayList list) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not supported yet.");
 	}

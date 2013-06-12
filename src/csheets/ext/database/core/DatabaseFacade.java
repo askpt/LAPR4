@@ -2,6 +2,7 @@ package csheets.ext.database.core;
 
 import csheets.core.Cell;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * A class that deals with all the data going into and from the databases
@@ -48,6 +49,14 @@ public class DatabaseFacade
         this.cells = cells;
         adapter.createTable(tableName, cells);
         adapter.disconnet();
+    }
+
+    /**
+     * gets the table list of a given database
+     */
+    public String[] getTableList() 
+    {
+        return adapter.getTableList(adapter.queryToArray("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'"));
     }
     
 }
