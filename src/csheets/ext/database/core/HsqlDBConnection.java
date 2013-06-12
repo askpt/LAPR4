@@ -184,8 +184,9 @@ public class HsqlDBConnection implements DBConnectionStrategy
     }
     
     @Override
-    public synchronized ArrayList queryToArray(String str) 
+    public synchronized ArrayList queryToArray() 
     {
+       String sqlStat = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'"; 
        /* SQL statement */
        Statement stat = null;
        /* SQL result set */
@@ -196,12 +197,11 @@ public class HsqlDBConnection implements DBConnectionStrategy
        try 
        {
             stat = connection.createStatement();
-            resSet = stat.executeQuery(str);
+            resSet = stat.executeQuery(sqlStat);
             stat.close();
             ResultSetMetaData metaData = resSet.getMetaData();
             int cols = metaData.getColumnCount();
             Object obj = null;
-            
             for(; resSet.next(); )
             {
                 for(int i = 0; i < cols; i++)
