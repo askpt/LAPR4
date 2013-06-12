@@ -141,10 +141,9 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
         
         @Override
-        public ArrayList queryToArray(String str) 
+        public ArrayList queryToArray() 
         {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null;
         }
 
 	@Override

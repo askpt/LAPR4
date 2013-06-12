@@ -37,7 +37,7 @@ public interface DBConnectionStrategy
      * @param str SQL expression
      * @return arraylist with statement objects
      */
-    public ArrayList queryToArray(String str);
+    public ArrayList queryToArray();
     
     /**
      * returns all the tables availabe int he database

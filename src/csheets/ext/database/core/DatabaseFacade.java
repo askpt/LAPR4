@@ -56,7 +56,7 @@ public class DatabaseFacade
      */
     public String[] getTableList() 
     {
-        return adapter.getTableList(adapter.queryToArray("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'"));
+        return adapter.getTableList(adapter.queryToArray());
     }
     
 }
