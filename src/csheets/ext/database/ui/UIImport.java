@@ -1,10 +1,9 @@
 package csheets.ext.database.ui;
 
 import csheets.core.Cell;
-import csheets.ext.database.controller.ControllerExport;
 import csheets.ext.database.controller.ControllerImport;
 import csheets.ext.database.core.Database;
-import csheets.ext.database.core.ThreadExport;
+import csheets.ext.database.core.ThreadImportTables;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -45,6 +44,9 @@ public class UIImport extends JFrame implements Observer
     
     /* main panel */
     private JPanel mainPanel;
+    
+    /* thread to get database tables */
+    ThreadImportTables thrImpTables;
     
     /* buttons */
     private JButton btnOk = new JButton("OK");
@@ -170,8 +172,12 @@ public class UIImport extends JFrame implements Observer
                    int index = comboDrivers.getSelectedIndex();
                    /* database name */
                    String dbName = comboDrivers.getSelectedItem().toString();
+                   /* thread to connect to database and retrive all tables names */
+                   thrImpTables = new ThreadImportTables(dbName, ctrlImp);
+                   
+                   
                    /* launches the select table window */
-                   TableSelectUI ts = new TableSelectUI(dbName);
+                   UITableSelect ts = new UITableSelect(dbName);
                 }
             }
             /* button cancel */

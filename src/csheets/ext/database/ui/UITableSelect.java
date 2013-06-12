@@ -23,7 +23,7 @@ import javax.swing.ListSelectionModel;
  * Table selection GUI (to select a select from the database)
  * @author João Carreira
  */
-public class TableSelectUI extends JFrame
+public class UITableSelect extends JFrame
 {
     
     /* labels */
@@ -34,15 +34,12 @@ public class TableSelectUI extends JFrame
     private JButton btnCancel = new JButton("Cancel");
     private JButton btnPreview = new JButton("Preview");
     
-    
-    
-    
     /**
      * constructor of the GUI for table selection 
      * @param dbName name of the database
      * @throws Exception 
      */
-    public TableSelectUI(String dbName)
+    public UITableSelect(String dbName)
     {
         /* window title */
         super("Select a table from " + dbName);

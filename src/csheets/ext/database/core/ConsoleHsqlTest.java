@@ -204,6 +204,10 @@ public class ConsoleHsqlTest
 
             /* doing a query */
             db.query("SELECT * FROM sample_table WHERE num_col < 250");
+            
+            /* query about all database tables */
+            System.out.println("***** ALL TABLES *****");
+            db.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
 
             /* shutting down db */
             db.shutdown();
