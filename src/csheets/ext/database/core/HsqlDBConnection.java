@@ -58,7 +58,7 @@ public class HsqlDBConnection implements DBConnectionStrategy
         int numberOfRows = cells.length;
         
         /* beginning the construction of the sql statement */
-        String stat = "CREATE TABLE " + tableName + "(id INTEGER IDENTITY, ";
+        String stat = "CREATE TABLE " + tableName + "(linha VARCHAR(20), ";
         
         /* the first line of the exported cells is the name of each column */
         String []columnsName = new String[cells[0].length];
@@ -107,7 +107,7 @@ public class HsqlDBConnection implements DBConnectionStrategy
         }
         
         /* now beggins the "insert into" sql statement */
-        String insertStat = "insert into " + tableName + "(";
+        String insertStat = "insert into " + tableName + "(linha,";
         for(int i = 0; i < columnsNameCopy.length; i++)
         {
             if(i != columnsNameCopy.length - 1)
@@ -126,7 +126,8 @@ public class HsqlDBConnection implements DBConnectionStrategy
         String []insertVector = new String[numberOfRows - 1];
         for(int i = 0; i < insertVector.length; i++)
         {
-            insertVector[i] = insertStat;
+            String temp = Integer.toString(cells[i][0].getAddress().getRow() + 2);
+            insertVector[i] = insertStat + temp + ",";
         }
         
         /* concatenating the respecting insert statements */
@@ -141,7 +142,6 @@ public class HsqlDBConnection implements DBConnectionStrategy
                 else
                 {
                     insertVector[i - 1] += "'" + cells[i][j].getContent() + "')";
-                    //break;
                 }
             }
         }
