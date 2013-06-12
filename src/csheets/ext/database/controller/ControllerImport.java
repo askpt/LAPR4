@@ -2,21 +2,29 @@ package csheets.ext.database.controller;
 
 import csheets.ext.database.core.DBCsvReader;
 import csheets.ext.database.core.Database;
+import csheets.ext.database.core.DatabaseFacade;
 import csheets.ext.database.ui.UIImport;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Observer;
 
 /**
  * The controller for UIImport 
  * @author João Carreira
  */
-public class ControllerImport 
+public class ControllerImport implements Subject
 {
+    private ArrayList<Observer> observers;
+    private DatabaseFacade facade;
     private ArrayList<Database> dbList;
     
-    public ControllerImport(UIImport aThis) 
+    public ControllerImport(Observer o) 
     {
-        
+        observers = new ArrayList<Observer>();
+        addObserver(o);
+        /* instantiating new facade */
+        facade = new DatabaseFacade(); 
     }
     
     /**
@@ -42,5 +50,26 @@ public class ControllerImport
         /* returns all names of supported databases */
         return driversName;
     }
-    
+
+    @Override
+    public void addObserver(Observer o) 
+    {
+       observers.add(o);
+    }
+
+    @Override
+    public void removerObserver(Observer o) 
+    {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObserver(String str) 
+    {
+        int i = 0;
+        for(; i < observers.size(); i++)
+        {
+            observers.get(i).update(null, str);
+        }
+    }
 }
