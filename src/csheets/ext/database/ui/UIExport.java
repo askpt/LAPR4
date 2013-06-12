@@ -37,6 +37,9 @@ public class UIExport extends JFrame implements Observer
     /* controller object for GUI-controller pattern */
     private ControllerExport ctrlExp;
     
+    /* export thread */
+    ThreadExport thrExp;
+    
     /* buttons */
     private JButton btnOk = new JButton("OK");
     private JButton btnCancel = new JButton("Cancel");
@@ -52,9 +55,6 @@ public class UIExport extends JFrame implements Observer
     /* label to display system information to the user */
     JLabel sysMsg = new JLabel();
     
-    /* export thread */
-    ThreadExport thrExp;
-   
     /**
      * Export GUI constructor
      * @param cells
