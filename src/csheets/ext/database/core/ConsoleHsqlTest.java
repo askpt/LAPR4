@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * A console-based application to test the HSQL database
@@ -152,8 +153,49 @@ public class ConsoleHsqlTest
             }
             System.out.println(" ");
         }
-    }                                     
+    }
+    
+    
+    public static ArrayList saveToArray(ResultSet rs) throws SQLException
+    {
+        ArrayList temp = new ArrayList();
+        ResultSetMetaData meta = rs.getMetaData();
+        int cols = meta.getColumnCount();
+        Object obj = null;
+        
+        for(; rs.next(); )
+        {
+            for(int i = 0; i < cols; i ++)
+            {
+                obj = rs.getObject(i + 1);
+                temp.add(obj);
+            }
+        }
+        return temp;
+    }
 
+    
+    public synchronized ArrayList queryToArray(String expression) throws SQLException 
+    {
+        Statement st = null;
+        ResultSet rs = null;
+        ArrayList temp = new ArrayList();
+        
+        /* statement objects can be reused with */
+        st = conn.createStatement();         
+
+        /* repeated calls to execute but we
+         * hoose to make a new one each time
+         */
+        rs = st.executeQuery(expression);   
+
+        /* do something with the result set. */
+        
+        st.close();    
+        
+        return (temp = saveToArray(rs));
+    }
+    
     /**
      * Console test application
      * @param args 
@@ -187,6 +229,27 @@ public class ConsoleHsqlTest
            /* second time we run program should throw execption since table
             * already there this will have no effect on the db */
         }
+        
+        try 
+        {
+            /* make an empty table by declaring the id column IDENTITY, 
+             * the db will automatically generate unique values for new rows
+             * this is useful for row keys 
+             */
+            db.update("CREATE TABLE TABELA2 ( id INTEGER IDENTITY, str_col "
+                    + "VARCHAR(256), num_col INTEGER)");
+        } 
+        catch (SQLException ex2) 
+        {
+
+           /* second time we run program should throw execption since table
+            * already there this will have no effect on the db */
+        }
+        
+        
+        
+        
+        
         try 
         {
             /* adding some rows - will create duplicates if run more then once
@@ -208,7 +271,18 @@ public class ConsoleHsqlTest
             /* query about all database tables */
             System.out.println("***** ALL TABLES *****");
             db.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
-
+            
+            /* saving queries to arraylist */
+            ArrayList temp = new ArrayList();
+            temp = db.queryToArray("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
+            for(int i = 0; i < temp.size(); i++)
+            {
+                System.out.println("TABELA nº " + (i + 1) + temp.get(i).toString());
+            }
+            
+            
+            
+            
             /* shutting down db */
             db.shutdown();
         } 

@@ -4,6 +4,7 @@
  */
 package csheets.ext.database.ui;
 
+import csheets.ext.database.controller.ControllerImport;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -11,6 +12,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,6 +21,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import csheets.ext.database.ui.UIImport;
 
 /**
  * Table selection GUI (to select a select from the database)
@@ -34,12 +38,18 @@ public class UITableSelect extends JFrame
     private JButton btnCancel = new JButton("Cancel");
     private JButton btnPreview = new JButton("Preview");
     
+    /* array with table list */
+    private String[] tableArray;
+    private ArrayList arrayQueries;
+    
+    private ControllerImport ctrlImp;
+    
     /**
      * constructor of the GUI for table selection 
      * @param dbName name of the database
      * @throws Exception 
      */
-    public UITableSelect(String dbName)
+    public UITableSelect(String dbName, ControllerImport ctrlImp)
     {
         /* window title */
         super("Select a table from " + dbName);
@@ -47,10 +57,13 @@ public class UITableSelect extends JFrame
         /* labels */
         sysMsg.setForeground(Color.BLUE);
         
-        /* teste string */
-        String []test = {"test", "teste2", "testes"};
-        /* Jlist */
-        JList tableList = new JList(test);
+        this.ctrlImp = ctrlImp;
+        
+        /* gets the table list */
+        tableArray = ctrlImp.getTableList();
+        
+        /* Jlist with table list for database */
+        JList tableList = new JList(tableArray);
         tableList.setVisibleRowCount(5);
         tableList.setPreferredSize(new Dimension(100,100));
         tableList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

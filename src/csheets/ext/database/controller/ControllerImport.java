@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observer;
 
+
 /**
  * The controller for UIImport 
  * @author João Carreira
@@ -25,6 +26,31 @@ public class ControllerImport implements Subject
         addObserver(o);
         /* instantiating new facade */
         facade = new DatabaseFacade(); 
+    }
+    
+    /**
+     * Connects with a database
+     * @param url path to database
+     * @param user username
+     * @param pass password
+     * @param dbName database name
+     * @throws Exception 
+     */
+    public void connect(String url, String user, String pass, String dbName) throws Exception
+    {
+        try
+        {
+            facade.createConnection(url, user, pass, dbName);
+        }
+        /* replace below with proper exceptions */
+        catch(SQLException e)
+        {
+            this.notifyObserver("Error connecting to database!");
+        }
+        catch(ClassNotFoundException e)
+        {
+            this.notifyObserver("Error: database driver not found!");
+        }
     }
     
     /**
@@ -71,5 +97,14 @@ public class ControllerImport implements Subject
         {
             observers.get(i).update(null, str);
         }
+    }
+
+    /**
+     * gets the table list of the selected database
+     * @param dbName name of the database
+     */
+    public String[] getTableList() 
+    {
+        return facade.getTableList();
     }
 }

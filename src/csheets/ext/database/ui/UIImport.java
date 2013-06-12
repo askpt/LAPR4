@@ -3,6 +3,7 @@ package csheets.ext.database.ui;
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerImport;
 import csheets.ext.database.core.Database;
+import csheets.ext.database.core.ThreadImport;
 import csheets.ext.database.core.ThreadImportTables;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -173,11 +174,9 @@ public class UIImport extends JFrame implements Observer
                    /* database name */
                    String dbName = comboDrivers.getSelectedItem().toString();
                    /* thread to connect to database and retrive all tables names */
-                   thrImpTables = new ThreadImportTables(dbName, ctrlImp);
-                   
-                   
-                   /* launches the select table window */
-                   UITableSelect ts = new UITableSelect(dbName);
+                   thrImpTables = new ThreadImportTables(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbName, ctrlImp);
+                   thrImpTables.run();
+                   dispose();
                 }
             }
             /* button cancel */
@@ -193,5 +192,4 @@ public class UIImport extends JFrame implements Observer
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
 }

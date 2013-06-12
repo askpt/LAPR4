@@ -1,7 +1,9 @@
 package csheets.ext.database.core;
 
 import csheets.core.Cell;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Database connection interface
@@ -31,9 +33,17 @@ public interface DBConnectionStrategy
     public void disconnet();
     
     /**
-     * returns all the tables availabe int he database
+     * saves the result of a SQL expression into an arraylist 
+     * @param str SQL expression
+     * @return arraylist with statement objects
      */
-    public void getTableList();
+    public ArrayList queryToArray(String str);
+    
+    /**
+     * returns all the tables availabe int he database
+     * @return array with table list
+     */
+    public String[] getTableList(ArrayList list);
     
     /**
      * returns the data of a given table
