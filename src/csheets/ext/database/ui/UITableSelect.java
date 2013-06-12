@@ -29,7 +29,6 @@ import csheets.ext.database.ui.UIImport;
  */
 public class UITableSelect extends JFrame
 {
-    
     /* labels */
     JLabel sysMsg = new JLabel("Select one table from above");
     
@@ -41,6 +40,12 @@ public class UITableSelect extends JFrame
     /* array with table list */
     private String[] tableArray;
     private ArrayList arrayQueries;
+    
+    /* array with table content */
+    private String[][] tableData;
+    
+    /* tablelist */
+    private JList tableList;
     
     private ControllerImport ctrlImp;
     
@@ -63,7 +68,7 @@ public class UITableSelect extends JFrame
         tableArray = ctrlImp.getTableList();
         
         /* Jlist with table list for database */
-        JList tableList = new JList(tableArray);
+        tableList = new JList(tableArray);
         tableList.setVisibleRowCount(5);
         tableList.setPreferredSize(new Dimension(100,100));
         tableList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -121,7 +126,7 @@ public class UITableSelect extends JFrame
             /* ok button */
             if(e.getSource() == btnOk)
             {
-                
+                tableData = ctrlImp.loadTable(tableList.getSelectedValue().toString());
             }
             
 //            /* preview button */

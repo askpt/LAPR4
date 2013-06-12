@@ -199,7 +199,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public void getTableContent() {
+	public String[][] getTableContent(String tableName) {
 		throw new UnsupportedOperationException("Not supported yet."); // To
 																		// change
 																		// body

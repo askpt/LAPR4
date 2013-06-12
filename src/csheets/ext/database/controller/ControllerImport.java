@@ -107,4 +107,14 @@ public class ControllerImport implements Subject
     {
         return facade.getTableList();
     }
+
+    
+    /**
+     * imports a table from the database
+     * @param tableName name of the table
+     */
+    public String[][] loadTable(String tableName) 
+    {
+        return facade.loadTable(tableName);
+    }
 }
