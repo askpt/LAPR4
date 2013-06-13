@@ -3,6 +3,7 @@ package csheets.ext.database.core;
 import java.sql.SQLException;
 
 import csheets.core.Cell;
+import csheets.core.formula.compiler.FormulaCompilationException;
 
 /**
  * A class that deals with all the data going into and from the databases (UML
@@ -88,12 +89,11 @@ public class DatabaseFacade {
 	 */
 	public void startSync(String user, String pass, Cell[][] cells,
 			String tableName) {
-		adapter.createTable(tableName, cells);
+		exportData(cells, tableName);
 		CellDatabase[][] cellsTemp = new CellDatabase[cells.length - 1][cells[0].length];
 		while (true) {
 			try {
 				temporaryStructure(cells, cellsTemp);
-
 				Thread.sleep(30000);
 
 				String[][] serverCells = loadTable(tableName);
@@ -105,6 +105,7 @@ public class DatabaseFacade {
 							cellsTemp[i]);
 				}
 			} catch (InterruptedException e) {
+			} catch (FormulaCompilationException e) {
 			}
 			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Not supported yet.");
@@ -129,10 +130,38 @@ public class DatabaseFacade {
 		}
 	}
 
-	// TODO Javadoc
+	/**
+	 * Method that will check if the line changes
+	 * 
+	 * @param lineServer
+	 *            line in the server
+	 * @param cellApp
+	 *            line in the app
+	 * @param cellTemp
+	 *            line in the temporary cell
+	 * @throws FormulaCompilationException
+	 *             throws if the wrong formula was entered
+	 */
 	private void checkLine(String[] lineServer, Cell[] cellApp,
-			CellDatabase[] cellTemp) {
-		// TODO check the line conditions
+			CellDatabase[] cellTemp) throws FormulaCompilationException {
+		boolean dbNeedChange = false;
+		for (int i = 0; i < cellApp.length; i++) {
+			if (cellApp[i].getContent().equals(cellTemp[i].getContent())
+					&& !cellTemp[i].getContent().equals(lineServer[i + 1])) {
+				cellApp[i].setContent(lineServer[i + 1]);
+			}
+			if (!cellApp[i].getContent().equals(cellTemp[i].getContent())
+					&& cellTemp[i].getContent().equals(lineServer[i + 1])) {
+				lineServer[i + 1] = cellApp[i].getContent();
+				dbNeedChange = true;
+			}
+			if (!cellApp[i].getContent().equals(cellTemp[i].getContent())
+					&& !cellTemp[i].getContent().equals(lineServer[i + 1])) {
+				// TODO erro de merge!
+			}
+		}
+
+		// TODO tratar update a db!
 	}
 
 	/**

@@ -161,7 +161,7 @@ public class UISync extends JFrame {
 
 			/* button OK */
 			else if (e.getSource() == btnOk) {
-				/* checks if there's at least two rows to proceed with export */
+				/* checks if there's at least two rows to proceed with sync */
 				if (cells.length < 2) {
 					JOptionPane
 							.showMessageDialog(null,
@@ -181,22 +181,11 @@ public class UISync extends JFrame {
 					/* the combo index indicates which database will be used */
 					int index = comboDrivers.getSelectedIndex();
 
-					/*
-					 * the following comented code DOES NOT use a thread to
-					 * export data
-					 */
-					/* connects to a database */
-					// ctrlExp.connect(dbDrivers[index][1], userTxt.getText(),
-					// pwd.getText(), dbDrivers[index][0]);
-					/* setting data to be exported */
-					// ctrlExp.setDataToExport(cells, userTxt.getText(),
-					// pwd.getText(), tableTxt.getText());
-
-					/* creating a new thread to export data */
 					thrSync = new ThreadSync(cells, dbDrivers[index][1],
 							userTxt.getText(), pwd.getSelectedText(),
 							tableTxt.getText(), dbDrivers[index][0]);
-					thrSync.run();
+					Thread thr = new Thread(thrSync);
+					thr.start();
 					dispose();
 
 				}
