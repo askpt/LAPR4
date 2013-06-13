@@ -88,8 +88,8 @@ public class ThreadServerReceiving implements Runnable {
 					}
 				}
 
-				listenerServer.setFlag(true);
 			}
+			listenerServer.setFlag(true);
 
 		}
 

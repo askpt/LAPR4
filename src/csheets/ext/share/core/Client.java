@@ -167,9 +167,9 @@ public class Client implements Runnable {
 				ObjectOutputStream objectOut = new ObjectOutputStream(
 						sock.getOutputStream());
 				objectOut.writeObject(cell);
-				listener.setFlag(false);
 
 			}
+			listener.setFlag(false);
 
 		}
 
