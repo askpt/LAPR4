@@ -54,4 +54,32 @@ public interface DBConnectionStrategy
      * updates a given table
      */
     public void updateTable();
+    
+    /**
+     * saves a SQL query in an ArrayList
+     * @param expression sql expression
+     * @return arraylist with indidivual items
+     * @throws SQLException 
+     */
+    public ArrayList queryToArray(String tableName) throws SQLException;
+    
+    
+    /**
+     * counts rows and columns of a give database table
+     * @param tableName table name
+     * @return 2D array with number of rows (index 0) and columns (index 1)
+     * @throws SQLException 
+     */
+    public int[] countsRowsAndCols(String tableName) throws SQLException;
+    
+    
+    /**
+     * counts the rows of a given table
+     * @param tableName
+     * @return
+     * @throws SQLException 
+     */
+    public int countRows(String tableName) throws SQLException;
+    
+    
 }

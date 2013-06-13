@@ -155,13 +155,28 @@ public class ConsoleHsqlTest
         }
     }
     
-    
-    public static ArrayList saveToArray(ResultSet rs) throws SQLException
+    /**
+     * saves a query in an ArrayList
+     * @param expression sql expression
+     * @return arraylist with indidivual items
+     * @throws SQLException 
+     */
+    public synchronized ArrayList queryToArray(String tableName) throws SQLException 
     {
+        Statement st = null;
+        ResultSet rs = null;
         ArrayList temp = new ArrayList();
+        Object obj = null;
+        
+        String expression = "SELECT * FROM " + tableName + ";";
+        
+        st = conn.createStatement();         
+        rs = st.executeQuery(expression);   
+        st.close();    
+        
         ResultSetMetaData meta = rs.getMetaData();
         int cols = meta.getColumnCount();
-        Object obj = null;
+        int rows = countRows(tableName);
         
         for(; rs.next(); )
         {
@@ -171,30 +186,74 @@ public class ConsoleHsqlTest
                 temp.add(obj);
             }
         }
+        
+//        String [][]result = new String[rows][cols];
+//        
+//        for(int i = 0, k = 0; i < rows; i++)
+//        {
+//            for(int j = 0; j < cols; j++, k++)
+//            {
+//                result[i][j] = temp.get(k).toString();
+//            }
+//        }
+        
         return temp;
     }
-
     
-    public synchronized ArrayList queryToArray(String expression) throws SQLException 
+    /**
+     * counts rows and columns of a give database table
+     * @param tableName table name
+     * @return 2D array with number of rows (index 0) and columns (index 1)
+     * @throws SQLException 
+     */
+    public synchronized int[] countsRowsAndCols(String tableName) throws SQLException
+    {
+        int []result = new int[2];
+        int rows, cols;
+        Statement st = null;
+        ResultSet rs = null;
+        Object obj = null;
+        String sqlExpression = "SELECT * FROM " + tableName + ";";
+       
+        st = conn.createStatement();
+        rs = st.executeQuery(sqlExpression);
+        st.close();
+        ResultSetMetaData meta = rs.getMetaData();
+        rs.next();
+        
+        obj = rs.getObject(1);
+        result[0] = countRows(tableName);
+        result[1] = meta.getColumnCount();
+        
+        return result;
+    }
+    
+
+    /**
+     * counts the rows of a given table
+     * @param tableName
+     * @return
+     * @throws SQLException 
+     */
+    public synchronized int countRows(String tableName) throws SQLException
     {
         Statement st = null;
         ResultSet rs = null;
-        ArrayList temp = new ArrayList();
+        Object obj = null;
+        String sqlExpression = "SELECT COUNT(*) FROM " + tableName + ";";
+       
+        st = conn.createStatement();
+        rs = st.executeQuery(sqlExpression);
+        st.close();
         
-        /* statement objects can be reused with */
-        st = conn.createStatement();         
-
-        /* repeated calls to execute but we
-         * hoose to make a new one each time
-         */
-        rs = st.executeQuery(expression);   
-
-        /* do something with the result set. */
+        ResultSetMetaData meta = rs.getMetaData();
+        rs.next();
         
-        st.close();    
+        obj = rs.getObject(1);
         
-        return (temp = saveToArray(rs));
+        return Integer.parseInt(obj.toString());
     }
+    
     
     /**
      * Console test application
@@ -258,29 +317,50 @@ public class ConsoleHsqlTest
                 "INSERT INTO sample_table(str_col,num_col) VALUES('Ford', 100)");
             db.update(
                 "INSERT INTO sample_table(str_col,num_col) VALUES('Toyota', 200)");
-            db.update(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('Honda', 300)");
-            db.update(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('GM', 400)");
-            db.update(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('Ferrari', 600)");
+//            db.update(
+//                "INSERT INTO sample_table(str_col,num_col) VALUES('Honda', 300)");
+//            db.update(
+//                "INSERT INTO sample_table(str_col,num_col) VALUES('GM', 400)");
+//            db.update(
+//                "INSERT INTO sample_table(str_col,num_col) VALUES('Ferrari', 600)");
 
             /* doing a query */
             db.query("SELECT * FROM sample_table WHERE num_col < 250");
             
             /* query about all database tables */
-            System.out.println("***** ALL TABLES *****");
-            db.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
+//            System.out.println("***** ALL TABLES *****");
+//            db.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
             
             /* saving queries to arraylist */
             ArrayList temp = new ArrayList();
-            temp = db.queryToArray("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
-            for(int i = 0; i < temp.size(); i++)
-            {
-                System.out.println("TABELA nº " + (i + 1) + temp.get(i).toString());
-            }
+//            temp = db.queryToArray("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
+//            for(int i = 0; i < temp.size(); i++)
+//            {
+//                System.out.println("TABELA nº " + (i + 1) + temp.get(i).toString());
+//            }
             
             
+           ArrayList temp2 = new ArrayList();
+            temp2 = db.queryToArray("sample_table");
+            
+//            for(int i = 0; i < temp2.size(); i++)
+//            {
+//                System.out.println(temp2.get(i).toString());
+//            }
+            
+            
+//            System.out.println("numero de linhas");
+//            ArrayList temp3 = new ArrayList();
+//            temp2 = db.queryToArrayList("SELECT COUNT(*) FROM sample_table");
+//            
+           // System.out.println("Número de linhas = " + db.countRows("sample_table"));
+            
+            int teste[] = new int[2];
+           
+            teste = db.countsRowsAndCols("sample_table");
+             System.out.println("linha de teste");
+              System.out.println("rows = " + teste[0]);
+              System.out.println("cols = " + teste[1]);
             
             
             /* shutting down db */
