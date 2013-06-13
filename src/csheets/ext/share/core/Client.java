@@ -150,9 +150,9 @@ public class Client implements Runnable {
 			InterruptedException {
 
 		while (true) {
+			Thread.sleep(100);
 
 			if (listener.getFlag() == true) {
-				Thread.sleep(100);
 
 				OutputStream out = sock.getOutputStream();
 				DataOutputStream outStream = new DataOutputStream(out);
@@ -167,6 +167,7 @@ public class Client implements Runnable {
 				ObjectOutputStream objectOut = new ObjectOutputStream(
 						sock.getOutputStream());
 				objectOut.writeObject(cell);
+				System.out.println(cell.getContent());
 
 			}
 			listener.setFlag(false);
@@ -191,8 +192,10 @@ public class Client implements Runnable {
 			Thread thr = new Thread(new ThreadClient(port, cellStart, cli,
 					listener));
 			thr.start();
+			while (true) {
 
-			sendToServer(cli);
+				sendToServer(cli);
+			}
 
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");

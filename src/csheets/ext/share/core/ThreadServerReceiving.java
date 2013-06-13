@@ -83,13 +83,13 @@ public class ThreadServerReceiving implements Runnable {
 
 							Server.getInstance().getCells()[i][j]
 									.setContent(cell.getContent());
+							listenerServer.setFlag(true);
 
 						}
 					}
 				}
 
 			}
-			listenerServer.setFlag(true);
 
 		}
 
@@ -102,7 +102,9 @@ public class ThreadServerReceiving implements Runnable {
 	public void run() {
 		try {
 
-			receiveUpdates(sock);
+			while (true) {
+				receiveUpdates(sock);
+			}
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");

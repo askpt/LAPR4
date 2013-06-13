@@ -106,9 +106,9 @@ public class ThreadServer implements Runnable {
 			throws IOException, InterruptedException {
 
 		while (true) {
+			Thread.sleep(100);
 
 			if (Server.getInstance().getListener().getFlag() == true) {
-				Thread.sleep(100);
 
 				for (int c = 0; c < Server.getInstance().getSockets().size(); c++) {
 
