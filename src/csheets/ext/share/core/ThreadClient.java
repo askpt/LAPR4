@@ -22,16 +22,20 @@ public class ThreadClient implements Runnable {
 	/** server socket */
 	private Socket sock;
 
+	private CellNetworkListenerClient listenerClient;
+
 	/**
 	 * Create a new server
 	 */
 	private ThreadClient() {
 	}
 
-	public ThreadClient(int port, Cell cellStart, Socket sock) {
+	public ThreadClient(int port, Cell cellStart, Socket sock,
+			CellNetworkListenerClient listener) {
 		this.port = port;
 		this.cellStart = cellStart;
 		this.sock = sock;
+		this.listenerClient = listener;
 	}
 
 	/**
@@ -50,22 +54,40 @@ public class ThreadClient implements Runnable {
 			int cellStartColumn = cellStart.getAddress().getColumn();
 
 			DataInputStream in = new DataInputStream(sock.getInputStream());
-			if (in.readUTF().equals("send me updated data")) {
+
+			if (in.readUTF().equals("server- send me updated data")) {
+				listenerClient.setFlag(false);
 
 				while (isCell) {
-					ObjectInputStream inStream = new ObjectInputStream(
-							cli.getInputStream());
-					CellNetwork cell = (CellNetwork) inStream.readObject();
-					if (cell.isCell()) {
+					if (listenerClient.getFlag() == false) {
+						ObjectInputStream inStream = new ObjectInputStream(
+								cli.getInputStream());
+						CellNetwork cell = (CellNetwork) inStream.readObject();
+						if (cell.isCell()) {
 
-						this.cellStart
-								.getSpreadsheet()
-								.getCell(cellStartColumn + cell.getColumn(),
-										cellStartRow + cell.getRow())
-								.setContent(cell.getContent());
+							this.cellStart
+									.getSpreadsheet()
+									.getCell(
+											cellStartColumn + cell.getColumn(),
+											cellStartRow + cell.getRow())
+									.removeCellListener(listenerClient);
+							this.cellStart
+									.getSpreadsheet()
+									.getCell(
+											cellStartColumn + cell.getColumn(),
+											cellStartRow + cell.getRow())
+									.setContent(cell.getContent());
 
-					} else {
-						isCell = false;
+							this.cellStart
+									.getSpreadsheet()
+									.getCell(
+											cellStartColumn + cell.getColumn(),
+											cellStartRow + cell.getRow())
+									.addCellListener(listenerClient);
+
+						} else {
+							isCell = false;
+						}
 					}
 				}
 			}

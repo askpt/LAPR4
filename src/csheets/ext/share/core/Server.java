@@ -106,9 +106,12 @@ public class Server implements Runnable {
 				Socket sock = svr.accept();
 				sockets.add(sock);
 				System.out.println(sock);
+
 				Thread thr = new Thread(new ThreadServer(port, cells, sock));
 				thr.start();
-
+				Thread tr = new Thread(new ThreadServerReceiving(cells, sock,
+						getListener()));
+				tr.start();
 			}
 
 		} catch (IOException e) {

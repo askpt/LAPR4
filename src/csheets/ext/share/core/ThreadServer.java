@@ -116,7 +116,7 @@ public class ThreadServer implements Runnable {
 							.getOutputStream();
 					DataOutputStream outStreamMessage = new DataOutputStream(
 							out);
-					outStreamMessage.writeUTF("send me updated data");
+					outStreamMessage.writeUTF("server- send me updated data");
 					for (int i = 0; i < cells.length; i++) {
 						for (int j = 0; j < cells[i].length; j++) {
 							CellNetwork cell = new CellNetwork(
@@ -135,8 +135,8 @@ public class ThreadServer implements Runnable {
 					outStream.writeObject(cell);
 				}
 
+				Server.getInstance().getListener().setFlag(false);
 			}
-			Server.getInstance().getListener().setFlag(false);
 
 		}
 
@@ -148,12 +148,12 @@ public class ThreadServer implements Runnable {
 	@Override
 	public void run() {
 		try {
+			while (true) {
 
-			send(cells, sock);
-			Thread tr = new Thread(new ThreadServerReceiving(cells,
-					cellUpdated, sock));
-			tr.start();
-			sendAllClients(cells);
+				send(cells, sock);
+
+				sendAllClients(cells);
+			}
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");
