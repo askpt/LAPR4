@@ -23,16 +23,20 @@ public class ThreadServerReceiving implements Runnable {
 
 	private Cell[][] cells;
 
+	private CellNetworkListenerServer listenerServer;
+
 	/**
 	 * Create a new server
 	 */
 	private ThreadServerReceiving() {
 	}
 
-	public ThreadServerReceiving(Cell[][] cells, Cell cellStart, Socket sock) {
+	public ThreadServerReceiving(Cell[][] cells, Socket sock,
+			CellNetworkListenerServer listenerServer) {
 
 		this.cellStart = cellStart;
 		this.sock = sock;
+		this.listenerServer = listenerServer;
 	}
 
 	/**
@@ -42,8 +46,7 @@ public class ThreadServerReceiving implements Runnable {
 	 * @param cli
 	 * @throws Exception
 	 */
-	private synchronized void receiveUpdates(Cell cellUpdated, Socket cli)
-			throws Exception {
+	private synchronized void receiveUpdates(Socket cli) throws Exception {
 		while (true) {
 			Thread.sleep(100);
 
@@ -64,14 +67,28 @@ public class ThreadServerReceiving implements Runnable {
 									.getSpreadsheet()
 
 									.getCell(cell.getColumn(), cell.getRow())
-									.setContent(cell.getContent());
+									.removeCellListener(listenerServer);
+
 							Server.getInstance().getCells()[i][j]
+									.getSpreadsheet()
+
+									.getCell(cell.getColumn(), cell.getRow())
 									.setContent(cell.getContent());
+
+							Server.getInstance().getCells()[i][j]
+									.getSpreadsheet()
+
+									.getCell(cell.getColumn(), cell.getRow())
+									.addCellListener(listenerServer);
+
+							// Server.getInstance().getCells()[i][j]
+							// .setContent(cell.getContent());
 
 						}
 					}
 				}
 
+				listenerServer.setFlag(true);
 			}
 
 		}
@@ -85,7 +102,7 @@ public class ThreadServerReceiving implements Runnable {
 	public void run() {
 		try {
 
-			receiveUpdates(cellStart, sock);
+			receiveUpdates(sock);
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");

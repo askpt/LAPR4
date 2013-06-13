@@ -42,6 +42,7 @@ public class CellNetworkListenerServer implements CellListener {
 
 		this.flag = true;
 		this.cell = cell;
+
 		Server.getInstance().getListener().setFlag(true);
 
 	}

@@ -146,23 +146,23 @@ public class Client implements Runnable {
 	 * changes a flag value and this method can run and send that update to the
 	 * server
 	 */
-	public synchronized void sendToServer(Cell cellUpdated, Socket sock)
-			throws IOException, InterruptedException {
+	public synchronized void sendToServer(Socket sock) throws IOException,
+			InterruptedException {
 
 		while (true) {
-			Thread.sleep(100);
+
 			if (listener.getFlag() == true) {
 				Thread.sleep(100);
-				cellUpdated = listener.getCell();
+
 				OutputStream out = sock.getOutputStream();
 				DataOutputStream outStream = new DataOutputStream(out);
 				outStream.writeUTF("send me updated data");
 
-				CellNetwork cell = new CellNetwork(cellUpdated.getContent(),
-						cellUpdated.getAddress().getRow()
-								- cellStart.getAddress().getRow(), cellUpdated
-								.getAddress().getColumn()
-								- cellStart.getAddress().getColumn(), true);
+				CellNetwork cell = new CellNetwork(listener.getCell()
+						.getContent(), listener.getCell().getAddress().getRow()
+						- cellStart.getAddress().getRow(), listener.getCell()
+						.getAddress().getColumn()
+						- cellStart.getAddress().getColumn(), true);
 
 				ObjectOutputStream objectOut = new ObjectOutputStream(
 						sock.getOutputStream());
@@ -188,10 +188,11 @@ public class Client implements Runnable {
 			} else
 				cli = new Socket(connection.getIP(), connection.getPort());
 			receive(cellStart, cli);
-			Thread thr = new Thread(new ThreadClient(port, cellStart, cli));
+			Thread thr = new Thread(new ThreadClient(port, cellStart, cli,
+					listener));
 			thr.start();
 
-			sendToServer(cellStart, cli);
+			sendToServer(cli);
 
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");
