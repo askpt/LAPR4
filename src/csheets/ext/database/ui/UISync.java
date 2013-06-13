@@ -2,7 +2,6 @@ package csheets.ext.database.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 
 import javax.swing.*;
 
@@ -11,37 +10,58 @@ import csheets.ext.database.controller.ControllerSync;
 import csheets.ext.database.core.ThreadSync;
 
 //TODO Change the table text to the list after db choosed
-public class UISync extends JFrame implements Observer {
-
+/**
+ * Class that will implements the interface of the sync box
+ * 
+ * @author Andre
+ * 
+ */
+public class UISync extends JFrame {
+	/** Generated ID */
 	private static final long serialVersionUID = 1L;
-	/* database available drivers stored in a string and displayed in a combobox */
+	/**
+	 * database available drivers stored in a string and displayed in a combobox
+	 */
 	private final String[][] dbDrivers;
+	/** drivers name */
 	private final String[] driversName;
+	/** drivers list */
 	@SuppressWarnings("rawtypes")
 	private final JComboBox comboDrivers;
 
-	/* controller object for GUI-controller pattern */
+	/** controller object for GUI-controller pattern */
 	private final ControllerSync ctrlSync;
 
-	/* buttons */
+	/** button of ok */
 	private final JButton btnOk = new JButton("OK");
+	/** button of cancel */
 	private final JButton btnCancel = new JButton("Cancel");
+	/** button of get url */
 	private final JButton btnUrl = new JButton("Get URL");
 
-	/* selected cells to export in a 2D array */
+	/** selected cells to export in a 2D array */
 	private final Cell[][] cells;
 
-	/* textfields for username, passord, database and table name */
+	/** textfields for username, passord, database and table name */
 	@SuppressWarnings("unused")
 	private final JTextField userTxt, dbTxt, tableTxt, urlTxt;
+	/** field for the password */
 	private final JPasswordField pwd;
 
-	/* label to display system information to the user */
+	/** label to display system information to the user */
 	JLabel sysMsg = new JLabel();
 
-	/* export thread */
+	/** export thread */
 	ThreadSync thrSync;
 
+	/**
+	 * Creates a new sync ui
+	 * 
+	 * @param cells
+	 *            cells to be synchronized
+	 * @throws Exception
+	 *             if any type of exceptions occurs
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public UISync(Cell[][] cells) throws Exception {
 		/* window title */
@@ -125,7 +145,14 @@ public class UISync extends JFrame implements Observer {
 		setResizable(false);
 	}
 
-	public class HandlesEvent implements ActionListener {
+	/**
+	 * 
+	 * Class that will handle the events occured in the user interface
+	 * 
+	 * @author Andre
+	 * 
+	 */
+	private class HandlesEvent implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			/* default url button */
@@ -181,11 +208,4 @@ public class UISync extends JFrame implements Observer {
 			}
 		}
 	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
 }
