@@ -1,6 +1,7 @@
 package csheets.ext.database.ui;
 
 import csheets.core.Cell;
+import csheets.core.Spreadsheet;
 import csheets.ext.database.controller.ControllerImport;
 import csheets.ext.database.core.Database;
 import csheets.ext.database.core.ThreadImport;
@@ -33,7 +34,7 @@ import javax.swing.JTextField;
 public class UIImport extends JFrame implements Observer
 {
     /* select cells to import in a 2D array */
-    private Cell cell;
+    private Spreadsheet spreadSheet;
     
     /* controller object for GUI-controller pattern */
     private ControllerImport ctrlImp;
@@ -63,16 +64,16 @@ public class UIImport extends JFrame implements Observer
     
     /**
      * constructor of the GUI
-     * @param cells cells 
+     * @param spreadSheet the current spreadsheet
      * @throws Exception 
      */
-    public UIImport(Cell cell) throws Exception
+    public UIImport(Spreadsheet spreadSheet) throws Exception
     {
         /* window title */
         super("Import information from a database");
         
         /* saving argument of this function is class variable */
-        this.cell = cell;
+        this.spreadSheet = spreadSheet;
         
         /* creating a new controller */
         ctrlImp = new ControllerImport(this);
@@ -174,7 +175,7 @@ public class UIImport extends JFrame implements Observer
                    /* database name */
                    String dbName = comboDrivers.getSelectedItem().toString();
                    /* thread to connect to database and retrive all tables names */
-                   thrImpTables = new ThreadImportTables(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbName, ctrlImp, cell);
+                   thrImpTables = new ThreadImportTables(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbName, ctrlImp, spreadSheet);
                    /* runs the thread to load tables list */
                    thrImpTables.run();
                    dispose();

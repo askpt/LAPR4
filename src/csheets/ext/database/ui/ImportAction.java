@@ -3,6 +3,7 @@ package csheets.ext.database.ui;
 import java.awt.event.ActionEvent;
 
 import csheets.core.Cell;
+import csheets.core.Spreadsheet;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.*;
 import java.util.logging.Level;
@@ -56,11 +57,12 @@ public class ImportAction extends FocusOwnerAction
     @Override
     public void actionPerformed(ActionEvent event) 
     {
-        /* select cells to import */
-    	Cell cell = focusOwner.getSelectedCell();
+        /* gettings the current spreadsheet  */
+        Spreadsheet spreadSheet = focusOwner.getSpreadsheet();
+        
         try 
         {
-            UIImport uiImp = new UIImport(cell);
+            UIImport uiImp = new UIImport(spreadSheet);
         } 
         catch (Exception ex) 
         {

@@ -7,6 +7,7 @@ package csheets.ext.database.ui;
 import csheets.SpreadsheetAppEvent;
 import csheets.SpreadsheetAppListener;
 import csheets.core.Cell;
+import csheets.core.Spreadsheet;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.database.controller.ControllerImport;
 import java.awt.BorderLayout;
@@ -48,7 +49,7 @@ public class UITableSelect extends JFrame
     private String[] tableArray;
     private ArrayList arrayQueries;
     
-    /* array with table content */
+    /* array with database table content */
     private String[][] tableData;
     
     /* tablelist */
@@ -58,14 +59,14 @@ public class UITableSelect extends JFrame
    
     private UIController uiCtrl;
     
-    private Cell cell;
+    private Spreadsheet spreadSheet;
     
     /**
      * constructor of the GUI for table selection 
      * @param dbName name of the database
      * @throws Exception 
      */
-    public UITableSelect(Cell cell, String dbName, ControllerImport ctrlImp)
+    public UITableSelect(Spreadsheet spreadSheet, String dbName, ControllerImport ctrlImp)
     {
         /* window title */
         super("Select a table from " + dbName);
@@ -75,7 +76,7 @@ public class UITableSelect extends JFrame
         
         this.ctrlImp = ctrlImp;
         
-        this.cell = cell;
+        this.spreadSheet = spreadSheet;
         
         /* gets the table list */
         tableArray = ctrlImp.getTableList();
@@ -128,8 +129,8 @@ public class UITableSelect extends JFrame
     }
     
    
-     /**
-     * handles event on different GUI objects
+    /**
+     * handles events on different GUI objects
      */
     public class HandlesEvent implements ActionListener
     {
@@ -139,26 +140,29 @@ public class UITableSelect extends JFrame
             /* ok button */
             if(e.getSource() == btnOk)
             {
+                /* loads a given database table to the table data array */
                 tableData = ctrlImp.loadTable(tableList.getSelectedValue().toString());
-                
-                for(int i = 0; i < tableData.length; i++)
-                {
-                    for(int j = 0; j < tableData[0].length; j++)
-                    {
-                        System.out.println(tableData[i][j]);
-                    }
-                }
                 try 
                 {
-                    cell.setContent("TESTE;");
-                } 
+                    /* getting the starting row, which is defined in any of the first columns */
+                    int startRow = Integer.parseInt(tableData[1][0]);
+                    
+                    /* cycles the entire tableData array */
+                    for(int i = 0; i < tableData.length; i++)
+                    {
+                        for(int j = 1; j < tableData[0].length; j++)
+                        {         
+                            /* changes the content of the given cell taking into account the row
+                             (we have to subtract 2 to go to right place) */
+                            spreadSheet.getCell(startRow + (j - 2), i).setContent(tableData[i][j]);
+                        }
+                    }
+                }
                 catch (FormulaCompilationException ex) 
                 {
                     Logger.getLogger(UITableSelect.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
-            
             
 //            /* preview button */
 //            else if(e.getSource() == btnPreview)
