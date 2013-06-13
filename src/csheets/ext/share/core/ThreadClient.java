@@ -84,6 +84,7 @@ public class ThreadClient implements Runnable {
 											cellStartColumn + cell.getColumn(),
 											cellStartRow + cell.getRow())
 									.addCellListener(listenerClient);
+							listenerClient.setFlag(false);
 
 						} else {
 							isCell = false;
@@ -102,7 +103,9 @@ public class ThreadClient implements Runnable {
 	public void run() {
 		try {
 
-			receiveUpdates(cellStart, sock);
+			while (true) {
+				receiveUpdates(cellStart, sock);
+			}
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Connection Error");

@@ -31,8 +31,8 @@ public class CellNetworkListenerClient implements CellListener {
 
 	@Override
 	public void valueChanged(Cell cell) {
-		this.flag = true;
-		this.cell = cell;
+		// this.flag = true;
+		// this.cell = cell;
 
 	}
 
@@ -47,19 +47,19 @@ public class CellNetworkListenerClient implements CellListener {
 	@Override
 	public void dependentsChanged(Cell cell) {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		// throw new UnsupportedOperationException("Not implemented yet!");
 	}
 
 	@Override
 	public void cellCleared(Cell cell) {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		// throw new UnsupportedOperationException("Not implemented yet!");
 	}
 
 	@Override
 	public void cellCopied(Cell cell, Cell source) {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		// throw new UnsupportedOperationException("Not implemented yet!");
 	}
 
 }
