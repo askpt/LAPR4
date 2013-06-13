@@ -81,8 +81,8 @@ public class ThreadServerReceiving implements Runnable {
 									.getCell(cell.getColumn(), cell.getRow())
 									.addCellListener(listenerServer);
 
-							// Server.getInstance().getCells()[i][j]
-							// .setContent(cell.getContent());
+							Server.getInstance().getCells()[i][j]
+									.setContent(cell.getContent());
 
 						}
 					}
