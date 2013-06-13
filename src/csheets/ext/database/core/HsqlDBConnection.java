@@ -48,7 +48,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 		/* defining row and column number */
 		int numberOfColumns = cells[0].length;
 		int numberOfRows = cells.length;
-
+                
 		/* beginning the construction of the sql statement */
 		String stat = "CREATE TABLE " + tableName + "(linha VARCHAR(20), ";
 
@@ -77,7 +77,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 		for (int i = 0; i < columnsName.length; i++) {
 			stat += columnsName[i];
 		}
-
+                
 		/* sql statement */
 		Statement st = null;
 
@@ -109,6 +109,9 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 		/* creating a number of insert statements equal to number of rows -1 */
 		String[] insertVector = new String[numberOfRows - 1];
 		for (int i = 0; i < insertVector.length; i++) {
+                    /* the first value of each insert statement is the respective row number 
+                     (we do this so that, in a future feature, we keep track of the original 
+                     row) */
 			String temp = Integer
 					.toString(cells[i][0].getAddress().getRow() + 1);
 			insertVector[i] = insertStat + temp + ",";
