@@ -7,15 +7,32 @@ import java.util.*;
 import csheets.core.Cell;
 import csheets.ext.database.core.*;
 
+/**
+ * Creates a new controller for the sync function
+ * 
+ * @author Andre
+ * 
+ */
 public class ControllerSync {
 
+	/** list of databases */
 	List<Database> dbList;
+	/** facade patern for the database connection */
 	DatabaseFacade facade;
 
+	/**
+	 * Creates a new controller
+	 */
 	public ControllerSync() {
 		facade = new DatabaseFacade();
 	}
 
+	/**
+	 * Search for avaliables databases
+	 * 
+	 * @return a list with databases
+	 * @throws FileNotFoundException
+	 */
 	public String[][] getDBlist() throws FileNotFoundException {
 		/* new DBCsvReader */
 		DBCsvReader reader = new DBCsvReader();
@@ -34,11 +51,35 @@ public class ControllerSync {
 		return driversName;
 	}
 
+	/**
+	 * Start the sync between application and database
+	 * 
+	 * @param user
+	 *            username
+	 * @param pass
+	 *            username's password
+	 * @param cells
+	 *            cells to be sync
+	 * @param tableName
+	 *            name of the table
+	 */
 	public void startSync(String user, String pass, Cell[][] cells,
 			String tableName) {
 		facade.startSync(user, pass, cells, tableName);
 	}
 
+	/**
+	 * Creates a new connection to the database
+	 * 
+	 * @param url
+	 *            link of the database
+	 * @param user
+	 *            username
+	 * @param pass
+	 *            username's password
+	 * @param dbName
+	 *            database name
+	 */
 	public void connect(String url, String user, String pass, String dbName) {
 		try {
 			facade.createConnection(url, user, pass, dbName);

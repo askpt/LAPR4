@@ -74,6 +74,18 @@ public class DatabaseFacade {
 		return adapter.getTableContent(tableName);
 	}
 
+	/**
+	 * Starts a new sync with database
+	 * 
+	 * @param user
+	 *            username
+	 * @param pass
+	 *            username's password
+	 * @param cells
+	 *            cells to be sync
+	 * @param tableName
+	 *            name of the table
+	 */
 	public void startSync(String user, String pass, Cell[][] cells,
 			String tableName) {
 		// TODO Auto-generated method stub

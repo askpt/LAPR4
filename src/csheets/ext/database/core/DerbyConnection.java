@@ -8,11 +8,18 @@ import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 
+/**
+ * Creates a new connection to a derby database
+ * 
+ * @author Andre
+ * 
+ */
 public class DerbyConnection implements DBConnectionStrategy {
 
+	/** driver path */
 	private final String driverPath = "org.apache.derby.jdbc.EmbeddedDriver";
+	/** connection method */
 	private Connection connection;
-	private String url, user, pwd;
 
 	@Override
 	public void createConnection(String url, String user, String pass)
@@ -141,7 +148,8 @@ public class DerbyConnection implements DBConnectionStrategy {
 
 	@Override
 	public ArrayList queryToArray() {
-		return null;
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
