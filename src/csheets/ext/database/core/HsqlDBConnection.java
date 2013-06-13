@@ -226,6 +226,12 @@ public class HsqlDBConnection implements DBConnectionStrategy {
         int cols = meta.getColumnCount();
         int rows = countRows(tableName);
         
+        for(int i = 1; i <= cols; i++)
+        {
+            obj = meta.getColumnName(i);
+            temp.add(obj);
+        }
+        
         for(; rs.next(); )
         {
             for(int i = 0; i < cols; i ++)
@@ -235,24 +241,10 @@ public class HsqlDBConnection implements DBConnectionStrategy {
             }
         }
         
-//        String [][]result = new String[rows][cols];
-//        for(int i = 0, k = 0; i < rows; i++)
-//        {
-//            for(int j = 0; j < cols; j++, k++)
-//            {
-//                result[i][j] = temp.get(k).toString();
-//            }
-//        }
         return temp;
     }
     
-    
-    /**
-     * counts rows and columns of a give database table
-     * @param tableName table name
-     * @return 2D array with number of rows (index 0) and columns (index 1)
-     * @throws SQLException 
-     */
+
     public synchronized int[] countsRowsAndCols(String tableName) throws SQLException
     {
         int []result = new int[2];
@@ -274,14 +266,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
         
         return result;
     }
-    
-
-    /**
-     * counts the rows of a given table
-     * @param tableName
-     * @return
-     * @throws SQLException 
-     */
+   
     public synchronized int countRows(String tableName) throws SQLException
     {
         Statement st = null;
@@ -298,9 +283,19 @@ public class HsqlDBConnection implements DBConnectionStrategy {
         
         obj = rs.getObject(1);
         
-        return Integer.parseInt(obj.toString());
+        return Integer.parseInt(obj.toString()) + 1;
     }
-        
-        
-        
+    
+    
+    public String[][] queryTo2dArray(ArrayList array, String[][] table)
+    {
+        for(int i = 0, k = 0; i < table.length; i++)
+        {
+            for(int j = 0; j < table[0].length; j++, k++)
+            {
+                table[i][j] = array.get(k).toString();
+            }          
+        }
+        return table;
+    }
 }

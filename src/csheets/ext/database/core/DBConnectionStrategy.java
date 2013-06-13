@@ -81,5 +81,11 @@ public interface DBConnectionStrategy
      */
     public int countRows(String tableName) throws SQLException;
     
-    
+    /**
+     * converts database table-content stored in an array list to a 2D String array
+     * @param array arralist with table-content
+     * @param table 2D array
+     * @return table
+     */
+    public String[][] queryTo2dArray(ArrayList array, String[][] table);
 }

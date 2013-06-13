@@ -178,12 +178,21 @@ public class ConsoleHsqlTest
         int cols = meta.getColumnCount();
         int rows = countRows(tableName);
         
+        for(int i = 1; i <= cols; i++)
+        {
+            obj = meta.getColumnName(i);
+            temp.add(obj);
+            System.out.println("nome da coluna = " + obj.toString());
+        }
+        
+        
         for(; rs.next(); )
         {
             for(int i = 0; i < cols; i ++)
             {
                 obj = rs.getObject(i + 1);
                 temp.add(obj);
+//                System.out.println(obj.toString());
             }
         }
         
@@ -251,9 +260,24 @@ public class ConsoleHsqlTest
         
         obj = rs.getObject(1);
         
-        return Integer.parseInt(obj.toString());
+        /* + 1 linha para guardar dados da coluna */
+        return Integer.parseInt(obj.toString()) + 1;
     }
     
+    
+    public String[][] queryTo2dArray(ArrayList array, String[][] table)
+    {
+        for(int i = 0, k = 0; i < table.length; i++)
+        {
+            for(int j = 0; j < table[0].length; j++, k++)
+            {
+                table[i][j] = array.get(k).toString();
+                System.out.println(table[i][j]);
+            }
+//            System.out.println("(NEWLINE)");
+        }
+        return table;
+    }
     
     /**
      * Console test application
@@ -273,37 +297,38 @@ public class ConsoleHsqlTest
             ex1.printStackTrace();   
             return;                  
         }
-        try 
-        {
-            /* make an empty table by declaring the id column IDENTITY, 
-             * the db will automatically generate unique values for new rows
-             * this is useful for row keys 
-             */
-            db.update("CREATE TABLE sample_table ( id INTEGER IDENTITY, str_col "
-                    + "VARCHAR(256), num_col INTEGER)");
-        } 
-        catch (SQLException ex2) 
-        {
-
-           /* second time we run program should throw execption since table
-            * already there this will have no effect on the db */
-        }
         
-        try 
-        {
-            /* make an empty table by declaring the id column IDENTITY, 
-             * the db will automatically generate unique values for new rows
-             * this is useful for row keys 
-             */
-            db.update("CREATE TABLE TABELA2 ( id INTEGER IDENTITY, str_col "
-                    + "VARCHAR(256), num_col INTEGER)");
-        } 
-        catch (SQLException ex2) 
-        {
-
-           /* second time we run program should throw execption since table
-            * already there this will have no effect on the db */
-        }
+//        try 
+//        {
+//            /* make an empty table by declaring the id column IDENTITY, 
+//             * the db will automatically generate unique values for new rows
+//             * this is useful for row keys 
+//             */
+//            db.update("CREATE TABLE sample_table ( id INTEGER IDENTITY, str_col "
+//                    + "VARCHAR(256), num_col INTEGER)");
+//        } 
+//        catch (SQLException ex2) 
+//        {
+//
+//           /* second time we run program should throw execption since table
+//            * already there this will have no effect on the db */
+//        }
+        
+//        try 
+//        {
+//            /* make an empty table by declaring the id column IDENTITY, 
+//             * the db will automatically generate unique values for new rows
+//             * this is useful for row keys 
+//             */
+//            db.update("CREATE TABLE TABELA2 ( id INTEGER IDENTITY, str_col "
+//                    + "VARCHAR(256), num_col INTEGER)");
+//        } 
+//        catch (SQLException ex2) 
+//        {
+//
+//           /* second time we run program should throw execption since table
+//            * already there this will have no effect on the db */
+//        }
         
         
         
@@ -313,10 +338,10 @@ public class ConsoleHsqlTest
         {
             /* adding some rows - will create duplicates if run more then once
              * the id column is automatically generated */
-            db.update(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('Ford', 100)");
-            db.update(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('Toyota', 200)");
+//            db.update(
+//                "INSERT INTO sample_table(str_col,num_col) VALUES('Ford', 100)");
+//            db.update(
+//                "INSERT INTO sample_table(str_col,num_col) VALUES('Toyota', 200)");
 //            db.update(
 //                "INSERT INTO sample_table(str_col,num_col) VALUES('Honda', 300)");
 //            db.update(
@@ -325,7 +350,7 @@ public class ConsoleHsqlTest
 //                "INSERT INTO sample_table(str_col,num_col) VALUES('Ferrari', 600)");
 
             /* doing a query */
-            db.query("SELECT * FROM sample_table WHERE num_col < 250");
+//            db.query("SELECT * FROM sample_table WHERE num_col < 250");
             
             /* query about all database tables */
 //            System.out.println("***** ALL TABLES *****");
@@ -340,8 +365,7 @@ public class ConsoleHsqlTest
 //            }
             
             
-           ArrayList temp2 = new ArrayList();
-            temp2 = db.queryToArray("sample_table");
+           
             
 //            for(int i = 0; i < temp2.size(); i++)
 //            {
@@ -355,17 +379,29 @@ public class ConsoleHsqlTest
 //            
            // System.out.println("Número de linhas = " + db.countRows("sample_table"));
             
-            int teste[] = new int[2];
-           
-            teste = db.countsRowsAndCols("sample_table");
-             System.out.println("linha de teste");
-              System.out.println("rows = " + teste[0]);
-              System.out.println("cols = " + teste[1]);
+            // contar linhas e colunas
+            int rc[] = new int[2];
+            rc = db.countsRowsAndCols("tabteste");
+            
+            System.out.println("linha de teste");
+            System.out.println("rows = " + rc[0]);
+            System.out.println("cols = " + rc[1]);
+            
+            // guardar dardos no arraylist
+            ArrayList temp2 = new ArrayList();
+            temp2 = db.queryToArray("tabteste");
+            
+            /* save data to array */
+            String [][]data = new String[rc[0]][rc[1]];
+            db.queryTo2dArray(temp2, data);
             
             
             /* shutting down db */
             db.shutdown();
         } 
+        
+        
+        
         catch (SQLException ex3) 
         {
             ex3.printStackTrace();
