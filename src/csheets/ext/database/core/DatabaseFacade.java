@@ -88,8 +88,27 @@ public class DatabaseFacade {
 	 */
 	public void startSync(String user, String pass, Cell[][] cells,
 			String tableName) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+		// adapter.createTable(tableName, cells); //TODO remove comments
+		CellDatabase[][] cellsTemp = new CellDatabase[cells.length - 1][cells[0].length];
+		while (true) {
+			try {
+				temporaryStructure(cells, cellsTemp);
+
+				Thread.sleep(30000);
+				// TODO Auto-generated method stub
+			} catch (InterruptedException e) {
+			}
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 	}
 
+	private void temporaryStructure(Cell[][] cells, CellDatabase[][] cellsTemp) {
+		for (int i = 1; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				cellsTemp[i - 1][j] = new CellDatabase(
+						cells[i][j].getContent(), cells[i][j].getAddress()
+								.getRow(), cells[i][j].getAddress().getColumn());
+			}
+		}
+	}
 }

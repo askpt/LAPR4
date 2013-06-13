@@ -9,7 +9,6 @@ import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerSync;
 import csheets.ext.database.core.ThreadSync;
 
-//TODO Change the table text to the list after db choosed
 /**
  * Class that will implements the interface of the sync box
  * 
