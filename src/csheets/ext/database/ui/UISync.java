@@ -10,6 +10,7 @@ import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerSync;
 import csheets.ext.database.core.ThreadSync;
 
+//TODO Change the table text to the list after db choosed
 public class UISync extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
@@ -50,7 +51,7 @@ public class UISync extends JFrame implements Observer {
 		this.cells = cells;
 
 		/* creating a new controller */
-		ctrlSync = new ControllerSync(this);
+		ctrlSync = new ControllerSync();
 
 		/*
 		 * getting the list of supported databases and putting it in the combo
@@ -168,7 +169,7 @@ public class UISync extends JFrame implements Observer {
 					/* creating a new thread to export data */
 					thrSync = new ThreadSync(cells, dbDrivers[index][1],
 							userTxt.getText(), pwd.getSelectedText(),
-							tableTxt.getText(), dbDrivers[index][0], ctrlSync);
+							tableTxt.getText(), dbDrivers[index][0]);
 					thrSync.run();
 					dispose();
 

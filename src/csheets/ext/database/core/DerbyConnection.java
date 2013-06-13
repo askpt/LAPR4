@@ -162,25 +162,22 @@ public class DerbyConnection implements DBConnectionStrategy {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-    @Override
-    public ArrayList queryToArray(String tableName) throws SQLException 
-    {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public ArrayList queryToArray(String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    @Override
-    public int[] countsRowsAndCols(String tableName) throws SQLException 
-    {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public int[] countsRowsAndCols(String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    @Override
-    public int countRows(String tableName) throws SQLException 
-    {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public int countRows(String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
 }
