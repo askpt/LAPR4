@@ -120,6 +120,4 @@ public class ControllerImport implements Subject
     {
         return facade.loadTable(tableName);
     }
-
-    
 }
