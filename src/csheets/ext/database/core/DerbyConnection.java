@@ -188,4 +188,11 @@ public class DerbyConnection implements DBConnectionStrategy {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+    @Override
+    public String[][] queryTo2dArray(ArrayList array, String[][] table) 
+    {
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
