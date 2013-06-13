@@ -133,9 +133,9 @@ public class ThreadServer implements Runnable {
 							Server.getInstance().getSockets().get(c)
 									.getOutputStream());
 					outStream.writeObject(cell);
+					Server.getInstance().getListener().setFlag(false);
 				}
 
-				Server.getInstance().getListener().setFlag(false);
 			}
 
 		}
