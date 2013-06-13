@@ -1,17 +1,19 @@
 package csheets.ext.database.controller;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.*;
 
+import csheets.core.Cell;
 import csheets.ext.database.core.*;
-import csheets.ext.database.ui.UISync;
 
 public class ControllerSync {
 
 	List<Database> dbList;
+	DatabaseFacade facade;
 
-	public ControllerSync(UISync uiSync) {
-		// TODO Auto-generated constructor stub
+	public ControllerSync() {
+		facade = new DatabaseFacade();
 	}
 
 	public String[][] getDBlist() throws FileNotFoundException {
@@ -30,6 +32,22 @@ public class ControllerSync {
 		}
 		/* returns all names of supported databases */
 		return driversName;
+	}
+
+	public void startSync(String user, String pass, Cell[][] cells,
+			String tableName) {
+		facade.startSync(user, pass, cells, tableName);
+	}
+
+	public void connect(String url, String user, String pass, String dbName) {
+		try {
+			facade.createConnection(url, user, pass, dbName);
+		}
+		/* replace below with proper exceptions */
+		catch (SQLException e) {
+		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
+		}
 	}
 
 }
