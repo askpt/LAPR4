@@ -3,14 +3,17 @@ package csheets.ext.database.ui;
 import java.awt.event.ActionEvent;
 
 import csheets.core.Cell;
+import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Import submenu
  * 
  * @author João Carreira
  */
-public class Import extends FocusOwnerAction 
+public class ImportAction extends FocusOwnerAction 
 {
 
     /* The user interface controller */
@@ -20,7 +23,7 @@ public class Import extends FocusOwnerAction
      * Import action
      * @param uiController 
      */
-    public Import(UIController uiController) 
+    public ImportAction(UIController uiController) 
     {
     	this.uiController = uiController;
     }
@@ -55,14 +58,13 @@ public class Import extends FocusOwnerAction
     {
         /* select cells to import */
     	Cell cell = focusOwner.getSelectedCell();
-    	
         try 
-    	{
-    		UIImport uiImp = new UIImport(cell);
-    	} 
-    	catch (Exception e2) 
-    	{
-    		e2.printStackTrace();
-    	}
+        {
+            UIImport uiImp = new UIImport(cell);
+        } 
+        catch (Exception ex) 
+        {
+            Logger.getLogger(ImportAction.class.getName()).log(Level.SEVERE, null, ex);
+        } 	
     }
 }

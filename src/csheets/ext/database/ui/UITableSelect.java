@@ -6,6 +6,8 @@ package csheets.ext.database.ui;
 
 import csheets.SpreadsheetAppEvent;
 import csheets.SpreadsheetAppListener;
+import csheets.core.Cell;
+import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.database.controller.ControllerImport;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,7 +26,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import csheets.ext.database.ui.UIImport;
-import csheets.ext.database.core.ImportAction;
+import csheets.ui.ctrl.UIController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Table selection GUI (to select a select from the database)
@@ -51,15 +55,17 @@ public class UITableSelect extends JFrame
     private JList tableList;
     
     private ControllerImport ctrlImp;
+   
+    private UIController uiCtrl;
     
-    private ImportAction impAct;
+    private Cell cell;
     
     /**
      * constructor of the GUI for table selection 
      * @param dbName name of the database
      * @throws Exception 
      */
-    public UITableSelect(String dbName, ControllerImport ctrlImp)
+    public UITableSelect(Cell cell, String dbName, ControllerImport ctrlImp)
     {
         /* window title */
         super("Select a table from " + dbName);
@@ -68,6 +74,8 @@ public class UITableSelect extends JFrame
         sysMsg.setForeground(Color.BLUE);
         
         this.ctrlImp = ctrlImp;
+        
+        this.cell = cell;
         
         /* gets the table list */
         tableArray = ctrlImp.getTableList();
@@ -140,10 +148,17 @@ public class UITableSelect extends JFrame
                         System.out.println(tableData[i][j]);
                     }
                 }
-                
-//                impAct.actionPerformed(e);
-                
+                try 
+                {
+                    cell.setContent("TESTE;");
+                } 
+                catch (FormulaCompilationException ex) 
+                {
+                    Logger.getLogger(UITableSelect.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+            
+            
             
 //            /* preview button */
 //            else if(e.getSource() == btnPreview)

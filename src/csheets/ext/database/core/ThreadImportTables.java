@@ -12,6 +12,7 @@ public class ThreadImportTables implements Runnable
 {
     private String url, user, pass, dbName;
     private ControllerImport ctrlImp;
+    private Cell cell;
     
     /**
      * construtor
@@ -23,13 +24,14 @@ public class ThreadImportTables implements Runnable
      * @param dbName database name
      * @param ctrlImp ControllerImport object
      */
-    public ThreadImportTables(String url, String user, String pass, String dbName, ControllerImport ctrlImp)
+    public ThreadImportTables(String url, String user, String pass, String dbName, ControllerImport ctrlImp, Cell cell)
     {
         this.url = url;
         this.user = user;
         this.pass = pass;
         this.dbName = dbName;
         this.ctrlImp = ctrlImp;
+        this.cell = cell;
     }
     
     @Override
@@ -40,7 +42,7 @@ public class ThreadImportTables implements Runnable
             /* connects with database */
             ctrlImp.connect(url, user, pass, dbName);
             /* launches the select table window */
-            UITableSelect ts = new UITableSelect(dbName, ctrlImp);
+            UITableSelect ts = new UITableSelect(cell, dbName, ctrlImp);
         }
         catch(Exception e)
         {

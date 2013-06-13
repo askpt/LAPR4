@@ -174,7 +174,8 @@ public class UIImport extends JFrame implements Observer
                    /* database name */
                    String dbName = comboDrivers.getSelectedItem().toString();
                    /* thread to connect to database and retrive all tables names */
-                   thrImpTables = new ThreadImportTables(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbName, ctrlImp);
+                   thrImpTables = new ThreadImportTables(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbName, ctrlImp, cell);
+                   /* runs the thread to load tables list */
                    thrImpTables.run();
                    dispose();
                 }
