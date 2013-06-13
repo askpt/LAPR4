@@ -88,20 +88,37 @@ public class DatabaseFacade {
 	 */
 	public void startSync(String user, String pass, Cell[][] cells,
 			String tableName) {
-		// adapter.createTable(tableName, cells); //TODO remove comments
+		adapter.createTable(tableName, cells);
 		CellDatabase[][] cellsTemp = new CellDatabase[cells.length - 1][cells[0].length];
 		while (true) {
 			try {
 				temporaryStructure(cells, cellsTemp);
 
 				Thread.sleep(30000);
-				// TODO Auto-generated method stub
+
+				String[][] serverCells = loadTable(tableName);
+				for (int i = 0; i < cellsTemp.length; i++) {
+					int indexServ = findLine(cellsTemp[i][0].getRow(),
+							serverCells);
+					int indexApp = findLine(cellsTemp[i][0].getRow(), cells);
+					checkLine(serverCells[indexServ], cells[indexApp],
+							cellsTemp[i]);
+				}
 			} catch (InterruptedException e) {
 			}
+			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Not supported yet.");
 		}
 	}
 
+	/**
+	 * Creates a temporary structure of sync cells
+	 * 
+	 * @param cells
+	 *            cells of application
+	 * @param cellsTemp
+	 *            temporary cells
+	 */
 	private void temporaryStructure(Cell[][] cells, CellDatabase[][] cellsTemp) {
 		for (int i = 1; i < cells.length; i++) {
 			for (int j = 0; j < cells[i].length; j++) {
@@ -110,5 +127,47 @@ public class DatabaseFacade {
 								.getRow(), cells[i][j].getAddress().getColumn());
 			}
 		}
+	}
+
+	// TODO Javadoc
+	private void checkLine(String[] lineServer, Cell[] cellApp,
+			CellDatabase[] cellTemp) {
+		// TODO check the line conditions
+	}
+
+	/**
+	 * Find the index of the line in the server cells
+	 * 
+	 * @param row
+	 *            the row of the line to be sync
+	 * @param serverCells
+	 *            the server cells
+	 * @return the index of the line of the server
+	 */
+	private int findLine(int row, String[][] serverCells) {
+		for (int i = 1; i < serverCells.length; i++) {
+			if (Integer.parseInt(serverCells[i][0]) == row) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Find the index of the line in the application cells
+	 * 
+	 * @param row
+	 *            the row of the line to be sync
+	 * @param cells
+	 *            the application cells
+	 * @return the index of the line of the client
+	 */
+	private int findLine(int row, Cell[][] cells) {
+		for (int i = 0; i < cells.length; i++) {
+			if (cells[i][0].getAddress().getRow() == row) {
+				return i;
+			}
+		}
+		return 0;
 	}
 }
