@@ -1,6 +1,7 @@
 package csheets.ext.database.core;
 
 import csheets.core.Cell;
+import csheets.core.Spreadsheet;
 import csheets.ext.database.controller.ControllerImport;
 import csheets.ext.database.ui.UITableSelect;
 
@@ -12,26 +13,26 @@ public class ThreadImportTables implements Runnable
 {
     private String url, user, pass, dbName;
     private ControllerImport ctrlImp;
-    private Cell cell;
+    private Spreadsheet spreadSheet;
     
     /**
      * construtor
-     * @param cell cell used as reference for import
      * @param url path to the database
      * @param user username
      * @param pass password
      * @param tableName table in the database
      * @param dbName database name
      * @param ctrlImp ControllerImport object
+     * @param Spreadsheet current spreadsheet
      */
-    public ThreadImportTables(String url, String user, String pass, String dbName, ControllerImport ctrlImp, Cell cell)
+    public ThreadImportTables(String url, String user, String pass, String dbName, ControllerImport ctrlImp, Spreadsheet spreadSheet)
     {
         this.url = url;
         this.user = user;
         this.pass = pass;
         this.dbName = dbName;
         this.ctrlImp = ctrlImp;
-        this.cell = cell;
+        this.spreadSheet = spreadSheet;
     }
     
     @Override
@@ -42,7 +43,7 @@ public class ThreadImportTables implements Runnable
             /* connects with database */
             ctrlImp.connect(url, user, pass, dbName);
             /* launches the select table window */
-            UITableSelect ts = new UITableSelect(cell, dbName, ctrlImp);
+            UITableSelect ts = new UITableSelect(spreadSheet, dbName, ctrlImp);
         }
         catch(Exception e)
         {
@@ -50,7 +51,7 @@ public class ThreadImportTables implements Runnable
         }
     }
     
-        /**
+    /**
      * gets the controller import
      * @return ControllerImport object
      */
