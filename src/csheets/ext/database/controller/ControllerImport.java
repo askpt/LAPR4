@@ -9,12 +9,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observer;
 
+import csheets.ui.ctrl.BaseAction;
+import java.awt.event.ActionEvent;
+
 
 /**
  * The controller for UIImport 
  * @author João Carreira
  */
-public class ControllerImport implements Subject
+public class ControllerImport implements Subject 
 {
     private ArrayList<Observer> observers;
     private DatabaseFacade facade;
@@ -117,4 +120,6 @@ public class ControllerImport implements Subject
     {
         return facade.loadTable(tableName);
     }
+
+    
 }

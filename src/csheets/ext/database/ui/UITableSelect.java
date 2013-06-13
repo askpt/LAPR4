@@ -4,6 +4,8 @@
  */
 package csheets.ext.database.ui;
 
+import csheets.SpreadsheetAppEvent;
+import csheets.SpreadsheetAppListener;
 import csheets.ext.database.controller.ControllerImport;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import csheets.ext.database.ui.UIImport;
+import csheets.ext.database.core.ImportAction;
 
 /**
  * Table selection GUI (to select a select from the database)
@@ -48,6 +51,8 @@ public class UITableSelect extends JFrame
     private JList tableList;
     
     private ControllerImport ctrlImp;
+    
+    private ImportAction impAct;
     
     /**
      * constructor of the GUI for table selection 
@@ -114,7 +119,7 @@ public class UITableSelect extends JFrame
         setResizable(false);
     }
     
-    
+   
      /**
      * handles event on different GUI objects
      */
@@ -127,6 +132,17 @@ public class UITableSelect extends JFrame
             if(e.getSource() == btnOk)
             {
                 tableData = ctrlImp.loadTable(tableList.getSelectedValue().toString());
+                
+                for(int i = 0; i < tableData.length; i++)
+                {
+                    for(int j = 0; j < tableData[0].length; j++)
+                    {
+                        System.out.println(tableData[i][j]);
+                    }
+                }
+                
+//                impAct.actionPerformed(e);
+                
             }
             
 //            /* preview button */
@@ -143,6 +159,8 @@ public class UITableSelect extends JFrame
         }
     }
 
+    
+   
     
 }
 

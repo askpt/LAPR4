@@ -199,8 +199,22 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public String[][] getTableContent(String tableName) {
-		throw new UnsupportedOperationException("Not supported yet.");            
+	public String[][] getTableContent(String tableName) 
+        {
+                ArrayList temp = new ArrayList();
+                int []rowsAndCols = new int[2];
+                  
+                try 
+                {            
+                    temp = queryToArray(tableName);
+                    rowsAndCols = countsRowsAndCols(tableName);
+                } 
+                catch (SQLException ex) 
+                {
+                    Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                return queryTo2dArray(temp, new String[rowsAndCols[0]][rowsAndCols[1]]);
 	}
 
 	@Override
