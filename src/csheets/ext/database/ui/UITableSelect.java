@@ -30,6 +30,7 @@ import csheets.ext.database.ui.UIImport;
 import csheets.ui.ctrl.UIController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * Table selection GUI (to select a select from the database)
@@ -158,9 +159,11 @@ public class UITableSelect extends JFrame
                             spreadSheet.getCell(j - 1, i).setContent(tableData[i][j]);
                         }
                     }
+                    JOptionPane.showMessageDialog(null, "Data successfully imported from " + tableList.getSelectedValue().toString());
                 }
                 catch (FormulaCompilationException ex) 
                 {
+                    JOptionPane.showMessageDialog(null, "Error: importing data");
                     Logger.getLogger(UITableSelect.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
