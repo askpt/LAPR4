@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import csheets.ui.ctrl.UIController;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -53,6 +54,8 @@ public class UITableSelectUpdate extends JFrame
     private UIController uiCtrl;
     
     private Cell [][]cells;
+    
+    private int numberOfCols;
      
     /**
      * constructor of the GUI for table selection 
@@ -70,6 +73,9 @@ public class UITableSelectUpdate extends JFrame
         this.ctrlUp = ctrlUp;
         
         this.cells = cells;
+        
+        /* number of columns of current selected cells */
+        this.numberOfCols = cells[0].length;
         
         /* gets the table list */
         tableArray = ctrlUp.getTableList();
@@ -137,6 +143,16 @@ public class UITableSelectUpdate extends JFrame
             {
                 /* loads a given database table to the table data array */
                 tableData = ctrlUp.loadTable(tableList.getSelectedValue().toString());
+                int numberColsTargetTable = tableData[0].length - 1;
+                
+                if(numberColsTargetTable == numberOfCols)
+                {
+                    // TODO
+                }
+                else
+                {
+                   JOptionPane.showMessageDialog(null, "Error: you can't proceed with update!\nTables differ in column number!\nSelected columns = " + numberOfCols + "\nTable columns = " + numberColsTargetTable);
+                }
             }
             /* cancel button */
             else if(e.getSource() == btnCancel)
