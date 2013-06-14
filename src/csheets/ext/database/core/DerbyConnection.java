@@ -188,9 +188,22 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public String[][] getTableContent(String tableName) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+	public String[][] getTableContent(String tableName) 
+        {
+            ArrayList temp = new ArrayList();
+            int []rowsAndCols = new int[2];
+                  
+            try 
+            {            
+                temp = queryToArray(tableName);
+                rowsAndCols = countsRowsAndCols(tableName);
+            } 
+            catch (SQLException ex) 
+            {
+                Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+            return queryTo2dArray(temp, new String[rowsAndCols[0]][rowsAndCols[1]]);
 	}
 
 	@Override
@@ -200,28 +213,96 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public ArrayList queryToArray(String tableName) throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+	public ArrayList queryToArray(String tableName) throws SQLException 
+        {
+            Statement st = null;
+            ResultSet rs = null;
+            ArrayList temp = new ArrayList();
+            Object obj = null;
+        
+            String expression = "SELECT * FROM " + tableName ;
+        
+            st = connection.createStatement();         
+            rs = st.executeQuery(expression);   
+       
+            ResultSetMetaData meta = rs.getMetaData();
+            int cols = meta.getColumnCount();
+            int rows = countRows(tableName);
+        
+            for(int i = 1; i <= cols; i++)
+            {
+                obj = meta.getColumnName(i);
+                temp.add(obj);
+            }
+        
+            for(; rs.next(); )
+            {
+                for(int i = 0; i < cols; i ++)
+                {
+                    obj = rs.getObject(i + 1);
+                    temp.add(obj);
+                }
+            }
+            st.close();
+            return temp;            
 	}
 
 	@Override
-	public int[] countsRowsAndCols(String tableName) throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+	public int[] countsRowsAndCols(String tableName) throws SQLException 
+        {
+            int []result = new int[2];
+            int rows, cols;
+            Statement st = null;
+            ResultSet rs = null;
+            Object obj = null;
+            String sqlExpression = "SELECT * FROM " + tableName;
+       
+            st = connection.createStatement();
+            rs = st.executeQuery(sqlExpression);
+            ResultSetMetaData meta = rs.getMetaData();
+            rs.next();
+        
+            obj = rs.getObject(1);
+            result[0] = countRows(tableName);
+            result[1] = meta.getColumnCount();
+            
+            st.close();
+                  
+            return result;
 	}
 
 	@Override
-	public int countRows(String tableName) throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+	public int countRows(String tableName) throws SQLException 
+        {
+            Statement st = null;
+            ResultSet rs = null;
+            Object obj = null;
+            String sqlExpression = "SELECT COUNT(*) FROM " + tableName;
+       
+            st = connection.createStatement();
+            rs = st.executeQuery(sqlExpression);
+        
+            ResultSetMetaData meta = rs.getMetaData();
+            rs.next();
+        
+            obj = rs.getObject(1);
+        
+            st.close();
+        
+            return Integer.parseInt(obj.toString()) + 1;
 	}
 
     @Override
     public String[][] queryTo2dArray(ArrayList array, String[][] table) 
     {
-        // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(int i = 0, k = 0; i < table.length; i++)
+        {
+            for(int j = 0; j < table[0].length; j++, k++)
+            {
+                table[i][j] = array.get(k).toString();
+            }          
+        }
+        return table;
     }
 
 }

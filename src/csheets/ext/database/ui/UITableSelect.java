@@ -80,7 +80,7 @@ public class UITableSelect extends JFrame
         
         /* gets the table list */
         tableArray = ctrlImp.getTableList();
-        
+             
         /* Jlist with table list for database */
         tableList = new JList(tableArray);
         tableList.setVisibleRowCount(5);
