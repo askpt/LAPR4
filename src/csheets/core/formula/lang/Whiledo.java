@@ -32,14 +32,7 @@ public class Whiledo implements Function {
 	public Value applyTo(Expression[] args) throws IllegalValueTypeException {
 		// arg[0] = conditionals
 		// arg[>0] = iterations
-		int i = 1;
-		while (args[0].evaluate().toBoolean()) {
-			for (; i < (args.length - 1); i++) {
-				args[i].evaluate();
-			}
-			return args[i].evaluate();
-		}
-		return args[i].evaluate();
+		return args[args.length - 1].evaluate();
 	}
 
 	@Override
