@@ -15,7 +15,17 @@ us -> sys : select a cell
 us -> sys : insert a sequence of expressions
 us -> sys : insert the stop condition of the loop
 us -> sys : presses return
-sys -> sys : compiles expression
+sys -> us : display the result of last iteration in the cells
+@enduml
+
+@startuml doc-files/sd_system_eval.png
+Actor User as us
+Participant System as sys
+
+us -> sys : select a cell
+us -> sys : insert the eval function
+us -> sys : insert the cell expression
+us -> sys : presses return
 sys -> us : display the result of last iteration in the cells
 @enduml
 
@@ -191,7 +201,12 @@ Function <|.. Dowhile
 * <b>System Sequence Diagram - Loop of Expressions</b>
 * </p>
 * <img src="doc-files/sd_system_do_loops.png">
-*
+* 
+* <p>
+* <b>System Sequence Diagram - Eval</b>
+* </p>
+* <img src="doc-files/sd_system_eval.png">
+* 
 *<p>
 *<b>Sequence Diagram - Implementation of loops</b>
 *</p>
