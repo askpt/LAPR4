@@ -62,13 +62,15 @@ public class ControllerSync {
 	 *            cells to be sync
 	 * @param tableName
 	 *            name of the table
+	 * @param url
+	 *            database url
 	 * @param observer
 	 *            the observer object
 	 * 
 	 */
 	public void startSync(String user, String pass, Cell[][] cells,
-			String tableName, Observer observer) {
-		facade.startSync(user, pass, cells, tableName, observer);
+			String tableName, String url, Observer observer) {
+		facade.startSync(user, pass, cells, tableName, url, observer);
 	}
 
 	/**
