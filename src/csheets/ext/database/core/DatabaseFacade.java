@@ -87,21 +87,24 @@ public class DatabaseFacade extends Observable {
 	 *            cells to be sync
 	 * @param tableName
 	 *            name of the table
+	 * @param url
+	 *            database url
 	 * @param observer
 	 *            the observer object
 	 */
 	public void startSync(String user, String pass, Cell[][] cells,
-			String tableName, Observer observer) {
+			String tableName, String url, Observer observer) {
 		addObserver(observer);
-		exportData(cells, tableName); // FIXME Error with disconnection of the
-										// db
+		adapter.createTable(tableName, cells);
 
 		CellDatabase[][] cellsTemp = new CellDatabase[cells.length - 1][cells[0].length];
 		while (true) {
 			try {
 				temporaryStructure(cells, cellsTemp);
+				adapter.disconnet();
 
 				Thread.sleep(30000);
+				adapter.createConnection(url, user, pass);
 				String[][] serverCells = loadTable(tableName);
 				for (int i = 0; i < cellsTemp.length; i++) {
 					int indexServ = findLine(cellsTemp[i][0].getRow(),
@@ -113,6 +116,8 @@ public class DatabaseFacade extends Observable {
 
 			} catch (InterruptedException e) {
 			} catch (FormulaCompilationException e) {
+			} catch (ClassNotFoundException e) {
+			} catch (SQLException e) {
 			}
 
 			// TODO Finish method

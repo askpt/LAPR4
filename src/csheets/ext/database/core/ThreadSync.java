@@ -52,7 +52,7 @@ public class ThreadSync implements Runnable {
 	public void run() {
 		ControllerSync sync = new ControllerSync();
 		sync.connect(url, user, pass, dbName);
-		sync.startSync(user, pass, cells, tableName, observer);
+		sync.startSync(user, pass, cells, tableName, url, observer);
 	}
 
 }
