@@ -143,5 +143,5 @@ public class ControllerUpdate implements Subject
     public String[] getTableList() 
     {
         return facade.getTableList();
-    }
+    } 
 }
