@@ -18,7 +18,9 @@ public class ConsoleDerbyTest
     private static String insertSt = "insert into " + tableName + " VALUES('1', 'SLB', '32')";
     private static String insertSt2 = "insert into " + tableName + " VALUES('2', 'FCP', '27')";
     
-    private static ArrayList allTables = new ArrayList();;
+    private static ArrayList allTables = new ArrayList();
+    private static ArrayList query = new ArrayList();
+    
 
     public static void main(String[] args) throws SQLException
     {
@@ -28,8 +30,11 @@ public class ConsoleDerbyTest
 //        insertRestaurants(insertSt2);
 //        selectRestaurants();
 //        showAllTables();
-        allTables = saveAllTableNamesToArrayList();
-        printArrayList(allTables);
+//        allTables = saveAllTableNamesToArrayList();
+//        printArrayList(allTables);
+        query = queryToArray(tableName);
+        printArrayList(query);
+        
         shutdown();
     }
     
@@ -186,6 +191,61 @@ public class ConsoleDerbyTest
         {
             System.out.println(a.get(i).toString());
         }
+    }
+    
+    public static synchronized ArrayList queryToArray(String tableName) throws SQLException 
+    {
+        Statement st = null;
+        ResultSet rs = null;
+        ArrayList temp = new ArrayList();
+        Object obj = null;
+        
+        String expression = "SELECT * FROM " + tableName ;
+        
+        st = connection.createStatement();         
+        rs = st.executeQuery(expression);   
+       
+        ResultSetMetaData meta = rs.getMetaData();
+        int cols = meta.getColumnCount();
+        int rows = countRows(tableName);
+        
+        for(int i = 1; i <= cols; i++)
+        {
+            obj = meta.getColumnName(i);
+            temp.add(obj);
+        }
+        
+        for(; rs.next(); )
+        {
+            for(int i = 0; i < cols; i ++)
+            {
+                obj = rs.getObject(i + 1);
+                temp.add(obj);
+            }
+        }
+        st.close();
+        return temp;
+    }
+     
+    
+    public static synchronized int countRows(String tableName) throws SQLException
+    {
+        Statement st = null;
+        ResultSet rs = null;
+        Object obj = null;
+        String sqlExpression = "SELECT COUNT(*) FROM " + tableName;
+       
+        st = connection.createStatement();
+        rs = st.executeQuery(sqlExpression);
+        
+        ResultSetMetaData meta = rs.getMetaData();
+        rs.next();
+        
+        obj = rs.getObject(1);
+        
+        st.close();
+        
+        return Integer.parseInt(obj.toString()) + 1;
     }
     
     private static void shutdown() throws SQLException
