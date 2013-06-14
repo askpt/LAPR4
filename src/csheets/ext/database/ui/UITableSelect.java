@@ -61,7 +61,7 @@ public class UITableSelect extends JFrame
     private UIController uiCtrl;
     
     private Spreadsheet spreadSheet;
-    
+     
     /**
      * constructor of the GUI for table selection 
      * @param dbName name of the database
@@ -138,42 +138,19 @@ public class UITableSelect extends JFrame
         @Override
         public void actionPerformed(ActionEvent e) 
         {
+            boolean flag = false;
+            
             /* ok button */
             if(e.getSource() == btnOk)
             {
                 /* loads a given database table to the table data array */
                 tableData = ctrlImp.loadTable(tableList.getSelectedValue().toString());
-                try 
-                {
-                    /* getting the starting row, which is defined in any of the first columns */
-                    //int startRow = Integer.parseInt(tableData[1][0]);
-                    
-                    /* cycles the entire tableData array */
-                    for(int i = 0; i < tableData.length; i++)
-                    {
-                        for(int j = 1; j < tableData[0].length; j++)
-                        {         
-                            /* changes the content of the given cell taking into account the row
-                             (we have to subtract 2 to go to right place) */
-                            //spreadSheet.getCell(startRow + (j - 2), i).setContent(tableData[i][j]);
-                            spreadSheet.getCell(j - 1, i).setContent(tableData[i][j]);
-                        }
-                    }
-                    JOptionPane.showMessageDialog(null, "Data successfully imported from " + tableList.getSelectedValue().toString());
-                }
-                catch (FormulaCompilationException ex) 
-                {
-                    JOptionPane.showMessageDialog(null, "Error: importing data");
-                    Logger.getLogger(UITableSelect.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
+                /* launches window for user to confirm import */
+                ConfirmImportUI confImpUI = new ConfirmImportUI(spreadSheet, tableData);
+                dispose();
+
             }
-            
-//            /* preview button */
-//            else if(e.getSource() == btnPreview)
-//            {
-//               
-//            }
-            
             /* cancel button */
             else if(e.getSource() == btnCancel)
             {
