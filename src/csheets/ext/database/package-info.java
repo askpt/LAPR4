@@ -165,22 +165,26 @@
  UIImport -> ControllerImport: <<Thread.run>>\n\tstart()
  UIImport -> ControllerImport: connect(String url, String user, String pass, String dbName)
  ControllerImport -> DatabaseFacade: createConnection(String url, String user, String pass)
- DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
- DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology()
- DatabaseFacade -> DBConnectionAdapter: createConnection(String url, String user, String pass)
+ DatabaseFacade -> DBConnectionFactory: getInstance()
+ DatabaseFacade -> DBConnectionFactory: getDBTechnology()
+ DatabaseFacade -> DBConnectionStrategy: createConnection(String url, String user, String pass)
  UIImport -> UITableSelect: <<create>>
  UITableSelect -> ControllerImport: getTableList()
  ControllerImport -> DatabaseFacade: getTableList()
- DatabaseFacade -> DBConnectionAdapter: getTableList()
- DatabaseFacade -> DBConnectionAdapter: queryToArray() 
-
- UITableSelect -> ControllerImport: loadTable(String tableName)
+ DatabaseFacade -> DBConnectionStrategy: getTableList()
+ DatabaseFacade -> DBConnectionStrategy: queryToArray() 
+ UITableSelect -> ControllerImport: String [][]tableData = loadTable(String tableName)
  ControllerImport -> DatabaseFacade: loadTable(String tableName)
- UIImport -> ControllerImport: startImport()
- ControllerImport -> DatabaseFacade: getTableContent()
- DatabaseFacade -> DBConnectionAdapter: getTableContent(String tableName)
- UIImport -> ControllerImport: getTable()
- UIImport -> UIImport: showData()
+ DatabaseFacade -> DBConnectionStrategy: getTableContent(String tableName)
+ DBConnectionStrategy -> DBConnectionStrategy: queryToArray(String tableName)
+ DBConnectionStrategy -> DBConnectionStrategy: countsRowsAndCols(String tableName)
+ DBConnectionStrategy -> DBConnectionStrategy: queryTo2dArray(String tableName)
+ loop i = 0; i < tableData.length
+  loop j = 1; j < tableData[0].length
+   UITableSelect -> Spreadsheet: getCell(j - 1; i)
+   UITableSelect -> Cell: setContent(tableData[i][j])
+  end
+ end
  @enduml
 
  @startuml doc-files/use_case_realization_DBupdate.png
