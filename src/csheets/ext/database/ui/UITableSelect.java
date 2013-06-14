@@ -178,9 +178,5 @@ public class UITableSelect extends JFrame
             }     
         }
     }
-
-    
-   
-    
 }
 
