@@ -21,6 +21,8 @@ public class ConsoleDerbyTest
     private static ArrayList allTables = new ArrayList();
     private static ArrayList query = new ArrayList();
     
+    private static int[] rowsCols;
+    
 
     public static void main(String[] args) throws SQLException
     {
@@ -30,10 +32,16 @@ public class ConsoleDerbyTest
 //        insertRestaurants(insertSt2);
 //        selectRestaurants();
 //        showAllTables();
-//        allTables = saveAllTableNamesToArrayList();
+        allTables = saveAllTableNamesToArrayList();
 //        printArrayList(allTables);
-        query = queryToArray(tableName);
-        printArrayList(query);
+//        query = queryToArray(tableName);
+//        printArrayList(query);
+        
+//        rowsCols = countsRowsAndCols(tableName);
+//        System.out.println("ROWS = " + rowsCols[0]);
+//        System.out.println("COLS = " + rowsCols[1]);
+        
+        dropAllTables(allTables);
         
         shutdown();
     }
@@ -247,6 +255,44 @@ public class ConsoleDerbyTest
         
         return Integer.parseInt(obj.toString()) + 1;
     }
+    
+    public static int[] countsRowsAndCols(String tableName) throws SQLException 
+        {
+            int []result = new int[2];
+            int rows, cols;
+            Statement st = null;
+            ResultSet rs = null;
+            Object obj = null;
+            String sqlExpression = "SELECT * FROM " + tableName;
+       
+            st = connection.createStatement();
+            rs = st.executeQuery(sqlExpression);
+            ResultSetMetaData meta = rs.getMetaData();
+            rs.next();
+        
+            obj = rs.getObject(1);
+            result[0] = countRows(tableName);
+            result[1] = meta.getColumnCount();
+            
+            st.close();
+                  
+            return result;
+	}
+    
+    
+    private static void dropAllTables(ArrayList allTables) throws SQLException
+    {
+        for(int i = 0; i < allTables.size(); i++)
+        {
+            String stat = "DROP TABLE  " + allTables.get(i).toString();
+            Statement st = null;
+            st = connection.createStatement();
+            int j = st.executeUpdate(stat);
+            System.out.println("TABLE DELETED: " + allTables.get(i).toString());
+        }
+        
+    }
+    
     
     private static void shutdown() throws SQLException
     {
