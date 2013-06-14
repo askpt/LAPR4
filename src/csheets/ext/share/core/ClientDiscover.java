@@ -70,6 +70,7 @@ public class ClientDiscover implements Runnable {
 			DatagramPacket sendPacket = new DatagramPacket(sendData,
 					sentence.length(), IPAddress, 9876);
 			clientSocket.send(sendPacket);
+			clientSocket.setSoTimeout(3000);
 			while (i > 0) {
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,
 						receiveData.length);
