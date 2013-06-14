@@ -21,10 +21,11 @@ public class ConsoleDerbyTest
     public static void main(String[] args) throws SQLException
     {
         createConnection();
-        createTable(tableName);
-        insertRestaurants(insertSt);
-        insertRestaurants(insertSt2);
-        selectRestaurants();
+//        createTable(tableName);
+//        insertRestaurants(insertSt);
+//        insertRestaurants(insertSt2);
+//        selectRestaurants();
+        showAllTables();
         shutdown();
     }
     
@@ -97,6 +98,37 @@ public class ConsoleDerbyTest
                 String restName = results.getString(2);
                 String cityName = results.getString(3);
                 System.out.println(id + "\t\t" + restName + "\t\t" + cityName);
+            }
+            results.close();
+            st.close();
+        }
+        catch (SQLException sqlExcept)
+        {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    private static void showAllTables()
+    {
+        try
+        {
+            Statement st = null;
+            st = connection.createStatement();
+            ResultSet results = st.executeQuery("SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'");
+            ResultSetMetaData rsmd = results.getMetaData();
+            int numberCols = rsmd.getColumnCount();
+            for (int i=1; i<=numberCols; i++)
+            {
+                //print Column Names
+                System.out.print(rsmd.getColumnLabel(i)+"\t\t");  
+            }
+
+            System.out.println("\n-------------------------------------------------");
+
+            while(results.next())
+            {
+                String tableName = results.getString(1);
+                System.out.println(tableName);
             }
             results.close();
             st.close();
