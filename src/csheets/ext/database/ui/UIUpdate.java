@@ -2,6 +2,7 @@ package csheets.ext.database.ui;
 
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerUpdate;
+import csheets.ext.database.core.ThreadUpdate;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -34,7 +35,7 @@ public class UIUpdate extends JFrame implements Observer
     private ControllerUpdate ctrlUp;
     
     /* export thread */
-//    ThreadUpdate thrUp;
+    ThreadUpdate thrUp;
     
     /* buttons */
     private JButton btnOk = new JButton("OK");
@@ -167,7 +168,15 @@ public class UIUpdate extends JFrame implements Observer
                 /* if all fields are filled tries to connect */
                 else
                 {
-                   
+                   /* the combo index indicates which database will be used */
+                   int index = comboDrivers.getSelectedIndex();
+                   /* database name */
+                   String dbName = comboDrivers.getSelectedItem().toString();
+                   /* thread to connect to database and retrive all tables names */
+                   thrUp = new ThreadUpdate(dbDrivers[index][1], userTxt.getText(), pwd.getText(), dbName, ctrlUp, cells);
+                   /* runs the thread to load tables list */
+                   thrUp.run();
+                   dispose();
                 }
             }
             /* button cancel */
