@@ -33,7 +33,7 @@ public class DatabaseMenu extends JMenu {
 		// menu options
 		add(new Export(uiController));
 		add(new ImportAction(uiController));
-		// add(new Update(uiController));
+		add(new Update(uiController));
 		add(new Sync(uiController));
 	}
 }
