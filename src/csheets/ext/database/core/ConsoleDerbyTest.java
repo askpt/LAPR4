@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 
 
 public class ConsoleDerbyTest
@@ -17,6 +18,7 @@ public class ConsoleDerbyTest
     private static String insertSt = "insert into " + tableName + " VALUES('1', 'SLB', '32')";
     private static String insertSt2 = "insert into " + tableName + " VALUES('2', 'FCP', '27')";
     
+    private static ArrayList allTables = new ArrayList();;
 
     public static void main(String[] args) throws SQLException
     {
@@ -25,7 +27,9 @@ public class ConsoleDerbyTest
 //        insertRestaurants(insertSt);
 //        insertRestaurants(insertSt2);
 //        selectRestaurants();
-        showAllTables();
+//        showAllTables();
+        allTables = saveAllTableNamesToArrayList();
+        printArrayList(allTables);
         shutdown();
     }
     
@@ -136,6 +140,51 @@ public class ConsoleDerbyTest
         catch (SQLException sqlExcept)
         {
             sqlExcept.printStackTrace();
+        }
+    }
+    
+    private static ArrayList saveAllTableNamesToArrayList()
+    {
+        ArrayList temp = new ArrayList();
+        try
+        {
+            Statement st = null;
+            st = connection.createStatement();
+            ResultSet results = st.executeQuery("SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'");
+            ResultSetMetaData rsmd = results.getMetaData();
+            int numberCols = rsmd.getColumnCount();
+            for (int i=1; i<=numberCols; i++)
+            {
+                //print Column Names
+                System.out.print(rsmd.getColumnLabel(i)+"\t\t");  
+            }
+
+            
+            Object obj = null;
+            for (; results.next();) 
+            {
+                for (int i = 0; i < numberCols; i++) 
+                {
+                    obj = results.getObject(i + 1);
+                    temp.add(obj);
+                }
+            }
+            results.close();
+            st.close();
+        }
+        catch (SQLException sqlExcept)
+        {
+            sqlExcept.printStackTrace();
+        }
+        
+        return temp;
+    }
+    
+    private static void printArrayList(ArrayList a)
+    {
+        for(int i = 0; i < a.size(); i++)
+        {
+            System.out.println(a.get(i).toString());
         }
     }
     
