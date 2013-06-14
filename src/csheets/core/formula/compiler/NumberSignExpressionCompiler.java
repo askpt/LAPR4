@@ -115,6 +115,18 @@ public class NumberSignExpressionCompiler implements ExpressionCompiler {
 		if (function != null) {
 			List<Expression> args = new ArrayList<Expression>();
 			AST child = node.getFirstChild();
+			if (function instanceof Eval) {
+
+				try {
+
+					Expression expression = convert(cell, node.getFirstChild());
+					cell.setContent(expression.evaluate().toText());
+					// FIXME need to fix some bugs...
+					// doesnt appear the function result, but the string
+				} catch (IllegalValueTypeException e) {
+				}
+
+			}
 			if (child != null) {
 				args.add(convert(cell, child));
 				while ((child = child.getNextSibling()) != null)
@@ -122,6 +134,7 @@ public class NumberSignExpressionCompiler implements ExpressionCompiler {
 			}
 
 			Expression[] argArray = args.toArray(new Expression[args.size()]);
+
 			if (function instanceof Whiledo) {
 
 				try {

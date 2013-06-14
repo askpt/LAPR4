@@ -40,6 +40,7 @@ If
 Do
 Whiledo
 Dowhile
+Eval
 
 # # # Numeric functions reflected from java.lang.Math
 #
