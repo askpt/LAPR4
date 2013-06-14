@@ -95,12 +95,13 @@ public class DatabaseFacade extends Observable {
 		addObserver(observer);
 		exportData(cells, tableName); // FIXME Error with disconnection of the
 										// db
+
 		CellDatabase[][] cellsTemp = new CellDatabase[cells.length - 1][cells[0].length];
 		while (true) {
 			try {
 				temporaryStructure(cells, cellsTemp);
-				Thread.sleep(300);
 
+				Thread.sleep(30000);
 				String[][] serverCells = loadTable(tableName);
 				for (int i = 0; i < cellsTemp.length; i++) {
 					int indexServ = findLine(cellsTemp[i][0].getRow(),
@@ -116,6 +117,7 @@ public class DatabaseFacade extends Observable {
 
 			// TODO Finish method
 			throw new UnsupportedOperationException("Not supported yet.");
+
 		}
 	}
 
@@ -164,9 +166,17 @@ public class DatabaseFacade extends Observable {
 			}
 			if (!cellApp[i].getContent().equals(cellTemp[i].getContent())
 					&& !cellTemp[i].getContent().equals(lineServer[i + 1])) {
+				ObserverMessages obs = new ObserverMessages(lineServer[i + 1],
+						cellApp[i].getContent());
 				setChanged();
-				notifyObservers();
-				// TODO add obj to change the merge!
+				notifyObservers(obs);
+				clearChanged();
+				if (obs.getDecision() == 0) {
+					cellApp[i].setContent(lineServer[i + 1]);
+				} else if (obs.getDecision() == 1) {
+					lineServer[i + 1] = cellApp[i].getContent();
+					dbNeedChange = true;
+				}
 			}
 		}
 
