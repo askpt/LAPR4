@@ -50,7 +50,7 @@ class ConfirmImportUI extends JFrame
         String [][]data = new String[tableData.length - 1][tableData[0].length - 1];
         for(int i = 0; i < data.length; i++)
         {
-            for(int j = 0; j < data.length; j++)
+            for(int j = 0; j < data[0].length; j++)
             {
                 data[i][j] = tableData[i + 1][j + 1];
             }
