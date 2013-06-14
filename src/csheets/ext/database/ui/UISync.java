@@ -5,10 +5,12 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerSync;
-import csheets.ext.database.core.ThreadSync;
+import csheets.ext.database.core.*;
 
 /**
  * Class that will implements the interface of the sync box
@@ -54,7 +56,11 @@ public class UISync extends JFrame implements Observer {
 	/** export thread */
 	ThreadSync thrSync;
 
+	/** this ui */
 	UISync sync = this;
+
+	/** return value for merge */
+	private int returnValue = -1;
 
 	/**
 	 * Creates a new sync ui
@@ -202,7 +208,109 @@ public class UISync extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+
+		MergeWindowSync ui = new MergeWindowSync(sync, true);
+		ObserverMessages obm = (ObserverMessages) arg;
+		String message = "Database:" + obm.getDatabaseValue()
+				+ "\nApplication:" + obm.getApplicationValue()
+				+ "\nWhat do you wanna persist?";
+		ui.createWindow(message);
+		ui.setVisible(true);
+		obm.setDecision(returnValue);
+	}
+
+	/**
+	 * Creates a new merge window error
+	 * 
+	 * @author Andre
+	 * 
+	 */
+	public class MergeWindowSync extends JDialog {
+		/** generated id */
+		private static final long serialVersionUID = 1L;
+		/** application button */
+		private JButton jButton1;
+		/** database button */
+		private JButton jButton2;
+		/** text area */
+		private JTextArea jLabel1;
+
+		/**
+		 * Creates new MergeWindowSync frame
+		 */
+		public MergeWindowSync(Frame parent, boolean modal) {
+			super(parent, modal);
+		}
+
+		/**
+		 * Creates a new window to choose between application and database
+		 * 
+		 * @param text
+		 *            the text in label
+		 * @return the choosed method
+		 */
+		public void createWindow(String text) {
+			jLabel1 = new JTextArea(text);
+			jLabel1.setEditable(false);
+			jButton1 = new JButton("Application");
+			jButton1.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					returnValue = 0;
+
+					dispose();
+				}
+			});
+			jButton2 = new JButton("Database");
+			jButton2.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					returnValue = 1;
+
+					dispose();
+				}
+			});
+			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+			GroupLayout layout = new GroupLayout(getContentPane());
+			getContentPane().setLayout(layout);
+			layout.setHorizontalGroup(layout
+					.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addGroup(
+							layout.createSequentialGroup()
+									.addGap(35, 35, 35)
+									.addGroup(
+											layout.createParallelGroup(
+													GroupLayout.Alignment.LEADING,
+													false)
+													.addGroup(
+															layout.createSequentialGroup()
+																	.addComponent(
+																			jButton1)
+																	.addPreferredGap(
+																			ComponentPlacement.RELATED,
+																			GroupLayout.DEFAULT_SIZE,
+																			Short.MAX_VALUE)
+																	.addComponent(
+																			jButton2))
+													.addComponent(jLabel1))
+									.addContainerGap(51, Short.MAX_VALUE)));
+			layout.setVerticalGroup(layout.createParallelGroup(
+					Alignment.LEADING).addGroup(
+					layout.createSequentialGroup()
+							.addGap(28, 28, 28)
+							.addComponent(jLabel1)
+							.addPreferredGap(ComponentPlacement.RELATED, 55,
+									Short.MAX_VALUE)
+							.addGroup(
+									layout.createParallelGroup(
+											Alignment.BASELINE)
+											.addComponent(jButton1)
+											.addComponent(jButton2))
+							.addGap(22, 22, 22)));
+			pack();
+
+		}
 	}
 }
