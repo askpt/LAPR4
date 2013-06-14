@@ -119,10 +119,6 @@ public class DatabaseFacade extends Observable {
 			} catch (ClassNotFoundException e) {
 			} catch (SQLException e) {
 			}
-
-			// TODO Finish method
-			throw new UnsupportedOperationException("Not supported yet.");
-
 		}
 	}
 

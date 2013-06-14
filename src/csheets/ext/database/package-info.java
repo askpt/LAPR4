@@ -15,8 +15,15 @@
  *
  * <p>
  * <b>System sequence diagram - Synchronize between application and database</b>
+ * </p>
  * <img src="doc-files/system_diagram_syncronize.png">
+ * 
  * <p>
+ * <b>Sequence diagram - Synchronize between application and database</b>
+ * </p>
+ * <img src="doc-files/sequence_diagram_sync.png">
+ * 
+ * 
  * <b>Class Diagram (persistence) </b>
  * </p>
  * <img src="doc-files/class_diagram_persistance.png">
@@ -90,6 +97,63 @@
  @enduml
 
  @startuml doc-files/class_diagram_persistance.png
+
+ class ControllerSync {
+ ~List<Database> dbList
+ ~DatabaseFacade facade
+ +ControllerSync()
+ +String[][] getDBlist()
+ +void startSync(String user, String pass, Cell[][] cells, String tableName, String url, Observer observer)
+ +void connect(String url, String user, String pass, String dbName)
+ }
+
+ class ThreadSync {
+ -Cell[][] cells
+ -String url
+ -String user
+ -String pass
+ -String tableName
+ -String dbName
+ -Observer observer
+ +ThreadSync(Cell[][] cells, String url, String user, String pass, String table, String dbName, Observer observer)
+ +void run()
+ }
+ interface Runnable {
+ }
+ Runnable <|.. ThreadSync
+
+ class UISync {
+ -{static}long serialVersionUID
+ -String[][] dbDrivers
+ -String[] driversName
+ -JComboBox comboDrivers
+ -ControllerSync ctrlSync
+ -JButton btnOk
+ -JButton btnCancel
+ -JButton btnUrl
+ -Cell[][] cells
+ -JTextField userTxt
+ -JTextField dbTxt
+ -JTextField tableTxt
+ -JTextField urlTxt
+ -JPasswordField pwd
+ ~JLabel sysMsg
+ ~ThreadSync thrSync
+ ~UISync sync
+ -int returnValue
+ +UISync(Cell[][] cells)
+ +void update(Observable o, Object arg)
+ }
+ class JFrame {
+ }
+ JFrame <|-- UISync
+ interface Observer {
+ }
+ Observer <|.. UISync
+
+
+
+
  interface DBConnectionAdapter
  DBConnectionAdapter <|-- HsqlDBConnectAdaptee
  DBConnectionAdapter <|-- DerbyDBConnectAdaptee
@@ -141,10 +205,10 @@
  UIExport -> ControllerExport: getDBList()
  ControllerExport -> DBCsvReader: <<create>>
  ControllerExport -> DBCsvReader: getDBlist()
-  note left of ControllerExport
-   thread launched 
-   at this point
-  end note
+ note left of ControllerExport
+ thread launched 
+ at this point
+ end note
  UIExport -> ControllerExport: <<Thread.run>>\n\tstart()
  ControllerExport -> DatabaseFacade: createConnection(String url, String user, String pass, String adapteeName)
  DatabaseFacade -> DBConnectionFactory: getInstance()
@@ -156,7 +220,7 @@
  DatabaseFacade -> DBConnectionStrategy: disconnect()
  @enduml
 
-@startuml doc-files/use_case_realization_DBimport.png
+ @startuml doc-files/use_case_realization_DBimport.png
  UIImport -> ControllerImport:  <<create(Observer this)>>
  ControllerImport -> ControllerImport: addObserver(Observer this)
  ControllerImport -> DatabaseFacade: <<create>>
@@ -180,10 +244,10 @@
  DBConnectionStrategy -> DBConnectionStrategy: countsRowsAndCols(String tableName)
  DBConnectionStrategy -> DBConnectionStrategy: queryTo2dArray(String tableName)
  loop i = 0; i < tableData.length
-  loop j = 1; j < tableData[0].length
-   UITableSelect -> Spreadsheet: getCell(j - 1; i)
-   UITableSelect -> Cell: setContent(tableData[i][j])
-  end
+ loop j = 1; j < tableData[0].length
+ UITableSelect -> Spreadsheet: getCell(j - 1; i)
+ UITableSelect -> Cell: setContent(tableData[i][j])
+ end
  end
  @enduml
 
@@ -214,6 +278,50 @@
  DatabaseFacade -> DBConnectionAdapter: updateTable(String targetTable, Cell [][]cells, int [][]pk)
  ControllerExport -> ControllerExport: alertObservers()
  @enduml
+
+ @startuml doc-files/sequence_diagram_sync.png
+ participant UISync as uis
+ participant ThreadSync as thr
+ participant ControllerSync as ctrl
+ participant DatabaseFacade as dbf
+
+ activate uis
+ create thr
+ uis -> thr: create
+ activate thr
+ uis->thr : <<Thread.start()>>\ncreate(cells, url, user, pass, table, dbName, observer)
+ create ctrl
+ thr->ctrl:create
+ activate ctrl
+
+ thr->ctrl:connect(url, user, pass, dbName)
+ create dbf
+ ctrl -> dbf: create
+ activate dbf
+ ctrl -> dbf: createConnection(String url, String user, String pass)
+ dbf -> DBConnectionStrategyFactory: getInstance()
+ dbf -> DBConnectionStrategyFactory: getDBTechnology(urlConnect)
+ dbf -> DBConnectionStrategy: createConnection(url, user, pass)
+
+ thr->ctrl:startSync(user, pass, cells, tableName, url, observer)
+ ctrl->dbf:startSync(user, pass, cells, tableName, url, observer)
+ dbf->dbf:addObserver(observer)
+ dbf-> DBConnectionStrategy: createTable(cells, cellsTemp)
+ loop while(true)
+ dbf->dbf:temporaryStructure(cells, cellsTemp)
+ dbf->DBConnectionStrategy:disconnect()
+ ...sleep 30 sec...
+ dbf -> DBConnectionStrategy: createConnection(url, user, pass)
+ loop for i=0;cellsTemp.lenght;i++
+ dbf->dbf:indexServ = findLine(cellsTemp[i][0].getRow(),serverCells)
+ dbf->dbf:indexApp = findLine(cellsTemp[i][0].getRow(), cells)
+ dbf->dbf:checkLine(serverCells[indexServ], cells[indexApp],cellsTemp[i])
+ end
+ end
+
+ @enduml
+
+
  */
 
 /**
@@ -221,3 +329,4 @@
  *
  */
 package csheets.ext.database;
+
