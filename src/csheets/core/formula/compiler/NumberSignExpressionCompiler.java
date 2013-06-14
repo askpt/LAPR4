@@ -39,155 +39,164 @@ import csheets.core.formula.lang.*;
  */
 public class NumberSignExpressionCompiler implements ExpressionCompiler {
 
-    /** The character that signals that a cell's content is a formula ('#') */
-    /* changed from = to # */
-    public static final char FORMULA_STARTER = '#';
+	/** The character that signals that a cell's content is a formula ('#') */
+	/* changed from = to # */
+	public static final char FORMULA_STARTER = '#';
 
-    /**
-     * Creates the Excel expression compiler.
-     */
-    public NumberSignExpressionCompiler() {
-    }
-
-    @Override
-    public char getStarter() {
-	return FORMULA_STARTER;
-    }
-
-    @Override
-    public Expression compile(Cell cell, String source)
-	    throws FormulaCompilationException {
-	// Creates the lexer and parser
-	/* adapted to support the new parser and lexer */
-	NumberSignFormulaParser parser = new NumberSignFormulaParser(
-		new NumberSignFormulaLexer(new StringReader(source)));
-	try {
-	    // Attempts to match an expression
-	    parser.expression();
-	} catch (ANTLRException e) {
-	    throw new FormulaCompilationException(e);
-	}
-	// Converts the expression and returns it
-	return convert(cell, parser.getAST());
-    }
-
-    /**
-     * Converts the given ANTLR AST to an expression.
-     * 
-     * @param node
-     *            the abstract syntax tree node to convert
-     * @return the result of the conversion
-     */
-    protected Expression convert(Cell cell, AST node)
-	    throws FormulaCompilationException {
-	// System.out.println("Converting node '" + node.getText() +
-	// "' of tree '" + node.toStringTree() + "' with " +
-	// node.getNumberOfChildren() + " children.");
-	if (node.getNumberOfChildren() == 0) {
-	    try {
-		switch (node.getType()) {
-		case NumberSignFormulaParserTokenTypes.NUMBER:
-		    return new Literal(Value.parseNumericValue(node.getText()));
-		case NumberSignFormulaParserTokenTypes.STRING:
-		    return new Literal(Value.parseValue(node.getText(),
-			    Value.Type.BOOLEAN, Value.Type.DATE));
-		case NumberSignFormulaParserTokenTypes.CELL_REF:
-		    return new CellReference(cell.getSpreadsheet(),
-			    node.getText());
-		case NumberSignFormulaParserTokenTypes.NAME:
-		    /*
-		     * return cell.getSpreadsheet().getWorkbook().
-		     * getRange(node.getText()) (Reference)
-		     */
-		}
-	    } catch (ParseException e) {
-		throw new FormulaCompilationException(e);
-	    }
+	/**
+	 * Creates the Excel expression compiler.
+	 */
+	public NumberSignExpressionCompiler() {
 	}
 
-	// Convert function call
-	Function function = null;
-	try {
-	    function = Language.getInstance().getFunction(node.getText());
-	} catch (UnknownElementException e) {
+	@Override
+	public char getStarter() {
+		return FORMULA_STARTER;
 	}
 
-	if (function != null) {
-	    List<Expression> args = new ArrayList<Expression>();
-	    AST child = node.getFirstChild();
-	    if (child != null) {
-		args.add(convert(cell, child));
-		while ((child = child.getNextSibling()) != null)
-		    args.add(convert(cell, child));
-	    }
-
-	    Expression[] argArray = args.toArray(new Expression[args.size()]);
-	    if (function instanceof Whiledo) {
-
+	@Override
+	public Expression compile(Cell cell, String source)
+			throws FormulaCompilationException {
+		// Creates the lexer and parser
+		/* adapted to support the new parser and lexer */
+		NumberSignFormulaParser parser = new NumberSignFormulaParser(
+				new NumberSignFormulaLexer(new StringReader(source)));
 		try {
-		    while (argArray[0].evaluate().toBoolean()) {
-			convert(cell, node);
-		    }
-		} catch (IllegalValueTypeException e) {
+			// Attempts to match an expression
+			parser.expression();
+		} catch (ANTLRException e) {
+			throw new FormulaCompilationException(e);
 		}
-	    }
-	    return new FunctionCall(function, argArray);
+		// Converts the expression and returns it
+		return convert(cell, parser.getAST());
 	}
 
-	if (node.getNumberOfChildren() == 1)
-	    // Convert unary operation
-	    return new UnaryOperation(Language.getInstance().getUnaryOperator(
-		    node.getText()), convert(cell, node.getFirstChild()));
-	else if (node.getNumberOfChildren() >= 2) {
-	    // Convert binary operation
-	    if (node.getType() == NumberSignFormulaParserTokenTypes.SEMI) {
-		convert(cell, node.getFirstChild());
-		return convert(cell, node.getFirstChild().getNextSibling());
-	    } else {
-		BinaryOperator operator = Language.getInstance()
-			.getBinaryOperator(node.getText());
-		if (operator instanceof RangeReference) {
-
-		    return new ReferenceOperation((Reference) convert(cell,
-			    node.getFirstChild()), (RangeReference) operator,
-			    (Reference) convert(cell, node.getFirstChild()
-				    .getNextSibling()));
-		} else if (operator instanceof RelationalOperatorImpl) {
-		    return new RelationalOperatorImpl((Reference) convert(cell,
-			    node.getFirstChild()), (RangeReference) operator,
-			    (Reference) convert(cell, node.getFirstChild()
-				    .getNextSibling()));
+	/**
+	 * Converts the given ANTLR AST to an expression.
+	 * 
+	 * @param node
+	 *            the abstract syntax tree node to convert
+	 * @return the result of the conversion
+	 */
+	protected Expression convert(Cell cell, AST node)
+			throws FormulaCompilationException {
+		// System.out.println("Converting node '" + node.getText() +
+		// "' of tree '" + node.toStringTree() + "' with " +
+		// node.getNumberOfChildren() + " children.");
+		if (node.getNumberOfChildren() == 0) {
+			try {
+				switch (node.getType()) {
+				case NumberSignFormulaParserTokenTypes.NUMBER:
+					return new Literal(Value.parseNumericValue(node.getText()));
+				case NumberSignFormulaParserTokenTypes.STRING:
+					return new Literal(Value.parseValue(node.getText(),
+							Value.Type.BOOLEAN, Value.Type.DATE));
+				case NumberSignFormulaParserTokenTypes.CELL_REF:
+					return new CellReference(cell.getSpreadsheet(),
+							node.getText());
+				case NumberSignFormulaParserTokenTypes.NAME:
+					/*
+					 * return cell.getSpreadsheet().getWorkbook().
+					 * getRange(node.getText()) (Reference)
+					 */
+				}
+			} catch (ParseException e) {
+				throw new FormulaCompilationException(e);
+			}
 		}
-		/* verifies is operator is ':=' */
-		else if (operator instanceof Attribution) {
-		    try {
-			CellReference cellRef = new CellReference(
-				cell.getSpreadsheet(), node.getFirstChild()
-					.getText());
-			Cell destinationCell = cellRef.getCell();
-			AST next = node.getFirstChild();
-			Expression exp = convert(destinationCell,
-				next.getNextSibling());
-			Value val = exp.evaluate();
-			UpdateCellContent.getInstance().triggerUpdate(
-				destinationCell, val);
-		    } catch (ParseException e) {
-			throw new FormulaCompilationException(e);
-		    } catch (IllegalValueTypeException e) {
-			throw new FormulaCompilationException(e);
-		    }
-		    return new BinaryOperation(convert(cell,
-			    node.getFirstChild()), operator, convert(cell, node
-			    .getFirstChild().getNextSibling()));
+
+		// Convert function call
+		Function function = null;
+		try {
+			function = Language.getInstance().getFunction(node.getText());
+		} catch (UnknownElementException e) {
+		}
+
+		if (function != null) {
+			List<Expression> args = new ArrayList<Expression>();
+			AST child = node.getFirstChild();
+			if (child != null) {
+				args.add(convert(cell, child));
+				while ((child = child.getNextSibling()) != null)
+					args.add(convert(cell, child));
+			}
+
+			Expression[] argArray = args.toArray(new Expression[args.size()]);
+			if (function instanceof Whiledo) {
+
+				try {
+					while (argArray[0].evaluate().toBoolean()) {
+						convert(cell, node);
+					}
+				} catch (IllegalValueTypeException e) {
+				}
+			}
+			if (function instanceof Dowhile) {
+
+				try {
+					while (argArray[argArray.length - 1].evaluate().toBoolean()) {
+						convert(cell, node);
+					}
+				} catch (IllegalValueTypeException e) {
+				}
+			}
+			return new FunctionCall(function, argArray);
+		}
+
+		if (node.getNumberOfChildren() == 1)
+			// Convert unary operation
+			return new UnaryOperation(Language.getInstance().getUnaryOperator(
+					node.getText()), convert(cell, node.getFirstChild()));
+		else if (node.getNumberOfChildren() >= 2) {
+			// Convert binary operation
+			if (node.getType() == NumberSignFormulaParserTokenTypes.SEMI) {
+				convert(cell, node.getFirstChild());
+				return convert(cell, node.getFirstChild().getNextSibling());
+			} else {
+				BinaryOperator operator = Language.getInstance()
+						.getBinaryOperator(node.getText());
+				if (operator instanceof RangeReference) {
+
+					return new ReferenceOperation((Reference) convert(cell,
+							node.getFirstChild()), (RangeReference) operator,
+							(Reference) convert(cell, node.getFirstChild()
+									.getNextSibling()));
+				} else if (operator instanceof RelationalOperatorImpl) {
+					return new RelationalOperatorImpl((Reference) convert(cell,
+							node.getFirstChild()), (RangeReference) operator,
+							(Reference) convert(cell, node.getFirstChild()
+									.getNextSibling()));
+				}
+				/* verifies is operator is ':=' */
+				else if (operator instanceof Attribution) {
+					try {
+						CellReference cellRef = new CellReference(
+								cell.getSpreadsheet(), node.getFirstChild()
+										.getText());
+						Cell destinationCell = cellRef.getCell();
+						AST next = node.getFirstChild();
+						Expression exp = convert(destinationCell,
+								next.getNextSibling());
+						Value val = exp.evaluate();
+						UpdateCellContent.getInstance().triggerUpdate(
+								destinationCell, val);
+					} catch (ParseException e) {
+						throw new FormulaCompilationException(e);
+					} catch (IllegalValueTypeException e) {
+						throw new FormulaCompilationException(e);
+					}
+					return new BinaryOperation(convert(cell,
+							node.getFirstChild()), operator, convert(cell, node
+							.getFirstChild().getNextSibling()));
+				} else {
+					return new BinaryOperation(convert(cell,
+							node.getFirstChild()), operator, convert(cell, node
+							.getFirstChild().getNextSibling()));
+				}
+			}
 		} else {
-		    return new BinaryOperation(convert(cell,
-			    node.getFirstChild()), operator, convert(cell, node
-			    .getFirstChild().getNextSibling()));
+			// Shouldn't happen
+			throw new FormulaCompilationException();
 		}
-	    }
-	} else {
-	    // Shouldn't happen
-	    throw new FormulaCompilationException();
 	}
-    }
 }

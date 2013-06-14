@@ -584,10 +584,22 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 		case NUMBER:
 		case STRING:
 		{
-			comparison();
-			astFactory.addASTChild(currentAST, returnAST);
 			{
-			_loop34:
+			if ((_tokenSet_0.member(LA(1))) && (_tokenSet_2.member(LA(2)))) {
+				comparison();
+				astFactory.addASTChild(currentAST, returnAST);
+			}
+			else if ((LA(1)==CELL_REF) && (LA(2)==ASSIGN)) {
+				assignment();
+				astFactory.addASTChild(currentAST, returnAST);
+			}
+			else {
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			
+			}
+			{
+			_loop35:
 			do {
 				if ((LA(1)==SEMI)) {
 					match(SEMI);
@@ -607,7 +619,7 @@ public NumberSignFormulaParser(ParserSharedInputState state) {
 					}
 				}
 				else {
-					break _loop34;
+					break _loop35;
 				}
 				
 			} while (true);
