@@ -124,4 +124,24 @@ public class ControllerUpdate implements Subject
             observers.get(i).update(null, str);
         }
     }
+    
+    
+    /**
+     * imports a table from the database
+     * @param tableName name of the table
+     */
+    public String[][] loadTable(String tableName) 
+    {
+        return facade.loadTable(tableName);
+    }
+
+    
+    /**
+     * gets the table list of the selected database
+     * @param dbName name of the database
+     */
+    public String[] getTableList() 
+    {
+        return facade.getTableList();
+    }
 }

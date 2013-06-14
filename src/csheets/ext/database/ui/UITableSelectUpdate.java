@@ -4,12 +4,9 @@
  */
 package csheets.ext.database.ui;
 
-import csheets.SpreadsheetAppEvent;
-import csheets.SpreadsheetAppListener;
 import csheets.core.Cell;
-import csheets.core.Spreadsheet;
-import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.database.controller.ControllerImport;
+import csheets.ext.database.controller.ControllerUpdate;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -17,7 +14,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,17 +22,14 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import csheets.ext.database.ui.UIImport;
 import csheets.ui.ctrl.UIController;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+
 
 /**
- * Table selection GUI (to select a select from the database)
+ * Table selection GUI (to select a table from the database)
  * @author João Carreira
  */
-public class UITableSelect extends JFrame
+public class UITableSelectUpdate extends JFrame
 {
     /* labels */
     JLabel sysMsg = new JLabel("Select one table from above");
@@ -44,7 +37,6 @@ public class UITableSelect extends JFrame
     /* buttons */
     private JButton btnOk = new JButton("OK");
     private JButton btnCancel = new JButton("Cancel");
-    private JButton btnPreview = new JButton("Preview");
     
     /* array with table list */
     private String[] tableArray;
@@ -56,18 +48,18 @@ public class UITableSelect extends JFrame
     /* tablelist */
     private JList tableList;
     
-    private ControllerImport ctrlImp;
+    private ControllerUpdate ctrlUp;
    
     private UIController uiCtrl;
     
-    private Spreadsheet spreadSheet;
+    private Cell [][]cells;
      
     /**
      * constructor of the GUI for table selection 
      * @param dbName name of the database
      * @throws Exception 
      */
-    public UITableSelect(Spreadsheet spreadSheet, String dbName, ControllerImport ctrlImp)
+    public UITableSelectUpdate(Cell [][]cells, String dbName, ControllerUpdate ctrlUp)
     {
         /* window title */
         super("Select a table from " + dbName);
@@ -75,12 +67,12 @@ public class UITableSelect extends JFrame
         /* labels */
         sysMsg.setForeground(Color.BLUE);
         
-        this.ctrlImp = ctrlImp;
+        this.ctrlUp = ctrlUp;
         
-        this.spreadSheet = spreadSheet;
+        this.cells = cells;
         
         /* gets the table list */
-        tableArray = ctrlImp.getTableList();
+        tableArray = ctrlUp.getTableList();
              
         /* Jlist with table list for database */
         tableList = new JList(tableArray);
@@ -144,12 +136,7 @@ public class UITableSelect extends JFrame
             if(e.getSource() == btnOk)
             {
                 /* loads a given database table to the table data array */
-                tableData = ctrlImp.loadTable(tableList.getSelectedValue().toString());
-                
-                /* launches window for user to confirm import */
-                ConfirmImportUI confImpUI = new ConfirmImportUI(spreadSheet, tableData);
-                dispose();
-
+                tableData = ctrlUp.loadTable(tableList.getSelectedValue().toString());
             }
             /* cancel button */
             else if(e.getSource() == btnCancel)
