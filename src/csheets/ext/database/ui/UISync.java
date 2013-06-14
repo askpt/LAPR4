@@ -2,6 +2,7 @@ package csheets.ext.database.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -15,7 +16,7 @@ import csheets.ext.database.core.ThreadSync;
  * @author Andre
  * 
  */
-public class UISync extends JFrame {
+public class UISync extends JFrame implements Observer {
 	/** Generated ID */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -52,6 +53,8 @@ public class UISync extends JFrame {
 
 	/** export thread */
 	ThreadSync thrSync;
+
+	UISync sync = this;
 
 	/**
 	 * Creates a new sync ui
@@ -183,7 +186,7 @@ public class UISync extends JFrame {
 
 					thrSync = new ThreadSync(cells, dbDrivers[index][1],
 							userTxt.getText(), pwd.getSelectedText(),
-							tableTxt.getText(), dbDrivers[index][0]);
+							tableTxt.getText(), dbDrivers[index][0], sync);
 					Thread thr = new Thread(thrSync);
 					thr.start();
 					dispose();
@@ -195,5 +198,11 @@ public class UISync extends JFrame {
 				dispose();
 			}
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

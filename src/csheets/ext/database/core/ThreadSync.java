@@ -1,5 +1,7 @@
 package csheets.ext.database.core;
 
+import java.util.Observer;
+
 import csheets.core.Cell;
 import csheets.ext.database.controller.ControllerSync;
 
@@ -14,6 +16,8 @@ public class ThreadSync implements Runnable {
 	private final Cell[][] cells;
 	/** database details */
 	private final String url, user, pass, tableName, dbName;
+	/** observer object */
+	private final Observer observer;
 
 	/**
 	 * Creates a new thread for sync function
@@ -30,22 +34,25 @@ public class ThreadSync implements Runnable {
 	 *            table name
 	 * @param dbName
 	 *            database name
+	 * @param observer
+	 *            the observer object
 	 */
 	public ThreadSync(Cell[][] cells, String url, String user, String pass,
-			String table, String dbName) {
+			String table, String dbName, Observer observer) {
 		this.cells = cells;
 		this.url = url;
 		this.user = user;
 		this.pass = pass;
 		this.tableName = table;
 		this.dbName = dbName;
+		this.observer = observer;
 	}
 
 	@Override
 	public void run() {
 		ControllerSync sync = new ControllerSync();
 		sync.connect(url, user, pass, dbName);
-		sync.startSync(user, pass, cells, tableName);
+		sync.startSync(user, pass, cells, tableName, observer);
 	}
 
 }

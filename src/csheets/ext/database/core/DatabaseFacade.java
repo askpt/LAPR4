@@ -1,6 +1,7 @@
 package csheets.ext.database.core;
 
 import java.sql.SQLException;
+import java.util.*;
 
 import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
@@ -11,7 +12,7 @@ import csheets.core.formula.compiler.FormulaCompilationException;
  * 
  * @author João Carreira
  */
-public class DatabaseFacade {
+public class DatabaseFacade extends Observable {
 	private DBConnectionStrategy adapter;
 	private String tableName;
 	private Cell[][] cells;
@@ -86,15 +87,19 @@ public class DatabaseFacade {
 	 *            cells to be sync
 	 * @param tableName
 	 *            name of the table
+	 * @param observer
+	 *            the observer object
 	 */
 	public void startSync(String user, String pass, Cell[][] cells,
-			String tableName) {
-		exportData(cells, tableName);
+			String tableName, Observer observer) {
+		addObserver(observer);
+		exportData(cells, tableName); // FIXME Error with disconnection of the
+										// db
 		CellDatabase[][] cellsTemp = new CellDatabase[cells.length - 1][cells[0].length];
 		while (true) {
 			try {
 				temporaryStructure(cells, cellsTemp);
-				Thread.sleep(30000);
+				Thread.sleep(300);
 
 				String[][] serverCells = loadTable(tableName);
 				for (int i = 0; i < cellsTemp.length; i++) {
@@ -104,10 +109,12 @@ public class DatabaseFacade {
 					checkLine(serverCells[indexServ], cells[indexApp],
 							cellsTemp[i]);
 				}
+
 			} catch (InterruptedException e) {
 			} catch (FormulaCompilationException e) {
 			}
-			// TODO Auto-generated method stub
+
+			// TODO Finish method
 			throw new UnsupportedOperationException("Not supported yet.");
 		}
 	}
@@ -157,11 +164,15 @@ public class DatabaseFacade {
 			}
 			if (!cellApp[i].getContent().equals(cellTemp[i].getContent())
 					&& !cellTemp[i].getContent().equals(lineServer[i + 1])) {
-				// TODO erro de merge!
+				setChanged();
+				notifyObservers();
+				// TODO add obj to change the merge!
 			}
 		}
 
-		// TODO tratar update a db!
+		if (dbNeedChange) {
+			// TODO add database update
+		}
 	}
 
 	/**
