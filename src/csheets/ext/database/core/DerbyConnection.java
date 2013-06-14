@@ -147,15 +147,44 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public ArrayList queryToArray() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+	public ArrayList queryToArray() 
+        {
+            ArrayList temp = new ArrayList();
+            try
+            {
+                Statement st = null;
+                st = connection.createStatement();
+                ResultSet results = st.executeQuery("SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'");
+                ResultSetMetaData rsmd = results.getMetaData();
+                int numberCols = rsmd.getColumnCount();
+                Object obj = null;
+                for (; results.next();) 
+                {
+                    for (int i = 0; i < numberCols; i++) 
+                    {
+                        obj = results.getObject(i + 1);
+                        temp.add(obj);
+                    }
+                }
+                results.close();
+                st.close();
+            }
+            catch (SQLException sqlExcept)
+            {
+                sqlExcept.printStackTrace();
+            }
+            return temp;
 	}
 
 	@Override
-	public String[] getTableList(ArrayList list) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not supported yet.");
+	public String[] getTableList(ArrayList list) 
+        {
+		int size = list.size();
+		String[] temp = new String[size];
+		for (int i = 0; i < size; i++) {
+			temp[i] = list.get(i).toString();
+		}
+		return temp;
 	}
 
 	@Override
