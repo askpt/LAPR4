@@ -22,10 +22,12 @@ public class Server implements Runnable {
 	private Cell[][] cells;
 	/** server socket */
 	private ServerSocket svr;
+	/** connection passoword */
+	private String password;
 
-	private ArrayList<Socket> sockets = new ArrayList<Socket>();
+	private final ArrayList<Socket> sockets = new ArrayList<Socket>();
 
-	private CellNetworkListenerServer listener = new CellNetworkListenerServer();
+	private final CellNetworkListenerServer listener = new CellNetworkListenerServer();
 
 	private static Server instance = null;
 
@@ -53,10 +55,11 @@ public class Server implements Runnable {
 	 * @param cells
 	 *            the cells we will pass throw network
 	 */
-	private Server(int port, Cell[][] cells, ServerSocket svr) {
+	private Server(int port, Cell[][] cells, ServerSocket svr, String password) {
 		this.port = port;
 		this.cells = cells;
 		this.svr = svr;
+		this.password = password;
 	}
 
 	public Cell[][] getCells() {
@@ -70,8 +73,10 @@ public class Server implements Runnable {
 	 *            connection port
 	 * @param cells
 	 *            value that will be shared throw network
+	 * @param password
+	 *            the connection password
 	 */
-	public void startServer(int port, Cell[][] cells) {
+	public void startServer(int port, Cell[][] cells, String password) {
 
 		try {
 			for (int i = 0; i < cells.length; i++) {
@@ -81,6 +86,7 @@ public class Server implements Runnable {
 			}
 			svr = new ServerSocket(port);
 			this.cells = cells;
+			this.password = password;
 
 			Thread thr = new Thread(getInstance());
 			thr.start();
@@ -105,9 +111,9 @@ public class Server implements Runnable {
 			while (true) {
 				Socket sock = svr.accept();
 				sockets.add(sock);
-				System.out.println(sock);
 
-				Thread thr = new Thread(new ThreadServer(port, cells, sock));
+				Thread thr = new Thread(new ThreadServer(port, cells, sock,
+						password));
 				thr.start();
 				Thread tr = new Thread(new ThreadServerReceiving(cells, sock,
 						getListener()));

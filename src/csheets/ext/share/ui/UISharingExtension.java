@@ -71,16 +71,20 @@ public class UISharingExtension extends UIExtension {
 			JPanel sendPanel = new JPanel();
 			JLabel sendStaticPort = new JLabel("Port");
 			final JTextField sendPort = new JTextField(10);
+			JLabel sendPass = new JLabel("Pass");
+			final JPasswordField pass = new JPasswordField(10);
 			JButton sendAction = new JButton("Send");
 			sendAction.addActionListener(new ActionListener() {
 
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					String portTemp = sendPort.getText();
 					if (Validate.checkIfANumber(portTemp)) {
 						int port = Integer.parseInt(portTemp);
 						if (Validate.checkPort(port)) {
-							SendAction.getInstance().clickOnSidebar(port);
+							SendAction.getInstance().clickOnSidebar(
+									port,
+									Validate.encrypt(String.copyValueOf(
+											pass.getPassword()).getBytes()));
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"Check if port is between 49152 and 65535",
@@ -95,6 +99,8 @@ public class UISharingExtension extends UIExtension {
 			});
 			sendPanel.add(sendStaticPort);
 			sendPanel.add(sendPort);
+			sendPanel.add(sendPass);
+			sendPanel.add(pass);
 			sendPanel.add(sendAction);
 
 			JPanel receivePanel = new JPanel();
@@ -102,19 +108,27 @@ public class UISharingExtension extends UIExtension {
 			final JTextField recIP = new JTextField(10);
 			JLabel recStaticPort = new JLabel("Port");
 			final JTextField recPort = new JTextField(10);
+			final JPasswordField passReceive = new JPasswordField(10);
+			JLabel passLabel = new JLabel("Password");
 			JButton recAction = new JButton("Receive");
 			recAction.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					String portTemp = recPort.getText();
+					String passwordReceive;
 					if (Validate.checkIfANumber(portTemp)) {
 						int port = Integer.parseInt(portTemp);
 						if (Validate.checkPort(port)) {
 							String IP = recIP.getText();
 							if (Validate.checkIFIPIsCorrect(IP)) {
-								ReceiveAction.getInstance().clickOnSidebar(IP,
-										port);
+								passwordReceive = new String(passReceive
+										.getPassword());
+								ReceiveAction.getInstance().clickOnSidebar(
+										IP,
+										port,
+										Validate.encrypt(passwordReceive
+												.getBytes()));
 							} else {
 								JOptionPane
 										.showMessageDialog(
@@ -171,6 +185,8 @@ public class UISharingExtension extends UIExtension {
 			receivePanel.add(recIP);
 			receivePanel.add(recStaticPort);
 			receivePanel.add(recPort);
+			receivePanel.add(passLabel);
+			receivePanel.add(passReceive);
 			receivePanel.add(recAction);
 			receivePanel.add(recDiscoverServer);
 

@@ -42,6 +42,8 @@ public class SendReceiveTest {
 	public void testConnection() {
 
 		try {
+			String password = "test";
+
 			// Initializes cells
 			Cell cellOri = sheet.getCell(new Address(1, 1));
 			cellOri.setContent("56");
@@ -54,11 +56,12 @@ public class SendReceiveTest {
 			Client cli = new Client();
 
 			// Start client and server
-			svr.startServer(50000, cells);
-			cli.startClient("localhost", 50000, cellFim);
+			svr.startServer(50000, cells, Validate.encrypt(password.getBytes()));
+			cli.startClient("localhost", 50000, cellFim,
+					Validate.encrypt(password.getBytes()));
 
 			// To wait to the system transmition
-			Thread.sleep(100);
+			Thread.sleep(1000);
 
 			assertEquals(cellOri.getContent(), cellFim.getContent());
 		} catch (Exception e) {

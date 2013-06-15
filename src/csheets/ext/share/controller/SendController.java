@@ -17,10 +17,12 @@ public class SendController {
 	 *            connection port of the cells
 	 * @param cells
 	 *            value that will be shared throw network
+	 * @param password
+	 *            the connection password
 	 */
-	public void startServer(int port, Cell[][] cells) {
+	public void startServer(int port, Cell[][] cells, String password) {
 		Server svr = Server.getInstance();
-		svr.startServer(port, cells);
+		svr.startServer(port, cells, password);
 	}
 
 }
