@@ -14,7 +14,7 @@ public class ConsoleDerbyTest
     private static Connection connection;
     private static String url = "jdbc:derby:src-resources/csheets/ext/database/embebbed_db/derby_db";
     
-    private static String tableName = "bola";
+    private static String tableName = "recent";
     private static String insertSt = "insert into " + tableName + " VALUES('1', 'SLB', '32')";
     private static String insertSt2 = "insert into " + tableName + " VALUES('2', 'FCP', '27')";
     

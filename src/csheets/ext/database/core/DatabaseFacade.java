@@ -241,7 +241,7 @@ public class DatabaseFacade extends Observable {
 			/* if it's [i][0] other than [0][0] then we go get the row */
 			if (i > 0) {
 				temp[i][0] = Integer
-						.toString(cells[i][0].getAddress().getRow() + 1);
+						.toString(cells[i][0].getAddress().getRow());
 			}
 			/* the rest of the columns are filled with cells conent */
 			for (int j = 1; j < temp[0].length; j++) {

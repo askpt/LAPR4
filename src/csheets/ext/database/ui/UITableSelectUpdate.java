@@ -148,16 +148,16 @@ public class UITableSelectUpdate extends JFrame
                 
                 
                 
-//                System.out.println("DATABASE");
-//                for(int i = 0; i < tableData.length; i++)
-//                {
-//                    for(int j = 0; j < tableData[0].length; j++)
-//                    {
-//                        
-//                         System.out.println(tableData[i][j]);
-//                     }
-//                    System.out.println("----");
-//                  }
+                System.out.println("DATABASE");
+                for(int i = 0; i < tableData.length; i++)
+                {
+                    for(int j = 0; j < tableData[0].length; j++)
+                    {
+                        
+                         System.out.println(tableData[i][j]);
+                     }
+                    System.out.println("----");
+                  }
                 
                 
                 
@@ -167,16 +167,16 @@ public class UITableSelectUpdate extends JFrame
                 {
                     selectedCells = ctrlUp.cellsTo2dArray(cells);
                     
-//                System.out.println("SELECTED CELLS");
-//                for(int i = 0; i < tableData.length; i++)
-//                {
-//                    for(int j = 0; j < tableData[0].length; j++)
-//                    {
-//                        
-//                         System.out.println(tableData[i][j]);
-//                     }
-//                    System.out.println("----");
-//                 }
+                System.out.println("SELECTED CELLS");
+                for(int i = 0; i < tableData.length; i++)
+                {
+                    for(int j = 0; j < tableData[0].length; j++)
+                    {
+                        
+                         System.out.println(tableData[i][j]);
+                     }
+                    System.out.println("----");
+                 }
                     
                     boolean isDifferent = ctrlUp.compareCellsWithDB(tableData, selectedCells);
                     if(isDifferent)
