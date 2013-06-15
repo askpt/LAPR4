@@ -1,3 +1,5 @@
+import csheets.core.formula.Expression;
+
 /*
 
 @startuml doc-files/use_case.png
@@ -55,6 +57,10 @@ loop recursive calls depending on the depth of the generated ANTLR AST
    NumberSignExpressionCompiler -> Language: getFunction()
   opt if function != NULL
    NumberSignExpressionCompiler -> ASTPair: getFirstChild()
+   alt if function instanceof Eval
+   NumberSignExpressionCompiler->NumberSignExpressionCompiler: expression = convert(cell, node.getFirstChild())
+   NumberSignExpressionCompiler->cell: setContent(expression.evaluate().toText())
+   end
    loop recursive calls while getFirstChild() != NULL
     NumberSignExpressionCompiler -> NumberSignExpressionCompiler: convert(cell, child)
    end
@@ -129,6 +135,14 @@ class Dowhile {
 	+boolean isVarArg()
 }
 
+class Eval {
+	+{static}FunctionParameter[] parameters
+	+Eval()
+	+String getIdentifier()
+	+Value applyTo(Expression[] args)
+	+FunctionParameter[] getParameters()
+	+boolean isVarArg()
+}
 
 interface Function {
 }
@@ -185,6 +199,7 @@ UpdateCellContent: getInstance()
 UpdateCellContent: triggerUpdate()
 Function <|.. Whiledo
 Function <|.. Dowhile
+Function <|.. Eval
 @enduml
 
 
