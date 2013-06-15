@@ -117,9 +117,7 @@ class ConfirmImportUI extends JFrame
                 try 
                 {
                     /* getting the starting row, which is defined in any of the first columns */
-                    int startRow = Integer.parseInt(tableData[1][0]);
-                    System.out.println("STARTROW = " + startRow);
-                    
+                    int startRow = Integer.parseInt(tableData[1][0]) - 1;
                     /* cycles the entire tableData array */
                     for(int i = 0; i < tableData.length; i++)
                     {
@@ -127,8 +125,8 @@ class ConfirmImportUI extends JFrame
                         {         
                          /* changes the content of the given cell taking into account the row
                          (we have to subtract 2 to go to right place) */
-                         //spreadSheet.getCell(startRow + (j - 2), i).setContent(tableData[i][j]);
-                         spreadSheet.getCell(i, startRow + (j - 2)).setContent(tableData[i][j]);
+                         spreadSheet.getCell(j - 1, i + startRow).setContent(tableData[i][j]);
+                         /* the next line doesn't take into account the initial row */
                          //spreadSheet.getCell(j - 1, i).setContent(tableData[i][j]);
                         }
                     }
