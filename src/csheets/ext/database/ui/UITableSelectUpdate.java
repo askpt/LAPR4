@@ -148,7 +148,7 @@ public class UITableSelectUpdate extends JFrame
                 
                 
                 
-                
+//                System.out.println("DATABASE");
 //                for(int i = 0; i < tableData.length; i++)
 //                {
 //                    for(int j = 0; j < tableData[0].length; j++)
@@ -166,6 +166,27 @@ public class UITableSelectUpdate extends JFrame
                 if(numberColsTargetTable == numberOfCols)
                 {
                     selectedCells = ctrlUp.cellsTo2dArray(cells);
+                    
+//                System.out.println("SELECTED CELLS");
+//                for(int i = 0; i < tableData.length; i++)
+//                {
+//                    for(int j = 0; j < tableData[0].length; j++)
+//                    {
+//                        
+//                         System.out.println(tableData[i][j]);
+//                     }
+//                    System.out.println("----");
+//                 }
+                    
+                    
+                    
+                    boolean isDifferent = ctrlUp.compareCellsWithDB(tableData, selectedCells);
+                    
+                   // System.out.println("is different? = " + isDifferent);
+                    
+                    
+                    
+                    
                     
                     // ConfirmUpdateUI confirmUpUI = new ConfirmUpdateUI()
                 }

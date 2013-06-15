@@ -154,4 +154,16 @@ public class ControllerUpdate implements Subject
     {
        return facade.cellsTo2dArray(cells);
     }
+
+    /**
+     * compares if there's any difference in content between the selected cells
+     * in the spreadsheet and the ones imported from the DB
+     * @param tableData content imported from BD
+     * @param selectedCells cells selected in the spreadsheet
+     * @return true if there's any difference, false if they're equal
+     */
+    public boolean compareCellsWithDB(String[][] tableData, String[][] selectedCells) 
+    {
+        return facade.compareCellsWithDB(tableData, selectedCells);
+    }
 }
