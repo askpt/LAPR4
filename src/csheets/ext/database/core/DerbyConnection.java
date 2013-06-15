@@ -104,7 +104,7 @@ public class DerbyConnection implements DBConnectionStrategy {
 		String[] insertVector = new String[numberOfRows - 1];
 		for (int i = 0; i < insertVector.length; i++) {
 			String temp = Integer
-					.toString(cells[i][0].getAddress().getRow() + 2);
+					.toString(cells[i][0].getAddress().getRow() + 1);
 			insertVector[i] = insertStat + temp + ",";
 		}
 
@@ -147,38 +147,32 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public ArrayList queryToArray() 
-        {
-            ArrayList temp = new ArrayList();
-            try
-            {
-                Statement st = null;
-                st = connection.createStatement();
-                ResultSet results = st.executeQuery("SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'");
-                ResultSetMetaData rsmd = results.getMetaData();
-                int numberCols = rsmd.getColumnCount();
-                Object obj = null;
-                for (; results.next();) 
-                {
-                    for (int i = 0; i < numberCols; i++) 
-                    {
-                        obj = results.getObject(i + 1);
-                        temp.add(obj);
-                    }
-                }
-                results.close();
-                st.close();
-            }
-            catch (SQLException sqlExcept)
-            {
-                sqlExcept.printStackTrace();
-            }
-            return temp;
+	public ArrayList queryToArray() {
+		ArrayList temp = new ArrayList();
+		try {
+			Statement st = null;
+			st = connection.createStatement();
+			ResultSet results = st
+					.executeQuery("SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'");
+			ResultSetMetaData rsmd = results.getMetaData();
+			int numberCols = rsmd.getColumnCount();
+			Object obj = null;
+			for (; results.next();) {
+				for (int i = 0; i < numberCols; i++) {
+					obj = results.getObject(i + 1);
+					temp.add(obj);
+				}
+			}
+			results.close();
+			st.close();
+		} catch (SQLException sqlExcept) {
+			sqlExcept.printStackTrace();
+		}
+		return temp;
 	}
 
 	@Override
-	public String[] getTableList(ArrayList list) 
-        {
+	public String[] getTableList(ArrayList list) {
 		int size = list.size();
 		String[] temp = new String[size];
 		for (int i = 0; i < size; i++) {
@@ -188,22 +182,19 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public String[][] getTableContent(String tableName) 
-        {
-            ArrayList temp = new ArrayList();
-            int []rowsAndCols = new int[2];
-                  
-            try 
-            {            
-                temp = queryToArray(tableName);
-                rowsAndCols = countsRowsAndCols(tableName);
-            } 
-            catch (SQLException ex) 
-            {
-                Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                
-            return queryTo2dArray(temp, new String[rowsAndCols[0]][rowsAndCols[1]]);
+	public String[][] getTableContent(String tableName) {
+		ArrayList temp = new ArrayList();
+		int[] rowsAndCols = new int[2];
+
+		try {
+			temp = queryToArray(tableName);
+			rowsAndCols = countsRowsAndCols(tableName);
+		} catch (SQLException ex) {
+			Logger.getLogger(HsqlDBConnection.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+
+		return queryTo2dArray(temp, new String[rowsAndCols[0]][rowsAndCols[1]]);
 	}
 
 	@Override
@@ -213,118 +204,110 @@ public class DerbyConnection implements DBConnectionStrategy {
 	}
 
 	@Override
-	public ArrayList queryToArray(String tableName) throws SQLException 
-        {
-            Statement st = null;
-            ResultSet rs = null;
-            ArrayList temp = new ArrayList();
-            Object obj = null;
-        
-            String expression = "SELECT * FROM " + tableName ;
-        
-            st = connection.createStatement();         
-            rs = st.executeQuery(expression);   
-       
-            ResultSetMetaData meta = rs.getMetaData();
-            int cols = meta.getColumnCount();
-            int rows = countRows(tableName);
-        
-            for(int i = 1; i <= cols; i++)
-            {
-                obj = meta.getColumnName(i);
-                temp.add(obj);
-            }
-        
-            for(; rs.next(); )
-            {
-                for(int i = 0; i < cols; i ++)
-                {
-                    obj = rs.getObject(i + 1);
-                    temp.add(obj);
-                }
-            }
-            st.close();
-            return temp;            
+	public ArrayList queryToArray(String tableName) throws SQLException {
+		Statement st = null;
+		ResultSet rs = null;
+		ArrayList temp = new ArrayList();
+		Object obj = null;
+
+		String expression = "SELECT * FROM " + tableName;
+
+		st = connection.createStatement();
+		rs = st.executeQuery(expression);
+
+		ResultSetMetaData meta = rs.getMetaData();
+		int cols = meta.getColumnCount();
+		int rows = countRows(tableName);
+
+		for (int i = 1; i <= cols; i++) {
+			obj = meta.getColumnName(i);
+			temp.add(obj);
+		}
+
+		for (; rs.next();) {
+			for (int i = 0; i < cols; i++) {
+				obj = rs.getObject(i + 1);
+				temp.add(obj);
+			}
+		}
+		st.close();
+		return temp;
 	}
 
 	@Override
-	public int[] countsRowsAndCols(String tableName) throws SQLException 
-        {
-            int []result = new int[2];
-            int rows, cols;
-            Statement st = null;
-            ResultSet rs = null;
-            Object obj = null;
-            String sqlExpression = "SELECT * FROM " + tableName;
-       
-            st = connection.createStatement();
-            rs = st.executeQuery(sqlExpression);
-            ResultSetMetaData meta = rs.getMetaData();
-            rs.next();
-        
-            obj = rs.getObject(1);
-            result[0] = countRows(tableName);
-            result[1] = meta.getColumnCount();
-            
-            st.close();
-                  
-            return result;
+	public int[] countsRowsAndCols(String tableName) throws SQLException {
+		int[] result = new int[2];
+		int rows, cols;
+		Statement st = null;
+		ResultSet rs = null;
+		Object obj = null;
+		String sqlExpression = "SELECT * FROM " + tableName;
+
+		st = connection.createStatement();
+		rs = st.executeQuery(sqlExpression);
+		ResultSetMetaData meta = rs.getMetaData();
+		rs.next();
+
+		obj = rs.getObject(1);
+		result[0] = countRows(tableName);
+		result[1] = meta.getColumnCount();
+
+		st.close();
+
+		return result;
 	}
 
 	@Override
-	public int countRows(String tableName) throws SQLException 
-        {
-            Statement st = null;
-            ResultSet rs = null;
-            Object obj = null;
-            String sqlExpression = "SELECT COUNT(*) FROM " + tableName;
-       
-            st = connection.createStatement();
-            rs = st.executeQuery(sqlExpression);
-        
-            ResultSetMetaData meta = rs.getMetaData();
-            rs.next();
-        
-            obj = rs.getObject(1);
-        
-            st.close();
-        
-            return Integer.parseInt(obj.toString()) + 1;
+	public int countRows(String tableName) throws SQLException {
+		Statement st = null;
+		ResultSet rs = null;
+		Object obj = null;
+		String sqlExpression = "SELECT COUNT(*) FROM " + tableName;
+
+		st = connection.createStatement();
+		rs = st.executeQuery(sqlExpression);
+
+		ResultSetMetaData meta = rs.getMetaData();
+		rs.next();
+
+		obj = rs.getObject(1);
+
+		st.close();
+
+		return Integer.parseInt(obj.toString()) + 1;
 	}
 
-    @Override
-    public String[][] queryTo2dArray(ArrayList array, String[][] table) 
-    {
-        for(int i = 0, k = 0; i < table.length; i++)
-        {
-            for(int j = 0; j < table[0].length; j++, k++)
-            {
-                table[i][j] = array.get(k).toString();
-            }          
-        }
-        return table;
-    }
-
-    @Override
-    public void updateRow(String tableName, String column, String origin, String destination) 
-    {
-        Statement st = null;
-        String stat = "UPDATE " + tableName + " SET " + column + " = '" + origin + "' WHERE " + column + " = '" + destination + "'";
-        System.out.println(stat);
-        try
-        {
-            st = connection.createStatement();
-            int i = st.executeUpdate(stat);
-            JOptionPane.showMessageDialog(null, "HSQL database: success on update\nPreviously: " +  destination + "\nNow: " + origin);
-        }
-        catch (SQLException ex) 
-        {
-            Logger.getLogger(HsqlDBConnection.class.getName()).log(
-            Level.SEVERE, null, ex);
-            /* keep this until observer is implemented */
-            JOptionPane.showMessageDialog(null, "HSQL database error:\nCould not update!");
+	@Override
+	public String[][] queryTo2dArray(ArrayList array, String[][] table) {
+		for (int i = 0, k = 0; i < table.length; i++) {
+			for (int j = 0; j < table[0].length; j++, k++) {
+				table[i][j] = array.get(k).toString();
+			}
+		}
+		return table;
 	}
-        
-    }
+
+	@Override
+	public void updateRow(String tableName, String column, String origin,
+			String destination) {
+		Statement st = null;
+		String stat = "UPDATE " + tableName + " SET " + column + " = '"
+				+ origin + "' WHERE " + column + " = '" + destination + "'";
+		System.out.println(stat); // TODO remove
+		try {
+			st = connection.createStatement();
+			int i = st.executeUpdate(stat);
+			JOptionPane.showMessageDialog(null,
+					"HSQL database: success on update\nPreviously: "
+							+ destination + "\nNow: " + origin);
+		} catch (SQLException ex) {
+			Logger.getLogger(HsqlDBConnection.class.getName()).log(
+					Level.SEVERE, null, ex);
+			/* keep this until observer is implemented */
+			JOptionPane.showMessageDialog(null,
+					"HSQL database error:\nCould not update!");
+		}
+
+	}
 
 }

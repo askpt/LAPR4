@@ -111,7 +111,7 @@ public class DatabaseFacade extends Observable {
 							serverCells);
 					int indexApp = findLine(cellsTemp[i][0].getRow(), cells);
 					checkLine(serverCells[indexServ], cells[indexApp],
-							cellsTemp[i]);
+							cellsTemp[i], tableName, cells[0]);
 				}
 
 			} catch (InterruptedException e) {
@@ -149,23 +149,27 @@ public class DatabaseFacade extends Observable {
 	 *            line in the app
 	 * @param cellTemp
 	 *            line in the temporary cell
+	 * @param tableName
+	 *            name of the table
+	 * @param cellHeader
+	 *            the header of the cell table
 	 * @throws FormulaCompilationException
 	 *             throws if the wrong formula was entered
 	 */
 	private void checkLine(String[] lineServer, Cell[] cellApp,
-			CellDatabase[] cellTemp) throws FormulaCompilationException {
-		boolean dbNeedChange = false;
+			CellDatabase[] cellTemp, String tableName, Cell[] cellHeader)
+			throws FormulaCompilationException {
 		for (int i = 0; i < cellApp.length; i++) {
 			if (cellApp[i].getContent().equals(cellTemp[i].getContent())
 					&& !cellTemp[i].getContent().equals(lineServer[i + 1])) {
 				cellApp[i].setContent(lineServer[i + 1]);
-			}
-			if (!cellApp[i].getContent().equals(cellTemp[i].getContent())
+			} else if (!cellApp[i].getContent()
+					.equals(cellTemp[i].getContent())
 					&& cellTemp[i].getContent().equals(lineServer[i + 1])) {
-				lineServer[i + 1] = cellApp[i].getContent();
-				dbNeedChange = true;
-			}
-			if (!cellApp[i].getContent().equals(cellTemp[i].getContent())
+				adapter.updateRow(tableName, cellHeader[i].getContent(),
+						cellApp[i].getContent(), lineServer[i + 1]);
+			} else if (!cellApp[i].getContent()
+					.equals(cellTemp[i].getContent())
 					&& !cellTemp[i].getContent().equals(lineServer[i + 1])) {
 				ObserverMessages obs = new ObserverMessages(lineServer[i + 1],
 						cellApp[i].getContent());
@@ -175,15 +179,12 @@ public class DatabaseFacade extends Observable {
 				if (obs.getDecision() == 0) {
 					cellApp[i].setContent(lineServer[i + 1]);
 				} else if (obs.getDecision() == 1) {
-					lineServer[i + 1] = cellApp[i].getContent();
-					dbNeedChange = true;
+					adapter.updateRow(tableName, cellHeader[i].getContent(),
+							cellApp[i].getContent(), lineServer[i + 1]);
 				}
 			}
 		}
 
-		if (dbNeedChange) {
-			// TODO add database update
-		}
 	}
 
 	/**
@@ -222,118 +223,122 @@ public class DatabaseFacade extends Observable {
 		return 0;
 	}
 
-    /**
-     * converts selected spreadsheet content in a 2D String array
-     * @param cells selected cells in spreadsheet
-     * @return 2D array with content in selected cells
-     */    
-    public String[][] cellsTo2dArray(Cell[][] cells) 
-    {
-        /* we add an additional row to temp so we can store the row number */
-        String [][] temp = new String[cells.length][cells[0].length + 1];
-        
-        /* position [0][0] must always have LINHA */
-        temp[0][0] = "LINHA";
-        
-        for(int i = 0; i < temp.length; i++)
-        {
-            /* if it's [i][0] other than [0][0] then we go get the row */
-            if(i > 0)
-            {
-                temp[i][0] = Integer.toString(cells[i][0].getAddress().getRow() + 1);
-            }
-            /* the rest of the columns are filled with cells conent */
-            for(int j = 1; j < temp[0].length; j++)
-            {
-                temp[i][j] = cells[i][j - 1].getContent().toString();
-            }
-        }
-        return temp;
-    }
+	/**
+	 * converts selected spreadsheet content in a 2D String array
+	 * 
+	 * @param cells
+	 *            selected cells in spreadsheet
+	 * @return 2D array with content in selected cells
+	 */
+	public String[][] cellsTo2dArray(Cell[][] cells) {
+		/* we add an additional row to temp so we can store the row number */
+		String[][] temp = new String[cells.length][cells[0].length + 1];
 
-    /**
-     * compares if there's any difference in content between the selected cells
-     * in the spreadsheet and the ones imported from the DB
-     * @param tableData content imported from BD
-     * @param selectedCells cells selected in the spreadsheet
-     * @return true if there's any difference, false if they're equal
-     */
-    public boolean compareCellsWithDB(String[][] tableData, String[][] selectedCells) 
-    {
-        /* to avoid getting the array out of bounds index in need to strict 
-         the comparison only in the range of the smaller array (we won't have
-         trouble with columns as we only get here if both arrays have the same 
-         number of cols) */
-        
-        int lessCols;
-        if(tableData.length < selectedCells.length)
-        {
-            lessCols = tableData.length;
-            /* is this case we're certain we can return true because having one more
-             row implies that we have different information when compared to the DB */
-            return true;
-        }
-        else
-        {
-            lessCols = selectedCells.length;
-        }
-        
-        for(int i = 0; i < lessCols; i++)
-        {
-            for(int j = 0; j < selectedCells[0].length; j++)
-            {
-                if(!tableData[i][j].equals(selectedCells[i][j]))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+		/* position [0][0] must always have LINHA */
+		temp[0][0] = "LINHA";
 
-    /**
-     * updates a database table based on the selected cells
-     * @param tableName target table to be updated 
-     * @param tableData 2D array with current table data
-     * @param selectedCells 2D array with selected cells in spreadsheet
-     */
-    public void updateTable(String tableName, String[][] tableData, String[][] selectedCells) 
-    {
-        int tableDataRows = tableData.length;
-        int selectedCellsRows = selectedCells.length;
-        
-        /* if selected cells have more rows than table data then we need to at least insert
-         new data into the database */
-        if(selectedCellsRows > tableDataRows)
-        {
-            
-        }
-        
-        /* if selected cells have less rows than table data then we need to at least remove
-         a record from the database */
-        else if(selectedCellsRows < tableDataRows)
-        {
-        
-            
-        }
-        
-        /* if row count is the same then we only need to update the table */
-        else
-        {
-            /* an array to store the actual changes */
-            String [][]modifiedCells = new String[selectedCells.length][selectedCells[0].length];
-            int cont = 0;
-            for(int i = 0; i < selectedCells.length; i++)
-            {
-                for(int j = 0; j < selectedCells[0].length; j++)
-                {
-                    if(!selectedCells[i][j].toString().equals(tableData[i][j].toString()))
-                    {
-                        adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][j]);
-                    }
-                }
-            }
-        }
-        
-    }
+		for (int i = 0; i < temp.length; i++) {
+			/* if it's [i][0] other than [0][0] then we go get the row */
+			if (i > 0) {
+				temp[i][0] = Integer
+						.toString(cells[i][0].getAddress().getRow() + 1);
+			}
+			/* the rest of the columns are filled with cells conent */
+			for (int j = 1; j < temp[0].length; j++) {
+				temp[i][j] = cells[i][j - 1].getContent().toString();
+			}
+		}
+		return temp;
+	}
+
+	/**
+	 * compares if there's any difference in content between the selected cells
+	 * in the spreadsheet and the ones imported from the DB
+	 * 
+	 * @param tableData
+	 *            content imported from BD
+	 * @param selectedCells
+	 *            cells selected in the spreadsheet
+	 * @return true if there's any difference, false if they're equal
+	 */
+	public boolean compareCellsWithDB(String[][] tableData,
+			String[][] selectedCells) {
+		/*
+		 * to avoid getting the array out of bounds index in need to strict the
+		 * comparison only in the range of the smaller array (we won't have
+		 * trouble with columns as we only get here if both arrays have the same
+		 * number of cols)
+		 */
+
+		int lessCols;
+		if (tableData.length < selectedCells.length) {
+			lessCols = tableData.length;
+			/*
+			 * is this case we're certain we can return true because having one
+			 * more row implies that we have different information when compared
+			 * to the DB
+			 */
+			return true;
+		} else {
+			lessCols = selectedCells.length;
+		}
+
+		for (int i = 0; i < lessCols; i++) {
+			for (int j = 0; j < selectedCells[0].length; j++) {
+				if (!tableData[i][j].equals(selectedCells[i][j])) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * updates a database table based on the selected cells
+	 * 
+	 * @param tableName
+	 *            target table to be updated
+	 * @param tableData
+	 *            2D array with current table data
+	 * @param selectedCells
+	 *            2D array with selected cells in spreadsheet
+	 */
+	public void updateTable(String tableName, String[][] tableData,
+			String[][] selectedCells) {
+		int tableDataRows = tableData.length;
+		int selectedCellsRows = selectedCells.length;
+
+		/*
+		 * if selected cells have more rows than table data then we need to at
+		 * least insert new data into the database
+		 */
+		if (selectedCellsRows > tableDataRows) {
+
+		}
+
+		/*
+		 * if selected cells have less rows than table data then we need to at
+		 * least remove a record from the database
+		 */
+		else if (selectedCellsRows < tableDataRows) {
+
+		}
+
+		/* if row count is the same then we only need to update the table */
+		else {
+			/* an array to store the actual changes */
+			String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
+			int cont = 0;
+			for (int i = 0; i < selectedCells.length; i++) {
+				for (int j = 0; j < selectedCells[0].length; j++) {
+					if (!selectedCells[i][j].toString().equals(
+							tableData[i][j].toString())) {
+						adapter.updateRow(tableName, tableData[0][j],
+								selectedCells[i][j], tableData[i][j]);
+					}
+				}
+			}
+		}
+
+	}
 }
