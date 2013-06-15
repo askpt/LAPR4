@@ -229,15 +229,65 @@ public class DatabaseFacade extends Observable {
      */    
     public String[][] cellsTo2dArray(Cell[][] cells) 
     {
+        /* we add an additional row to temp so we can store the row number */
         String [][] temp = new String[cells.length][cells[0].length + 1];
+        
+        /* position [0][0] must always have LINHA */
+        temp[0][0] = "LINHA";
+        
         for(int i = 0; i < temp.length; i++)
         {
-            temp[i][0] = Integer.toString(cells[i][0].getAddress().getRow() + 1);
+            /* if it's [i][0] other than [0][0] then we go get the row */
+            if(i > 0)
+            {
+                temp[i][0] = Integer.toString(cells[i][0].getAddress().getRow() + 1);
+            }
+            /* the rest of the columns are filled with cells conent */
             for(int j = 1; j < temp[0].length; j++)
             {
                 temp[i][j] = cells[i][j - 1].getContent().toString();
             }
         }
         return temp;
+    }
+
+    /**
+     * compares if there's any difference in content between the selected cells
+     * in the spreadsheet and the ones imported from the DB
+     * @param tableData content imported from BD
+     * @param selectedCells cells selected in the spreadsheet
+     * @return true if there's any difference, false if they're equal
+     */
+    public boolean compareCellsWithDB(String[][] tableData, String[][] selectedCells) 
+    {
+        /* to avoid getting the array out of bounds index in need to strict 
+         the comparison only in the range of the smaller array (we won't have
+         trouble with columns as we only get here if both arrays have the same 
+         number of cols) */
+        
+        int lessCols;
+        if(tableData.length < selectedCells.length)
+        {
+            lessCols = tableData.length;
+            /* is this case we're certain we can return true because having one more
+             row implies that we have different information when compared to the DB */
+            return true;
+        }
+        else
+        {
+            lessCols = selectedCells.length;
+        }
+        
+        for(int i = 0; i < lessCols; i++)
+        {
+            for(int j = 0; j < selectedCells[0].length; j++)
+            {
+                if(!tableData[i][j].equals(selectedCells[i][j]))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
