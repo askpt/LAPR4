@@ -97,4 +97,11 @@ public interface DBConnectionStrategy
      * @param destination target value in the database table 
      */
     public void updateRow(String tableName, String column, String origin, String destination);
+
+    /**
+     * inserts a new row into a database table
+     * @param tableName database table name
+     * @param newData 2D array with data to be added to the database
+     */
+    public void insertNewData(String tableName, String[][] newData);
 }
