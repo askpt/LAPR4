@@ -14,7 +14,7 @@ public class ConsoleDerbyTest
     private static Connection connection;
     private static String url = "jdbc:derby:src-resources/csheets/ext/database/embebbed_db/derby_db";
     
-    private static String tableName = "championships";
+    private static String tableName = "bola";
     private static String insertSt = "insert into " + tableName + " VALUES('1', 'SLB', '32')";
     private static String insertSt2 = "insert into " + tableName + " VALUES('2', 'FCP', '27')";
     
@@ -30,8 +30,8 @@ public class ConsoleDerbyTest
 //        createTable(tableName);
 //        insertRestaurants(insertSt);
 //        insertRestaurants(insertSt2);
-//        selectRestaurants();
-//        showAllTables();
+        selectRestaurants();
+        showAllTables();
         allTables = saveAllTableNamesToArrayList();
 //        printArrayList(allTables);
 //        query = queryToArray(tableName);
@@ -41,7 +41,8 @@ public class ConsoleDerbyTest
 //        System.out.println("ROWS = " + rowsCols[0]);
 //        System.out.println("COLS = " + rowsCols[1]);
         
-        dropAllTables(allTables);
+        //dropAllTables(allTables);
+        //update("UPDATE TITLES SET TITLES = 'f' WHERE TITLES = 'all bought'");
         
         shutdown();
     }
@@ -293,7 +294,7 @@ public class ConsoleDerbyTest
         
     }
     
-    
+
     private static void shutdown() throws SQLException
     {
          Statement st = null;
