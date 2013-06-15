@@ -306,8 +306,25 @@ public class DerbyConnection implements DBConnectionStrategy {
     }
 
     @Override
-    public void updateRow(String tableName, String column, String origin, String destination) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updateRow(String tableName, String column, String origin, String destination) 
+    {
+        Statement st = null;
+        String stat = "UPDATE " + tableName + " SET " + column + " = '" + origin + "' WHERE " + column + " = '" + destination + "'";
+        System.out.println(stat);
+        try
+        {
+            st = connection.createStatement();
+            int i = st.executeUpdate(stat);
+            JOptionPane.showMessageDialog(null, "HSQL database: success on update\nPreviously: " +  destination + "\nNow: " + origin);
+        }
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(HsqlDBConnection.class.getName()).log(
+            Level.SEVERE, null, ex);
+            /* keep this until observer is implemented */
+            JOptionPane.showMessageDialog(null, "HSQL database error:\nCould not update!");
+	}
+        
     }
 
 }
