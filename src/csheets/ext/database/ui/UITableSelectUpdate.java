@@ -146,15 +146,18 @@ public class UITableSelectUpdate extends JFrame
                 tableData = ctrlUp.loadTable(tableList.getSelectedValue().toString());
                 int numberColsTargetTable = tableData[0].length - 1;
                 
-                for(int i = 0; i < tableData.length; i++)
-                {
-                    for(int j = 0; j < tableData[0].length; j++)
-                    {
-                        
-                         System.out.println(tableData[i][j]);
-                     }
-                    System.out.println("----");
-                  }
+                
+                
+                
+//                for(int i = 0; i < tableData.length; i++)
+//                {
+//                    for(int j = 0; j < tableData[0].length; j++)
+//                    {
+//                        
+//                         System.out.println(tableData[i][j]);
+//                     }
+//                    System.out.println("----");
+//                  }
                 
                 
                 
@@ -163,6 +166,7 @@ public class UITableSelectUpdate extends JFrame
                 if(numberColsTargetTable == numberOfCols)
                 {
                     selectedCells = ctrlUp.cellsTo2dArray(cells);
+                    
                     // ConfirmUpdateUI confirmUpUI = new ConfirmUpdateUI()
                 }
                 /* if it's not we can't update */
