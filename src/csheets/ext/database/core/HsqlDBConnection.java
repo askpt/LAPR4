@@ -334,7 +334,51 @@ public class HsqlDBConnection implements DBConnectionStrategy {
     @Override
     public void insertNewData(String tableName, String[][] newData) 
     {
-//        Statement st = null;
-//        for(int i = )
+        /* array with all insert statements */
+        String []statementVec = new String[newData.length];
+        String beginStatement = "INSERT INTO " + tableName + " VALUES ('"; 
+        
+        /* begining to concatenate insert vector */
+        for(int i = 0; i < statementVec.length; i++)
+        {
+            statementVec[i] = beginStatement;
+        }
+        
+        /* adding the remaining values to insert vector */
+        for(int i = 0; i < statementVec.length; i++)
+        {
+             for(int j = 0; j < newData[0].length; j++)
+             {
+                 /* if it's not the last column it must include , */
+                 if(j < (newData[0].length - 1))
+                 {
+                     statementVec[i] += newData[i][j] + "','";
+                 }
+                 /* if it's the last we must end the insert statement with )*/
+                 else if(j == (newData[0].length - 1))
+                 {
+                     statementVec[i] += newData[i][j] + "')";
+                 }
+             }
+        }
+        
+        /* cycle to go through all the insert statements */
+        for (int i = 0; i < statementVec.length; i++) 
+        {
+            Statement st = null;
+            try 
+            {
+                st = connection.createStatement();
+                int j = st.executeUpdate(statementVec[i].toString());
+            } 
+            catch (SQLException ex) 
+            {
+                Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
+		/* keep this until observer is implemented */
+                JOptionPane.showMessageDialog(null, "Error: data not inserted");
+            }
+        }
+        /* keep this until observer is implemented */
+        //JOptionPane.showMessageDialog(null, "Derby Database: data successfully updated!");    
     }
 }

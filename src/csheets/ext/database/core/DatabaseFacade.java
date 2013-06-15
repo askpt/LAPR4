@@ -333,6 +333,10 @@ public class DatabaseFacade extends Observable {
                 }
                 /* inserts the "extra" selected cells in the database */
                 adapter.insertNewData(tableName, newRows);
+                /* at this points the rows are equal so we call the following to
+                 update any existing data */
+              // TODO (needs fix)
+                //updateEqualRows(tableName, newRows, selectedCells);
             }
 
             /*
