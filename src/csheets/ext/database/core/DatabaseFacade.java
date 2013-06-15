@@ -229,18 +229,15 @@ public class DatabaseFacade extends Observable {
      */    
     public String[][] cellsTo2dArray(Cell[][] cells) 
     {
-        String [][] temp = new String[cells.length][cells[0].length];
-
-        for(int i = 0; i < cells.length; i++)
+        String [][] temp = new String[cells.length][cells[0].length + 1];
+        for(int i = 0; i < temp.length; i++)
         {
-            for(int j = 0; j < cells[0].length; j++)
+            temp[i][0] = Integer.toString(cells[i][0].getAddress().getRow() + 1);
+            for(int j = 1; j < temp[0].length; j++)
             {
-                temp[i][j] = cells[i][j].getContent().toString();
-               // System.out.println(temp[i][j]);
+                temp[i][j] = cells[i][j - 1].getContent().toString();
             }
-           // System.out.println("----");
         }
-        
         return temp;
     }
 }
