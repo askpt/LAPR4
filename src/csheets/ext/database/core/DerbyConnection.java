@@ -305,4 +305,9 @@ public class DerbyConnection implements DBConnectionStrategy {
         return table;
     }
 
+    @Override
+    public void updateRow(String tableName, String column, String origin, String destination) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

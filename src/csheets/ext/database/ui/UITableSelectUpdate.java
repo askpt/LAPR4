@@ -178,11 +178,17 @@ public class UITableSelectUpdate extends JFrame
 //                    System.out.println("----");
 //                 }
                     
-                    
-                    
                     boolean isDifferent = ctrlUp.compareCellsWithDB(tableData, selectedCells);
+                    if(isDifferent)
+                    {
+                        ctrlUp.updateTable(tableList.getSelectedValue().toString(), tableData, selectedCells);
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Database table is already up-to-date!");
+                    }
                     
-                   // System.out.println("is different? = " + isDifferent);
+//                    System.out.println("is different? = " + isDifferent);
                     
                     
                     
