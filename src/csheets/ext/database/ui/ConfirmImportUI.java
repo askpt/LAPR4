@@ -117,7 +117,7 @@ class ConfirmImportUI extends JFrame
                 try 
                 {
                     /* getting the starting row, which is defined in any of the first columns */
-                    int startRow = Integer.parseInt(tableData[1][0]) - 1;
+                    int startRow = Integer.parseInt(tableData[1][0]) - 2;
                     /* cycles the entire tableData array */
                     for(int i = 0; i < tableData.length; i++)
                     {

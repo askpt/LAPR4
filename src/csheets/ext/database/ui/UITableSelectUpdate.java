@@ -54,6 +54,7 @@ public class UITableSelectUpdate extends JFrame
     private UIController uiCtrl;
     
     private Cell [][]cells;
+    private String [][]selectedCells;
     
     private int numberOfCols;
      
@@ -145,10 +146,26 @@ public class UITableSelectUpdate extends JFrame
                 tableData = ctrlUp.loadTable(tableList.getSelectedValue().toString());
                 int numberColsTargetTable = tableData[0].length - 1;
                 
+                for(int i = 0; i < tableData.length; i++)
+                {
+                    for(int j = 0; j < tableData[0].length; j++)
+                    {
+                        
+                         System.out.println(tableData[i][j]);
+                     }
+                    System.out.println("----");
+                  }
+                
+                
+                
+                
+                /* if column number is the same we can update */
                 if(numberColsTargetTable == numberOfCols)
                 {
-                    // TODO
+                    selectedCells = ctrlUp.cellsTo2dArray(cells);
+                    // ConfirmUpdateUI confirmUpUI = new ConfirmUpdateUI()
                 }
+                /* if it's not we can't update */
                 else
                 {
                    JOptionPane.showMessageDialog(null, "Error: you can't proceed with update!\nTables differ in column number!\nSelected columns = " + numberOfCols + "\nTable columns = " + numberColsTargetTable);

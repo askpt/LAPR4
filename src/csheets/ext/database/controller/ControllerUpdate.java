@@ -144,4 +144,14 @@ public class ControllerUpdate implements Subject
     {
         return facade.getTableList();
     } 
+
+    /**
+     * converts selected spreadsheet content in a 2D String array
+     * @param cells selected cells in spreadsheet
+     * @return 2D array with content in selected cells
+     */
+    public String[][] cellsTo2dArray(Cell[][] cells) 
+    {
+       return facade.cellsTo2dArray(cells);
+    }
 }

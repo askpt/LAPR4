@@ -221,4 +221,26 @@ public class DatabaseFacade extends Observable {
 		}
 		return 0;
 	}
+
+    /**
+     * converts selected spreadsheet content in a 2D String array
+     * @param cells selected cells in spreadsheet
+     * @return 2D array with content in selected cells
+     */    
+    public String[][] cellsTo2dArray(Cell[][] cells) 
+    {
+        String [][] temp = new String[cells.length][cells[0].length];
+
+        for(int i = 0; i < cells.length; i++)
+        {
+            for(int j = 0; j < cells[0].length; j++)
+            {
+                temp[i][j] = cells[i][j].getContent().toString();
+               // System.out.println(temp[i][j]);
+            }
+           // System.out.println("----");
+        }
+        
+        return temp;
+    }
 }
