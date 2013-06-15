@@ -21,6 +21,8 @@ public class ThreadServer implements Runnable {
 	private Cell[][] cells;
 	/** server socket */
 	private Socket sock;
+	/** connection passoword */
+	private String password;
 
 	private Cell cellUpdated;
 
@@ -37,12 +39,14 @@ public class ThreadServer implements Runnable {
 	 *            the connection port
 	 * @param cells
 	 *            the cells we will pass throw network
+	 * @param password
+	 *            the connection password
 	 */
-	public ThreadServer(int port, Cell[][] cells, Socket sock) {
+	public ThreadServer(int port, Cell[][] cells, Socket sock, String password) {
 		this.port = port;
 		this.cells = cells;
 		this.sock = sock;
-
+		this.password = password;
 	}
 
 	/**
@@ -61,7 +65,7 @@ public class ThreadServer implements Runnable {
 		while (isAlive) {
 
 			DataInputStream in = new DataInputStream(sock.getInputStream());
-			if (in.readUTF().equals("send me data")) {
+			if (in.readUTF().equals(password)) {
 				for (int i = 0; i < cells.length; i++) {
 					for (int j = 0; j < cells[i].length; j++) {
 						CellNetwork cell = new CellNetwork(

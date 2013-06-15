@@ -25,6 +25,8 @@ public class Client implements Runnable {
 	private Cell cellStart;
 	/** the connection to the server */
 	private Connections connection;
+	/** the connection password */
+	private String password;
 
 	private final CellNetworkListenerClient listener = new CellNetworkListenerClient();
 
@@ -44,10 +46,11 @@ public class Client implements Runnable {
 	 * @param cellStart
 	 *            the cell where the program will copy
 	 */
-	private Client(String IP, int port, Cell cellStart) {
+	private Client(String IP, int port, Cell cellStart, String password) {
 		this.IP = IP;
 		this.port = port;
 		this.cellStart = cellStart;
+		this.password = password;
 	}
 
 	/**
@@ -72,9 +75,11 @@ public class Client implements Runnable {
 	 *            the connection port of the server
 	 * @param cellStart
 	 *            cell where we paste the content of the shared cells
+	 * @param password
+	 *            the connection password
 	 */
-	public void startClient(String IP, int port, Cell cellStart) {
-		Thread thr = new Thread(new Client(IP, port, cellStart));
+	public void startClient(String IP, int port, Cell cellStart, String password) {
+		Thread thr = new Thread(new Client(IP, port, cellStart, password));
 		thr.start();
 	}
 
@@ -98,6 +103,8 @@ public class Client implements Runnable {
 	 *            cell where we paste the content
 	 * @param cli
 	 *            the socket of connection
+	 * @param password
+	 *            the connection password
 	 * @throws IOException
 	 *             throw this exception if the I/O have errors
 	 * @throws ClassNotFoundException
@@ -106,15 +113,15 @@ public class Client implements Runnable {
 	 * @throws FormulaCompilationException
 	 *             throw if the cell does not respect the formula compiler
 	 */
-	private synchronized void receive(Cell cellStart, Socket cli)
-			throws IOException, ClassNotFoundException,
+	private synchronized void receive(Cell cellStart, Socket cli,
+			String password) throws IOException, ClassNotFoundException,
 			FormulaCompilationException {
 		boolean isCell = true;
 		int cellStartRow = cellStart.getAddress().getRow();
 		int cellStartColumn = cellStart.getAddress().getColumn();
 		OutputStream out = cli.getOutputStream();
 		DataOutputStream outStream = new DataOutputStream(out);
-		outStream.writeUTF("send me data");
+		outStream.writeUTF(password);
 		while (isCell) {
 			ObjectInputStream inStream = new ObjectInputStream(
 					cli.getInputStream());
@@ -187,7 +194,7 @@ public class Client implements Runnable {
 				cli = new Socket(IP, port);
 			} else
 				cli = new Socket(connection.getIP(), connection.getPort());
-			receive(cellStart, cli);
+			receive(cellStart, cli, password);
 			Thread thr = new Thread(new ThreadClient(port, cellStart, cli,
 					listener));
 			thr.start();

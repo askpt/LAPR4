@@ -22,10 +22,12 @@ public class ReceiveController {
 	 *            the connection port of the server
 	 * @param cellStart
 	 *            cell where we paste the content of the shared cells
+	 * @param password
+	 *            the connection password
 	 */
-	public void startClient(String IP, int port, Cell cellStart) {
+	public void startClient(String IP, int port, Cell cellStart, String password) {
 		Client cli = new Client();
-		cli.startClient(IP, port, cellStart);
+		cli.startClient(IP, port, cellStart, password);
 	}
 
 	/**
