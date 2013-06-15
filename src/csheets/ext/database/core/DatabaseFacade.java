@@ -303,42 +303,68 @@ public class DatabaseFacade extends Observable {
 	 * @param selectedCells
 	 *            2D array with selected cells in spreadsheet
 	 */
-	public void updateTable(String tableName, String[][] tableData,
-			String[][] selectedCells) {
-		int tableDataRows = tableData.length;
-		int selectedCellsRows = selectedCells.length;
+	public void updateTable(String tableName, String[][] tableData, String[][] selectedCells) 
+        {
+            int tableDataRows = tableData.length;
+            int selectedCellsRows = selectedCells.length;
 
-		/*
-		 * if selected cells have more rows than table data then we need to at
-		 * least insert new data into the database
-		 */
-		if (selectedCellsRows > tableDataRows) {
+            /*
+             * if selected cells have more rows than table data then we need to at
+             * least insert new data into the database
+             */
+            if (selectedCellsRows > tableDataRows) 
+            {
 
-		}
+            }
 
-		/*
+            /*
 		 * if selected cells have less rows than table data then we need to at
 		 * least remove a record from the database
 		 */
-		else if (selectedCellsRows < tableDataRows) {
+            else if (selectedCellsRows < tableDataRows) 
+            {
 
-		}
+            }
 
-		/* if row count is the same then we only need to update the table */
-		else {
-			/* an array to store the actual changes */
-			String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
-			int cont = 0;
-			for (int i = 0; i < selectedCells.length; i++) {
-				for (int j = 0; j < selectedCells[0].length; j++) {
-					if (!selectedCells[i][j].toString().equals(
-							tableData[i][j].toString())) {
-						adapter.updateRow(tableName, tableData[0][j],
-								selectedCells[i][j], tableData[i][j]);
-					}
-				}
-			}
-		}
+            /* if row count is the same then we only need to update the table */
+            else 
+            {
+                /* an array to store the actual changes */
+                updateEqualRows(tableName, tableData, selectedCells);
+//                String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
+//		for (int i = 0; i < selectedCells.length; i++) 
+//                {
+//                    for (int j = 0; j < selectedCells[0].length; j++) 
+//                    {
+//                        if (!selectedCells[i][j].toString().equals(tableData[i][j].toString())) 
+//                        {
+//                            adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][j]);
+//			}
+//                    }
+//		}
+            }
 
 	}
+
+    /**
+     * updates a database table when selected cells in the spreadsheet and database's
+     * table have the same column number
+     * @param tableName database's table
+     * @param tableData 2D array with database's data
+     * @param selectedCells 2D array with spreadsheet's data
+     */
+    private void updateEqualRows(String tableName, String[][] tableData, String[][] selectedCells) 
+    {
+        String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
+        for (int i = 0; i < selectedCells.length; i++) 
+        {
+            for (int j = 0; j < selectedCells[0].length; j++) 
+            {
+                if (!selectedCells[i][j].toString().equals(tableData[i][j].toString())) 
+                {
+                    adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][j]);
+                }
+            }
+        }
+    }
 }
