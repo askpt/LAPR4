@@ -307,6 +307,9 @@ public class DatabaseFacade extends Observable {
         {
             int tableDataRows = tableData.length;
             int selectedCellsRows = selectedCells.length;
+            
+//            System.out.println("tableDataRows = " + tableDataRows);
+//            System.out.println("selectedCellsRows = " + selectedCellsRows);
 
             /*
              * if selected cells have more rows than table data then we need to at
@@ -314,7 +317,22 @@ public class DatabaseFacade extends Observable {
              */
             if (selectedCellsRows > tableDataRows) 
             {
-
+                /* creating a new array with only the "extra" rows in the spreadsheet */
+                int startIndex = tableDataRows;
+//                System.out.println("startIndex = " + startIndex);
+                String [][]newRows = new String[selectedCells.length - startIndex][tableData[0].length];
+                for(int i = 0; i < newRows.length; i++)
+                {
+                    for(int j = 0; j < newRows[0].length; j++)
+                    {
+                        newRows[i][j] = selectedCells[i + startIndex][j];
+//                        System.out.println(newRows[i][j]);
+                    }
+//                    System.out.println("-----------");
+                    
+                }
+                /* inserts the "extra" selected cells in the database */
+                adapter.insertNewData(tableName, newRows);
             }
 
             /*
@@ -329,19 +347,7 @@ public class DatabaseFacade extends Observable {
             /* if row count is the same then we only need to update the table */
             else 
             {
-                /* an array to store the actual changes */
                 updateEqualRows(tableName, tableData, selectedCells);
-//                String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
-//		for (int i = 0; i < selectedCells.length; i++) 
-//                {
-//                    for (int j = 0; j < selectedCells[0].length; j++) 
-//                    {
-//                        if (!selectedCells[i][j].toString().equals(tableData[i][j].toString())) 
-//                        {
-//                            adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][j]);
-//			}
-//                    }
-//		}
             }
 
 	}

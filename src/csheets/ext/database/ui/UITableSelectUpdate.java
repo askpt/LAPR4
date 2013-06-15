@@ -181,6 +181,7 @@ public class UITableSelectUpdate extends JFrame
                     if(isDifferent)
                     {
                         ctrlUp.updateTable(tableList.getSelectedValue().toString(), tableData, selectedCells);
+                        JOptionPane.showMessageDialog(null, tableList.getSelectedValue().toString() + " database: data successfully updated!");
                     }
                     else
                     {

@@ -330,4 +330,11 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 		}
 
 	}
+
+    @Override
+    public void insertNewData(String tableName, String[][] newData) 
+    {
+//        Statement st = null;
+//        for(int i = )
+    }
 }
