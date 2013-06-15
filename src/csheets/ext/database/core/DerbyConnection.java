@@ -104,7 +104,7 @@ public class DerbyConnection implements DBConnectionStrategy {
 		String[] insertVector = new String[numberOfRows - 1];
 		for (int i = 0; i < insertVector.length; i++) {
 			String temp = Integer
-					.toString(cells[i][0].getAddress().getRow() + 1);
+					.toString(cells[i][0].getAddress().getRow() + 2);
 			insertVector[i] = insertStat + temp + ",";
 		}
 

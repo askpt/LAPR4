@@ -113,7 +113,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
                      (we do this so that, in a future feature, we keep track of the original 
                      row) */
 			String temp = Integer
-					.toString(cells[i][0].getAddress().getRow() + 1);
+					.toString(cells[i][0].getAddress().getRow() + 2);
 			insertVector[i] = insertStat + temp + ",";
 		}
 
