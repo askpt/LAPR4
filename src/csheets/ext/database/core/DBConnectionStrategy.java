@@ -88,4 +88,13 @@ public interface DBConnectionStrategy
      * @return table
      */
     public String[][] queryTo2dArray(ArrayList array, String[][] table);
+
+    /**
+     * updates a single row in a database table
+     * @param tableName table's name
+     * @param column table's column
+     * @param origin value to be final
+     * @param destination target value in the database table 
+     */
+    public void updateRow(String tableName, String column, String origin, String destination);
 }

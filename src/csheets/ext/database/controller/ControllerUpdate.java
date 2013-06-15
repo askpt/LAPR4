@@ -166,4 +166,15 @@ public class ControllerUpdate implements Subject
     {
         return facade.compareCellsWithDB(tableData, selectedCells);
     }
+
+    /**
+     * updates a database table based on the selected cells
+     * @param tableName target table to be updated 
+     * @param tableData 2D array with current table data
+     * @param selectedCells 2D array with selected cells in spreadsheet
+     */
+    public void updateTable(String tableName, String[][] tableData, String[][] selectedCells) 
+    {
+        facade.updateTable(tableName, tableData, selectedCells);
+    }
 }

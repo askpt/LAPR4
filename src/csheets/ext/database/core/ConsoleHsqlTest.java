@@ -283,7 +283,7 @@ public class ConsoleHsqlTest
      * Console test application
      * @param args 
      */
-    public static void main(String[] args) 
+    public static void main(String[] args) throws SQLException 
     {
 
         ConsoleHsqlTest db = null;
@@ -297,11 +297,11 @@ public class ConsoleHsqlTest
             ex1.printStackTrace();   
             return;                  
         }
-        
-//        try 
-//        {
-//            /* make an empty table by declaring the id column IDENTITY, 
-//             * the db will automatically generate unique values for new rows
+//        
+////        try 
+////        {
+////            /* make an empty table by declaring the id column IDENTITY, 
+////             * the db will automatically generate unique values for new rows
 //             * this is useful for row keys 
 //             */
 //            db.update("CREATE TABLE sample_table ( id INTEGER IDENTITY, str_col "
@@ -331,81 +331,89 @@ public class ConsoleHsqlTest
 //        }
         
         
-        
-        
-        
-        try 
-        {
-            /* adding some rows - will create duplicates if run more then once
-             * the id column is automatically generated */
-//            db.update(
-//                "INSERT INTO sample_table(str_col,num_col) VALUES('Ford', 100)");
-//            db.update(
-//                "INSERT INTO sample_table(str_col,num_col) VALUES('Toyota', 200)");
-//            db.update(
-//                "INSERT INTO sample_table(str_col,num_col) VALUES('Honda', 300)");
-//            db.update(
-//                "INSERT INTO sample_table(str_col,num_col) VALUES('GM', 400)");
-//            db.update(
-//                "INSERT INTO sample_table(str_col,num_col) VALUES('Ferrari', 600)");
-
-            /* doing a query */
-//            db.query("SELECT * FROM sample_table WHERE num_col < 250");
-            
-            /* query about all database tables */
-//            System.out.println("***** ALL TABLES *****");
-//            db.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
-            
-            /* saving queries to arraylist */
-            ArrayList temp = new ArrayList();
-//            temp = db.queryToArray("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
-//            for(int i = 0; i < temp.size(); i++)
-//            {
-//                System.out.println("TABELA nº " + (i + 1) + temp.get(i).toString());
-//            }
-            
-            
-           
-            
-//            for(int i = 0; i < temp2.size(); i++)
-//            {
-//                System.out.println(temp2.get(i).toString());
-//            }
-            
-            
-//            System.out.println("numero de linhas");
-//            ArrayList temp3 = new ArrayList();
-//            temp2 = db.queryToArrayList("SELECT COUNT(*) FROM sample_table");
+//        try 
+//        {
+//            /* adding some rows - will create duplicates if run more then once
+//             * the id column is automatically generated */
+////            db.update(
+////                "INSERT INTO sample_table(str_col,num_col) VALUES('Ford', 100)");
+////            db.update(
+////                "INSERT INTO sample_table(str_col,num_col) VALUES('Toyota', 200)");
+////            db.update(
+////                "INSERT INTO sample_table(str_col,num_col) VALUES('Honda', 300)");
+////            db.update(
+////                "INSERT INTO sample_table(str_col,num_col) VALUES('GM', 400)");
+////            db.update(
+////                "INSERT INTO sample_table(str_col,num_col) VALUES('Ferrari', 600)");
+//
+//            /* doing a query */
+////            db.query("SELECT * FROM sample_table WHERE num_col < 250");
 //            
-           // System.out.println("Número de linhas = " + db.countRows("sample_table"));
-            
-            // contar linhas e colunas
-            int rc[] = new int[2];
-            rc = db.countsRowsAndCols("tabteste");
-            
-            System.out.println("linha de teste");
-            System.out.println("rows = " + rc[0]);
-            System.out.println("cols = " + rc[1]);
-            
-            // guardar dardos no arraylist
-            ArrayList temp2 = new ArrayList();
-            temp2 = db.queryToArray("tabteste");
-            
-            /* save data to array */
-            String [][]data = new String[rc[0]][rc[1]];
-            db.queryTo2dArray(temp2, data);
-            
-            
-            /* shutting down db */
+//            /* query about all database tables */
+////            System.out.println("***** ALL TABLES *****");
+////            db.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
+//            
+//            /* saving queries to arraylist */
+//            ArrayList temp = new ArrayList();
+////            temp = db.queryToArray("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE'");
+////            for(int i = 0; i < temp.size(); i++)
+////            {
+////                System.out.println("TABELA nº " + (i + 1) + temp.get(i).toString());
+////            }
+//            
+//            
+//           
+//            
+////            for(int i = 0; i < temp2.size(); i++)
+////            {
+////                System.out.println(temp2.get(i).toString());
+////            }
+//            
+//            
+////            System.out.println("numero de linhas");
+////            ArrayList temp3 = new ArrayList();
+////            temp2 = db.queryToArrayList("SELECT COUNT(*) FROM sample_table");
+////            
+//           // System.out.println("Número de linhas = " + db.countRows("sample_table"));
+//            
+//            // contar linhas e colunas
+//            int rc[] = new int[2];
+//            rc = db.countsRowsAndCols("tabteste");
+//            
+//            System.out.println("linha de teste");
+//            System.out.println("rows = " + rc[0]);
+//            System.out.println("cols = " + rc[1]);
+//            
+//            // guardar dardos no arraylist
+//            ArrayList temp2 = new ArrayList();
+//            temp2 = db.queryToArray("tabteste");
+//            
+//            /* save data to array */
+//            String [][]data = new String[rc[0]][rc[1]];
+//            db.queryTo2dArray(temp2, data);
+//            
+//            
+//            /* shutting down db */
+//            db.shutdown();
+//        } 
+//        
+//        catch (SQLException ex3) 
+//        {
+//            ex3.printStackTrace();
+//        }
+       
+        
+        db.query("SELECT * FROM TITULOS");
+        
+        db.update("UPDATE TITULOS SET TITLES = 'suckers' WHERE TITLES = 'fdp'");
+        
+        db.query("SELECT * FROM TITULOS");
+        
+         /* shutting down db */
             db.shutdown();
-        } 
         
         
-        
-        catch (SQLException ex3) 
-        {
-            ex3.printStackTrace();
-        }
-    }    
+    }
+     
 }    
 
