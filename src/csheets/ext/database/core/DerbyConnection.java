@@ -298,14 +298,14 @@ public class DerbyConnection implements DBConnectionStrategy {
 			st = connection.createStatement();
 			int i = st.executeUpdate(stat);
 			JOptionPane.showMessageDialog(null,
-					"HSQL database: success on update\nPreviously: "
+					"Derby database: success on update\nPreviously: "
 							+ destination + "\nNow: " + origin);
 		} catch (SQLException ex) {
 			Logger.getLogger(HsqlDBConnection.class.getName()).log(
 					Level.SEVERE, null, ex);
 			/* keep this until observer is implemented */
 			JOptionPane.showMessageDialog(null,
-					"HSQL database error:\nCould not update!");
+					"Derby database error:\nCould not update!");
 		}
 
 	}
