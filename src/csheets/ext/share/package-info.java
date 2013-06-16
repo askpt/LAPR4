@@ -143,8 +143,11 @@
 
  us -> sys : startSharing()
  us -> sys : selectSharingMode()
+ us -> sys : sendPassword(password)
  us -> sys : sendPort(port)
+ us -> sys : sendShareProperties(properties)
  us -> sys : sendCells(cells)
+
  sys --> us : return confirmation 
  @enduml
 
@@ -156,6 +159,8 @@
  us -> sys : selectSharingMode()
  us -> sys : sendPort(port)
  us -> sys : sendIP (IP)
+ us -> sys : sendPassword(password)
+ sys -> sys : receive()
  sys --> us : return confirmation
  @enduml
 
@@ -271,6 +276,18 @@
 
  end
  end
+ alt [if properties="read-only"]
+ loop
+
+ threadcli->net : out("send me updated data")
+ net -> svr : in("send me updated data")
+ listener -> svr : contentChanged(cll)
+ svr-> net : sendToAllClients(Cell[][])
+ net->threadcli: receiveUpdates(Cell[][])
+ end 
+ end
+
+
 
 
 
@@ -280,115 +297,29 @@
 
  @startuml doc-files/class_diagram.png
 
- package java
- package java.lang
- interface Runnable {
- }
- end package
-
- package java.io
- interface Serializable {
- }
- end package
- end package
-
- package javax.swing
- class JMenu {
- }
- end package
-
-
- package csheets
- package csheets.ui
- package csheets.ui.ctrl
- abstract class FocusOwnerAction {
- }
- end package
- package csheets.ui.ext
- abstract class UIExtension {
- }
- end package
- end package
- package csheets.ext
- abstract class Extension {
- }
- package csheets.ext.share
- class SharingExtension {
- +{static}String NAME
- +{static}int LOGGER_SIZE
- +SharingExtension()
- +UIExtension getUIExtension(UIController uiController)
- }
-
- package csheets.ext.share.controller
  class ReceiveController {
- +void startClient(String IP, int port, Cell cellStart)
+ +void startClient(String IP, int port, Cell cellStart, String password, Observer observer)
+ +List<Connections> findServers(Observer observer)
+ +void startClient(Connections connection, Cell cellStart, Observer observer)
  }
  class SendController {
- +void startServer(int port, Cell[][] cells)
+ +void startServer(int port, Cell[][] cells, String password, String properties, Observer observer)
  }
- end package
-
- package csheets.ext.share.core
-
- class Validate {
- +{static}boolean checkIFIPIsCorrect(String IP)
- +{static}boolean checkPort(int port)
- +{static}boolean checkIfANumber(String port)
+ class CellNetwork {
+ -{static}long serialVersionUID
+ -String content
+ -int row
+ -int column
+ -boolean isCell
+ +CellNetwork(String content, int row, int column, boolean isCell)
+ +boolean isCell()
+ +String getContent()
+ +int getRow()
+ +int getColumn()
  }
- class Server {
- -int port
- -Cell[][] cells
- -ServerSocket svr
- -String Ip
- -boolean changesClient
- -CellNetworkListenerServer listener
- -{static}Server instance
- -Server()
- +{static}Server getInstance()
- +CellNetworkListenerServer getListener()
- -Server(int port, Cell[][] cells, ServerSocket svr)
- +void startServer(int port, Cell[][] cells)
- +void run()
+ interface Serializable {
  }
- interface Runnable {
- }
- Runnable <|.. Server
-
- class Client {
- -String IP
- -int port
- -Cell cellStart
- -Connections connection
- -CellNetworkListenerClient listener
- +Client()
- -Client(String IP, int port, Cell cellStart)
- -Client(Connections connection, Cell cellStart)
- +void startClient(String IP, int port, Cell cellStart)
- +void startClient(Connections connection, Cell cellStart)
- -void receive(Cell cellStart, Socket cli)
- +void sendToServer(Cell cellUpdated, Socket sock)
- +void run()
- }
- interface Runnable {
- }
- Runnable <|.. Client
-
- class ThreadServer {
- -int port
- -Cell[][] cells
- -Socket sock
- -Cell cellUpdated
- -ThreadServer()
- +ThreadServer(int port, Cell[][] cells, Socket sock)
- -void send(Cell[][] cells, Socket sock)
- -void receiveUpdates(Cell cellUpdated, Socket cli)
- -void sendAllClients(Cell[][] cells, Socket sock)
- +void run()
- }
- interface Runnable {
- }
- Runnable <|.. ThreadServer
+ Serializable <|.. CellNetwork
 
  class CellNetworkListenerClient {
  -boolean flag
@@ -407,19 +338,6 @@
  }
  CellListener <|.. CellNetworkListenerClient
 
- class ThreadClient {
- -int port
- -Cell cellStart
- -Socket sock
- -ThreadClient()
- +ThreadClient(int port, Cell cellStart, Socket sock)
- -void receiveUpdates(Cell cellStart, Socket cli)
- +void run()
- }
- interface Runnable {
- }
- Runnable <|.. ThreadClient
-
  class CellNetworkListenerServer {
  -boolean flag
  -Cell cell
@@ -436,20 +354,158 @@
  interface CellListener {
  }
  CellListener <|.. CellNetworkListenerServer
- class CellNetwork {
- -String content
- -int row
- -int column
- -boolean isCell
- +CellNetwork(String content, int row, int column, boolean isCell)
- +boolean isCell()
- +String getContent()
- +int getRow()
- +int getColumn()
- }
- end package
 
- package csheets.ext.share.ui
+ class Client {
+ -String IP
+ -int port
+ -Cell cellStart
+ -Connections connection
+ -String password
+ -Observer observer
+ -CellNetworkListenerClient listener
+ -String properties
+ +Client()
+ -Client(String IP, int port, Cell cellStart, String password, Observer observer)
+ -Client(Connections connection, Cell cellStart, Observer observer)
+ +void startClient(String IP, int port, Cell cellStart, String password, Observer observer)
+ +void startClient(Connections connection, Cell cellStart, Observer observer)
+ -void receive(Cell cellStart, Socket cli, String password)
+ +void sendToServer(Socket sock)
+ +void run()
+ }
+ class Observable {
+ }
+ Observable <|-- Client
+ interface Runnable {
+ }
+ Runnable <|.. Client
+
+ class ClientDiscover {
+ ~List<Connections> connections
+ -{static}ClientDiscover instance
+ -Observer observer
+ -ClientDiscover()
+ +{static}ClientDiscover getInstance()
+ +List<Connections> findServers(Observer observer)
+ -void search()
+ +void run()
+ }
+ class Observable {
+ }
+ Observable <|-- ClientDiscover
+ interface Runnable {
+ }
+ Runnable <|.. ClientDiscover
+
+ class Connections {
+ -int port
+ -InetAddress IP
+ +Connections(int port, InetAddress ip)
+ +InetAddress getIP()
+ +int getPort()
+ +String toString()
+ +boolean equals(Object obj)
+ }
+
+ class Server {
+ -Cell[][] cells
+ -ServerSocket svr
+ -String password
+ -Observer observer
+ -String properties
+ -ArrayList<Socket> sockets
+ -CellNetworkListenerServer listener
+ -{static}Server instance
+ -Server()
+ +{static}Server getInstance()
+ +CellNetworkListenerServer getListener()
+ +String getProperties()
+ -Server(Cell[][] cells, ServerSocket svr, String password, String properties, Observer observer)
+ +Cell[][] getCells()
+ +void startServer(int port, Cell[][] cells, String password, String properties, Observer observer)
+ +ArrayList<Socket> getSockets()
+ +void run()
+ }
+ class Observable {
+ }
+ Observable <|-- Server
+ interface Runnable {
+ }
+ Runnable <|.. Server
+
+ class ServerDiscover {
+ -{static}ServerDiscover instance
+ -int port
+ -Observer observer
+ -ServerDiscover()
+ +{static}ServerDiscover getInstance()
+ +void findClients(int port, Observer observer)
+ -void broadcast()
+ +void run()
+ }
+ class Observable {
+ }
+ Observable <|-- ServerDiscover
+ interface Runnable {
+ }
+ Runnable <|.. ServerDiscover
+
+ class ThreadClient {
+ -Cell cellStart
+ -Socket sock
+ -Observer observer
+ -CellNetworkListenerClient listenerClient
+ +ThreadClient(Cell cellStart, Socket sock, CellNetworkListenerClient listener, Observer observer)
+ -void receiveUpdates(Cell cellStart, Socket cli)
+ +void run()
+ }
+ class Observable {
+ }
+ Observable <|-- ThreadClient
+ interface Runnable {
+ }
+ Runnable <|.. ThreadClient
+
+ class ThreadServer {
+ -Cell[][] cells
+ -Socket sock
+ -String password
+ -Observer observer
+ +ThreadServer(Cell[][] cells, Socket sock, String password, Observer observer)
+ -void send(Cell[][] cells, Socket sock)
+ -void sendAllClients(Cell[][] cells)
+ +void run()
+ }
+ class Observable {
+ }
+ Observable <|-- ThreadServer
+ interface Runnable {
+ }
+ Runnable <|.. ThreadServer
+
+ class ThreadServerReceiving {
+ -Socket sock
+ -Observer observer
+ -CellNetworkListenerServer listenerServer
+ +ThreadServerReceiving(Socket sock, CellNetworkListenerServer listenerServer, Observer observer)
+ -void receiveUpdates(Socket cli)
+ +void run()
+ }
+ class Observable {
+ }
+ Observable <|-- ThreadServerReceiving
+ interface Runnable {
+ }
+ Runnable <|.. ThreadServerReceiving
+
+ class Validate {
+ +{static}boolean checkIFIPIsCorrect(String IP)
+ +{static}boolean checkPort(int port)
+ +{static}boolean checkIfANumber(String port)
+ +{static}String removeMessage(String message)
+ +{static}String encrypt(byte[] plainText)
+ }
+
  class ReceiveAction {
  -{static}long serialVersionUID
  #UIController uiController
@@ -458,12 +514,20 @@
  +ReceiveAction(UIController uiController)
  +void actionPerformed(ActionEvent event)
  #String getName()
- +void clickOnSidebar(String IP, int port)
+ +void clickOnSidebar(String IP, int port, String password, Observer observer)
+ +void clickOnSidebar(Connections connection, Observer observer)
  }
+ abstract class FocusOwnerAction {
+ }
+ FocusOwnerAction <|-- ReceiveAction
 
  class ReceiveUI {
  +void createUI(Cell cellStart)
+ +void update(Observable o, Object arg)
  }
+ interface Observer {
+ }
+ Observer <|.. ReceiveUI
 
  class SendAction {
  -{static}long serialVersionUID
@@ -472,55 +536,54 @@
  +{static}SendAction getInstance()
  +SendAction(UIController uiController)
  +void actionPerformed(ActionEvent event)
- +void clickOnSidebar(int port)
+ +void clickOnSidebar(int port, String password, String properties, Observer observer)
  #String getName()
  }
+ abstract class FocusOwnerAction {
+ }
+ FocusOwnerAction <|-- SendAction
+
  class SendUI {
  +void createUI(Cell[][] cells)
+ +void update(Observable o, Object arg)
  }
+ interface Observer {
+ }
+ Observer <|.. SendUI
 
  class SharingMenu {
  -{static}long serialVersionUID
  +SharingMenu(UIController uiController)
  }
+ class JMenu {
+ }
+ JMenu <|-- SharingMenu
+
  class UISharingExtension {
  -JComponent sidebar
  -SharingMenu menu
+ -UISharingExtension uiShare
  +UISharingExtension(Extension extension, UIController uiController)
  +JMenu getMenu()
  +JComponent getSideBar()
+ +void update(Observable o, Object arg)
  }
- end package
- end package
- end package
- end package
-
-
-
- Extension <|-- SharingExtension
- Runnable <|.. Client
- Runnable <|.. Server
- Serializable <|.. CellNetwork
- FocusOwnerAction <|-- ReceiveAction
- FocusOwnerAction <|-- SendAction
- JMenu <|-- SharingMenu
+ abstract class UIExtension {
+ }
  UIExtension <|-- UISharingExtension
-
- class ThreadClient {
- -int port
- -Cell cellStart
- -Socket sock
- -ThreadClient()
- +ThreadClient(int port, Cell cellStart, Socket sock)
- -void receiveUpdates(Cell cellStart, Socket cli)
- +void run()
+ interface Observer {
  }
- interface Runnable {
+ Observer <|.. UISharingExtension
+
+ class SharingExtension {
+ +{static}String NAME
+ +{static}int LOGGER_SIZE
+ +SharingExtension()
+ +UIExtension getUIExtension(UIController uiController)
  }
- Runnable <|.. ThreadClient
-
-
-
+ abstract class Extension {
+ }
+ Extension <|-- SharingExtension
  @enduml
 
 
