@@ -145,38 +145,10 @@ public class UITableSelectUpdate extends JFrame
                 /* loads a given database table to the table data array */
                 tableData = ctrlUp.loadTable(tableList.getSelectedValue().toString());
                 int numberColsTargetTable = tableData[0].length - 1;
-                
-                
-                
-//                System.out.println("DATABASE");
-//                for(int i = 0; i < tableData.length; i++)
-//                {
-//                    for(int j = 0; j < tableData[0].length; j++)
-//                    {
-//                        
-//                         System.out.println(tableData[i][j]);
-//                     }
-//                    System.out.println("----");
-//                  }
-                
-                
-                
-                
                 /* if column number is the same we can update */
                 if(numberColsTargetTable == numberOfCols)
                 {
                     selectedCells = ctrlUp.cellsTo2dArray(cells);
-                    
-//                System.out.println("SELECTED CELLS");
-//                for(int i = 0; i < tableData.length; i++)
-//                {
-//                    for(int j = 0; j < tableData[0].length; j++)
-//                    {        
-//                         System.out.println(tableData[i][j]);
-//                     }
-//                    System.out.println("----");
-//                 }
-                    
                     boolean isDifferent = ctrlUp.compareCellsWithDB(tableData, selectedCells);
                     if(isDifferent)
                     {
@@ -191,14 +163,6 @@ public class UITableSelectUpdate extends JFrame
                     {
                         JOptionPane.showMessageDialog(null, "Database table is already up-to-date!");
                     }
-                    
-//                    System.out.println("is different? = " + isDifferent);
-                    
-                    
-                    
-                    
-                    
-                    // ConfirmUpdateUI confirmUpUI = new ConfirmUpdateUI()
                 }
                 /* if it's not we can't update */
                 else

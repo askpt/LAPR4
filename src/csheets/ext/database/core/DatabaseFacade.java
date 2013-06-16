@@ -341,14 +341,14 @@ public class DatabaseFacade extends Observable {
                 updateEqualRows(tableName, tableData, selectedCells);
             }
 
-            /*
-		 * if selected cells have less rows than table data then we need to at
-		 * least remove a record from the database
-		 */
-            else if (selectedCellsRows < tableDataRows) 
-            {
-                
-            }
+//            /*
+//		 * if selected cells have less rows than table data then we need to at
+//		 * least remove a record from the database
+//		 */
+//            else if (selectedCellsRows < tableDataRows) 
+//            {
+//                
+//            }
 
             /* if row count is the same then we only need to update the table */
             else 
