@@ -44,12 +44,6 @@ public class UISharingExtension extends UIExtension implements Observer {
 		super(extension, uiController);
 	}
 
-	/**
-	 * Returns an instance of the SharingMenu
-	 * 
-	 * @see SharingMenu
-	 * @return a JMenu component
-	 */
 	@Override
 	public JMenu getMenu() {
 		if (menu == null)
@@ -58,11 +52,6 @@ public class UISharingExtension extends UIExtension implements Observer {
 		return menu;
 	}
 
-	/**
-	 * Creates a sidebar for the extension
-	 * 
-	 * @return the created sidebar
-	 */
 	@Override
 	public JComponent getSideBar() {
 		if (sidebar == null) {

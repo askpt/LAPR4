@@ -17,6 +17,7 @@ import csheets.ui.ctrl.*;
  */
 public class ReceiveAction extends FocusOwnerAction {
 
+	/** generated id */
 	private static final long serialVersionUID = 1L;
 	/** User Interface Controller */
 	protected UIController uiController;
@@ -46,12 +47,6 @@ public class ReceiveAction extends FocusOwnerAction {
 		}
 	}
 
-	/**
-	 * This method will create a new UI for the client
-	 * 
-	 * @param event
-	 *            the event that was fired
-	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		ReceiveUI rui = new ReceiveUI();
@@ -59,11 +54,6 @@ public class ReceiveAction extends FocusOwnerAction {
 		rui.createUI(cellStart);
 	}
 
-	/**
-	 * The method that will define the name in the bar
-	 * 
-	 * @return the name in the bar
-	 */
 	@Override
 	protected String getName() {
 		return "Receive";

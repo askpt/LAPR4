@@ -5,10 +5,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.logging.*;
 
-import javax.swing.JOptionPane;
-
-import csheets.core.Cell;
-
 /**
  * Class that implement the client to can receives updates from server
  * 
@@ -16,22 +12,26 @@ import csheets.core.Cell;
  * 
  */
 public class ThreadServerReceiving extends Observable implements Runnable {
-
-	/** the cells we will pass throw network */
-	private Cell cellStart;
 	/** server socket */
 	private Socket sock;
 	/** the observer class */
 	private Observer observer;
-
-	private Cell[][] cells;
-
+	/** the cell listener */
 	private CellNetworkListenerServer listenerServer;
 
-	public ThreadServerReceiving(Cell[][] cells, Socket sock,
+	/**
+	 * Creates a new thread for the server receive updates
+	 * 
+	 * @param sock
+	 *            server socket
+	 * @param listenerServer
+	 *            listener server
+	 * @param observer
+	 *            the observer class
+	 */
+	public ThreadServerReceiving(Socket sock,
 			CellNetworkListenerServer listenerServer, Observer observer) {
 
-		this.cellStart = cellStart;
 		this.sock = sock;
 		this.listenerServer = listenerServer;
 		this.observer = observer;
@@ -40,9 +40,10 @@ public class ThreadServerReceiving extends Observable implements Runnable {
 	/**
 	 * Method to wait from message of server to update client's information
 	 * 
-	 * @param cellStart
 	 * @param cli
+	 *            the socket server
 	 * @throws Exception
+	 *             throws if any exception occurs
 	 */
 	private synchronized void receiveUpdates(Socket cli) throws Exception {
 		while (true) {
@@ -57,10 +58,10 @@ public class ThreadServerReceiving extends Observable implements Runnable {
 
 				for (int i = 0; i < Server.getInstance().getCells().length; i++) {
 					for (int j = 0; j < Server.getInstance().getCells()[i].length; j++) {
-						if (Server.getInstance().getCells()[i][j].getAddress()
-								.getColumn() == cell.getColumn()
-								&& Server.getInstance().getCells()[i][j]
-										.getAddress().getRow() == cell.getRow()) {
+						if ((Server.getInstance().getCells()[i][j].getAddress()
+								.getColumn() == cell.getColumn())
+								&& (Server.getInstance().getCells()[i][j]
+										.getAddress().getRow() == cell.getRow())) {
 							Server.getInstance().getCells()[i][j]
 									.getSpreadsheet()
 
@@ -93,9 +94,6 @@ public class ThreadServerReceiving extends Observable implements Runnable {
 
 	}
 
-	/**
-	 * Running thread
-	 */
 	@Override
 	public void run() {
 		try {
@@ -105,7 +103,7 @@ public class ThreadServerReceiving extends Observable implements Runnable {
 			}
 
 		} catch (Exception e) {
-			//JOptionPane.showMessageDialog(null, "Connection Error");
+			// JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
 			e.printStackTrace();

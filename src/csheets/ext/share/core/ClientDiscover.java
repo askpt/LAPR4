@@ -98,9 +98,6 @@ public class ClientDiscover extends Observable implements Runnable {
 		clientSocket.close();
 	}
 
-	/**
-	 * Running thread
-	 */
 	@Override
 	public void run() {
 		addObserver(observer);

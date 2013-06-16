@@ -14,8 +14,6 @@ import csheets.core.Cell;
  * 
  */
 public class ThreadClient extends Observable implements Runnable {
-	/** the connection port */
-	private int port;
 	/** the cells we will pass throw network */
 	private Cell cellStart;
 	/** server socket */
@@ -25,9 +23,8 @@ public class ThreadClient extends Observable implements Runnable {
 
 	private CellNetworkListenerClient listenerClient;
 
-	public ThreadClient(int port, Cell cellStart, Socket sock,
+	public ThreadClient(Cell cellStart, Socket sock,
 			CellNetworkListenerClient listener, Observer observer) {
-		this.port = port;
 		this.cellStart = cellStart;
 		this.sock = sock;
 		this.listenerClient = listener;
@@ -104,7 +101,7 @@ public class ThreadClient extends Observable implements Runnable {
 			}
 
 		} catch (Exception e) {
-			//JOptionPane.showMessageDialog(null, "Connection Error");
+			// JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
 			setChanged();

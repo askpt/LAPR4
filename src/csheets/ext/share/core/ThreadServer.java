@@ -14,20 +14,14 @@ import csheets.core.Cell;
  * 
  */
 public class ThreadServer extends Observable implements Runnable {
-	/** the connection port */
-	private int port;
 	/** the cells we will pass throw network */
-	private Cell[][] cells;
+	private final Cell[][] cells;
 	/** server socket */
-	private Socket sock;
+	private final Socket sock;
 	/** connection passoword */
-	private String password;
+	private final String password;
 	/** the observer class */
-	private Observer observer;
-
-	private String properties;
-
-	private Cell cellUpdated;
+	private final Observer observer;
 
 	/**
 	 * Create internaly a new client
@@ -41,13 +35,11 @@ public class ThreadServer extends Observable implements Runnable {
 	 * @param observer
 	 *            the observer class
 	 */
-	public ThreadServer(int port, Cell[][] cells, Socket sock, String password,
-			String properties, Observer observer) {
-		this.port = port;
+	public ThreadServer(Cell[][] cells, Socket sock, String password,
+			Observer observer) {
 		this.cells = cells;
 		this.sock = sock;
 		this.password = password;
-		this.properties = properties;
 		this.observer = observer;
 	}
 
@@ -56,7 +48,7 @@ public class ThreadServer extends Observable implements Runnable {
 	 * 
 	 * @param cells
 	 *            value that will be shared throw network
-	 * @param svr
+	 * @param sock
 	 *            the socket of connection
 	 * @throws IOException
 	 *             throw this exception if the I/O have errors
@@ -94,9 +86,11 @@ public class ThreadServer extends Observable implements Runnable {
 	 * operation
 	 * 
 	 * @param cells
-	 * @param sock
+	 *            the cells to be shared
 	 * @throws IOException
+	 *             throws if a I/O exception occurs
 	 * @throws InterruptedException
+	 *             throws if a thread exception occurs
 	 */
 
 	private synchronized void sendAllClients(Cell[][] cells)
@@ -139,13 +133,10 @@ public class ThreadServer extends Observable implements Runnable {
 
 	}
 
-	/**
-	 * Running thread
-	 */
 	@Override
 	public void run() {
 		try {
-
+			addObserver(observer);
 			while (true) {
 
 				send(cells, sock);
@@ -154,7 +145,7 @@ public class ThreadServer extends Observable implements Runnable {
 			}
 
 		} catch (Exception e) {
-			//JOptionPane.showMessageDialog(null, "Connection Error");
+			// JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
 			setChanged();

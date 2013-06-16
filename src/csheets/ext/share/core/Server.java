@@ -15,7 +15,6 @@ import csheets.core.Cell;
  */
 public class Server extends Observable implements Runnable {
 	/** the connection port */
-	private int port;
 	/** the cells we will pass throw network */
 	private Cell[][] cells;
 	/** server socket */
@@ -24,13 +23,13 @@ public class Server extends Observable implements Runnable {
 	private String password;
 	/** observer class */
 	private Observer observer;
-
+	/** the properties of the connection */
 	private String properties;
-
+	/** the sockets list */
 	private final ArrayList<Socket> sockets = new ArrayList<Socket>();
-
+	/** the cell listeners */
 	private final CellNetworkListenerServer listener = new CellNetworkListenerServer();
-
+	/** the running instance */
 	private static Server instance = null;
 
 	/**
@@ -39,31 +38,51 @@ public class Server extends Observable implements Runnable {
 	private Server() {
 	}
 
+	/**
+	 * Method that returns the running instance of the server
+	 * 
+	 * @return the running instance of the server
+	 */
 	public static synchronized Server getInstance() {
 		if (instance == null)
 			instance = new Server();
 		return instance;
 	}
 
+	/**
+	 * Method that returns the listener of the cells
+	 * 
+	 * @return the listener of the cells
+	 */
 	public CellNetworkListenerServer getListener() {
 		return listener;
 	}
 
-	public String getProps() {
+	/**
+	 * Method that returns the properties of the connection
+	 * 
+	 * @return the properties of the connection
+	 */
+	public String getProperties() {
 		return properties;
 	}
 
 	/**
 	 * Create internaly a new client
 	 * 
-	 * @param port
-	 *            the connection port
 	 * @param cells
 	 *            the cells we will pass throw network
+	 * @param svr
+	 *            the server socket
+	 * @param password
+	 *            the connection password
+	 * @param properties
+	 *            the connection properties
+	 * @param observer
+	 *            the observer class
 	 */
-	private Server(int port, Cell[][] cells, ServerSocket svr, String password,
+	private Server(Cell[][] cells, ServerSocket svr, String password,
 			String properties, Observer observer) {
-		this.port = port;
 		this.cells = cells;
 		this.svr = svr;
 		this.password = password;
@@ -89,6 +108,8 @@ public class Server extends Observable implements Runnable {
 	 *            value that will be shared throw network
 	 * @param password
 	 *            the connection password
+	 * @param properties
+	 *            the connection properties
 	 * @param observer
 	 *            the observer class
 	 */
@@ -130,9 +151,6 @@ public class Server extends Observable implements Runnable {
 		return sockets;
 	}
 
-	/**
-	 * Running thread
-	 */
 	@Override
 	public void run() {
 		try {
@@ -141,12 +159,12 @@ public class Server extends Observable implements Runnable {
 				sockets.add(sock);
 				addObserver(observer);
 
-				Thread thr = new Thread(new ThreadServer(port, cells, sock,
-						password, properties, observer));
+				Thread thr = new Thread(new ThreadServer(cells, sock, password,
+						observer));
 				thr.start();
 				if (properties.equals("wr")) {
-					Thread tr = new Thread(new ThreadServerReceiving(cells,
-							sock, getListener(), observer));
+					Thread tr = new Thread(new ThreadServerReceiving(sock,
+							getListener(), observer));
 					tr.start();
 				}
 			}

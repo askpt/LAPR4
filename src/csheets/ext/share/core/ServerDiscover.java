@@ -56,6 +56,8 @@ public class ServerDiscover extends Observable implements Runnable {
 	/**
 	 * Broadcasts a message throw network
 	 * 
+	 * @exception IOException
+	 *                throws if a I/O exception occurs
 	 */
 	@SuppressWarnings("resource")
 	private void broadcast() throws IOException {
@@ -93,9 +95,6 @@ public class ServerDiscover extends Observable implements Runnable {
 
 	}
 
-	/**
-	 * Running thread
-	 */
 	@Override
 	public void run() {
 		try {

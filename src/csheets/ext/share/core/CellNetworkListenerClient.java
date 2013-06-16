@@ -3,11 +3,12 @@ package csheets.ext.share.core;
 import csheets.core.*;
 
 /**
- * Class that will detect changes on cliet's cells
+ * Class that will detect changes on client's cells
  * 
  * @author Tiago
  * 
  */
+// FIXME Need javadoc
 public class CellNetworkListenerClient implements CellListener {
 	private boolean flag = false;
 	private Cell cell;
