@@ -104,4 +104,11 @@ public interface DBConnectionStrategy
      * @param newData 2D array with data to be added to the database
      */
     public void insertNewData(String tableName, String[][] newData);
+
+    /**
+     * deletes rows from a database table
+     * @param tableName database table name
+     * @param toDelete array with primary keys for deletion
+     */
+    public void deleteRows(String tableName, String[] toDelete);
 }

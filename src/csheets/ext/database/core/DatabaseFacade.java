@@ -368,7 +368,7 @@ public class DatabaseFacade extends Observable {
     private void updateEqualRows(String tableName, String[][] tableData, String[][] selectedCells) 
     {
         String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
-        int cont = 0;
+//        int cont = 0;
         for (int i = 0; i < selectedCells.length; i++) 
         {
             for (int j = 0; j < selectedCells[0].length; j++) 
@@ -376,16 +376,43 @@ public class DatabaseFacade extends Observable {
                 if (!selectedCells[i][j].toString().equals(tableData[i][j].toString())) 
                 {
                     adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][0]);
-                    cont++;
-                    System.out.println("GOT HERE: " + cont);
-                    System.out.println("table name: " + tableName);
-                    System.out.println("table data 0j: " + tableData[0][j]);
-                    System.out.println("selected cells ij: " + selectedCells[i][j]);
-                    System.out.println("tabledata i0: " + tableData[i][0]);
-                    System.out.println("\n");
+//                    cont++;
+//                    System.out.println("GOT HERE: " + cont);
+//                    System.out.println("table name: " + tableName);
+//                    System.out.println("table data 0j: " + tableData[0][j]);
+//                    System.out.println("selected cells ij: " + selectedCells[i][j]);
+//                    System.out.println("tabledata i0: " + tableData[i][0]);
+//                    System.out.println("\n");
                 }
             }
-            cont = 0;
+//            cont = 0;
         }
+    }
+
+    /**
+     * updates a database table by deleting unselected rows and editing modified rows
+     * @param tableName table name in database
+     * @param tableData content from database
+     * @param selectedCells content sppreadsheet
+     * @param cells selected cells
+     */
+    public void updateTableWithDeletion(String tableName, String[][] tableData, String[][] selectedCells, Cell[][] cells) 
+    {
+        int startIndex = selectedCells.length;
+        int endIndex = tableData.length;
+        
+        String []toDelete = new String[endIndex - startIndex];
+        
+        for(int i = 0; i < toDelete.length; i++)
+        {
+            toDelete[i] = tableData[i + startIndex][0];
+        }
+        
+        adapter.deleteRows(tableName, toDelete);
+        
+        //TODO
+//        selectedCells = cellsTo2dArray(cells);
+//        tableData = loadTable(tableName);
+//        updateEqualRows(tableName, tableData, selectedCells);
     }
 }
