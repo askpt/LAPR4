@@ -66,6 +66,8 @@ public class ClientDiscover extends Observable implements Runnable {
 
 	/**
 	 * Search a servers through network
+	 * 
+	 * @throws IOException
 	 */
 	private void search() throws IOException {
 		MulticastSocket clientSocket;
@@ -103,7 +105,11 @@ public class ClientDiscover extends Observable implements Runnable {
 		addObserver(observer);
 		try {
 			search();
-		} catch (IOException e) {
+		} catch (SocketTimeoutException e) {
+
+		}
+
+		catch (IOException e) {
 			Logger.getLogger(ClientDiscover.class.getName()).log(Level.SEVERE,
 					null, e);
 			setChanged();
