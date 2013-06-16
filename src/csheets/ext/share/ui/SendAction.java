@@ -16,6 +16,7 @@ import csheets.ui.ctrl.*;
  */
 public class SendAction extends FocusOwnerAction {
 
+	/** generated id */
 	private static final long serialVersionUID = 1L;
 	/** User Interface Controller */
 	protected UIController uiController;
@@ -45,12 +46,6 @@ public class SendAction extends FocusOwnerAction {
 		}
 	}
 
-	/**
-	 * This method will create a new UI for the server
-	 * 
-	 * @param event
-	 *            the event that was fired
-	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		SendUI sui = new SendUI();
@@ -77,11 +72,6 @@ public class SendAction extends FocusOwnerAction {
 		sc.startServer(port, cells, password, properties, observer);
 	}
 
-	/**
-	 * The method that will define the name in the bar
-	 * 
-	 * @return the name in the bar
-	 */
 	@Override
 	protected String getName() {
 		return "Send";

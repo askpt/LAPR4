@@ -28,7 +28,7 @@ public class Client extends Observable implements Runnable {
 	private String password;
 	/** the observer class */
 	private Observer observer;
-
+	/** the cell listener */
 	private final CellNetworkListenerClient listener = new CellNetworkListenerClient();
 
 	/**
@@ -46,6 +46,8 @@ public class Client extends Observable implements Runnable {
 	 *            the port of the connection
 	 * @param cellStart
 	 *            the cell where the program will copy
+	 * @param password
+	 *            the connection password
 	 * @param observer
 	 *            the observer class
 	 */
@@ -65,6 +67,8 @@ public class Client extends Observable implements Runnable {
 	 *            the connection to the server
 	 * @param cellStart
 	 *            the cell where the program will copy
+	 * @param observer
+	 *            the connection observer
 	 */
 	private Client(Connections connection, Cell cellStart, Observer observer) {
 		this.connection = connection;
@@ -200,9 +204,6 @@ public class Client extends Observable implements Runnable {
 
 	}
 
-	/**
-	 * The running thread
-	 */
 	@Override
 	public void run() {
 		try {
@@ -213,13 +214,13 @@ public class Client extends Observable implements Runnable {
 			} else
 				cli = new Socket(connection.getIP(), connection.getPort());
 			receive(cellStart, cli, password);
-			Thread thr = new Thread(new ThreadClient(port, cellStart, cli,
-					listener, observer));
+			Thread thr = new Thread(new ThreadClient(cellStart, cli, listener,
+					observer));
 			thr.start();
 
 			while (true) {
-				if (Server.getInstance().getProps().equals("wr"))
-
+				if (Server.getInstance().getProperties().equals("wr"))
+					// FIXME only works in the same instance
 					sendToServer(cli);
 			}
 

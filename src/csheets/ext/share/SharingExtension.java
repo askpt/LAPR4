@@ -17,36 +17,29 @@ import csheets.ui.ext.UIExtension;
  */
 public class SharingExtension extends Extension {
 
-    /** The name of the extension */
-    public static final String NAME = "Sharing";
+	/** The name of the extension */
+	public static final String NAME = "Sharing";
 
-    /** The log file size = 1MB */
-    public static final int LOGGER_SIZE = 1024 * 1024;
+	/** The log file size = 1MB */
+	public static final int LOGGER_SIZE = 1024 * 1024;
 
-    /**
-     * Creates a new Sharing extension
-     */
-    public SharingExtension() {
-	super(NAME);
-	try {
-	    Handler fh = new FileHandler("sharingExtension.log", LOGGER_SIZE,
-		    1, true);
-	    Logger.getLogger("csheets.ext.share").setUseParentHandlers(false);
-	    Logger.getLogger("csheets.ext.share").addHandler(fh);
-	} catch (SecurityException e) {
-	} catch (IOException e) {
+	/**
+	 * Creates a new Sharing extension
+	 */
+	public SharingExtension() {
+		super(NAME);
+		try {
+			Handler fh = new FileHandler("sharingExtension.log", LOGGER_SIZE,
+					1, true);
+			Logger.getLogger("csheets.ext.share").setUseParentHandlers(false);
+			Logger.getLogger("csheets.ext.share").addHandler(fh);
+		} catch (SecurityException e) {
+		} catch (IOException e) {
+		}
 	}
-    }
 
-    /**
-     * Returns the user interface extension of this extension.
-     * 
-     * @param uiController
-     *            the user interface controller
-     * @return a user interface extension
-     */
-    @Override
-    public UIExtension getUIExtension(UIController uiController) {
-	return new UISharingExtension(this, uiController);
-    }
+	@Override
+	public UIExtension getUIExtension(UIController uiController) {
+		return new UISharingExtension(this, uiController);
+	}
 }

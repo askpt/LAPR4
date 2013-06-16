@@ -16,21 +16,22 @@ import csheets.ui.ctrl.UIController;
  */
 public class SharingMenu extends JMenu {
 
-    private static final long serialVersionUID = 1L;
+	/** generated id */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Creates a simple menu bar with the options to choose a Receive or a
-     * Sharing Action
-     * 
-     * @param uiController
-     *            the user interface controller
-     */
-    public SharingMenu(UIController uiController) {
-	super("Sharing");
-	setMnemonic(KeyEvent.VK_S);
+	/**
+	 * Creates a simple menu bar with the options to choose a Receive or a
+	 * Sharing Action
+	 * 
+	 * @param uiController
+	 *            the user interface controller
+	 */
+	public SharingMenu(UIController uiController) {
+		super("Sharing");
+		setMnemonic(KeyEvent.VK_S);
 
-	// Sub-extensions
-	add(new ReceiveAction(uiController));
-	add(new SendAction(uiController));
-    }
+		// Sub-extensions
+		add(new ReceiveAction(uiController));
+		add(new SendAction(uiController));
+	}
 }
