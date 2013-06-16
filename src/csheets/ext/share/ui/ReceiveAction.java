@@ -87,10 +87,14 @@ public class ReceiveAction extends FocusOwnerAction {
 	 *            the connection details
 	 * @param observer
 	 *            the observer class
+	 * @param password
+	 *            the password connection
+	 * 
 	 */
-	public void clickOnSidebar(Connections connection, Observer observer) {
+	public void clickOnSidebar(Connections connection, Observer observer,
+			String password) {
 		Cell cellStart = focusOwner.getSelectedCell();
 		ReceiveController rc = new ReceiveController();
-		rc.startClient(connection, cellStart, observer);
+		rc.startClient(connection, cellStart, observer, password);
 	}
 }

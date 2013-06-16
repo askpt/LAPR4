@@ -157,6 +157,8 @@ public class UISharingExtension extends UIExtension implements Observer {
 				public void actionPerformed(ActionEvent e) {
 					ReceiveController rec = new ReceiveController();
 					List<Connections> connections = rec.findServers(uiShare);
+					String passwordDiscover = null;
+
 					if (connections.size() > 0) {
 
 						Object[] objs = new Object[connections.size()];
@@ -168,9 +170,16 @@ public class UISharingExtension extends UIExtension implements Observer {
 										"Server Discover",
 										JOptionPane.PLAIN_MESSAGE, null, objs,
 										"");
+
 						if (con != null) {
-							ReceiveAction.getInstance().clickOnSidebar(con,
-									uiShare);
+							passwordDiscover = passwordField();
+							if (passwordDiscover != null) {
+								ReceiveAction.getInstance().clickOnSidebar(
+										con,
+										uiShare,
+										Validate.encrypt(passwordDiscover
+												.getBytes()));
+							}
 						}
 					} else {
 						JOptionPane.showMessageDialog(sidebar,
@@ -207,5 +216,30 @@ public class UISharingExtension extends UIExtension implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		JOptionPane.showMessageDialog(null, "Connection Error");
+	}
+
+	/**
+	 * Creates a new dialog with password
+	 * 
+	 * @return the password
+	 */
+	public String passwordField() {
+		char[] password = null;
+		JPanel panel = new JPanel();
+		JLabel label = new JLabel("Enter a password:");
+		JPasswordField pass = new JPasswordField(10);
+		panel.add(label);
+		panel.add(pass);
+		String[] options = new String[] { "OK", "Cancel" };
+		int option = JOptionPane.showOptionDialog(null, panel, "The title",
+				JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+				options, options[1]);
+		if (option == 0) // pressing OK button
+		{
+			password = pass.getPassword();
+			System.out.println("Your password is: " + new String(password));
+		}
+
+		return new String(password);
 	}
 }
