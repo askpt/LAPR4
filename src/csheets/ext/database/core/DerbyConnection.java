@@ -364,4 +364,9 @@ public class DerbyConnection implements DBConnectionStrategy {
         
     }
 
+    @Override
+    public void deleteRows(String tableName, String[] toDelete) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -183,6 +183,10 @@ public class UITableSelectUpdate extends JFrame
                         ctrlUp.updateTable(tableList.getSelectedValue().toString(), tableData, selectedCells, cells);
                         JOptionPane.showMessageDialog(null, tableList.getSelectedValue().toString() + " database: data successfully updated!");
                     }
+                    else if(selectedCells.length < tableData.length)
+                    {
+                       ctrlUp.updateTableWithDeletion(tableList.getSelectedValue().toString(), tableData, selectedCells, cells);
+                    }
                     else
                     {
                         JOptionPane.showMessageDialog(null, "Database table is already up-to-date!");

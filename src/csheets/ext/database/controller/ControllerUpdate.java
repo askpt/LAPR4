@@ -177,4 +177,17 @@ public class ControllerUpdate implements Subject
     {
         facade.updateTable(tableName, tableData, selectedCells, cells);
     }
+
+    
+    /**
+     * updates a spreadsheets table by deleting unselected cells and editing modified cells
+     * @param tableName table name in database
+     * @param tableData table content from database
+     * @param selectedCells selected content from cleansheets
+     * @param cells selected cells
+     */
+    public void updateTableWithDeletion(String tableName, String[][] tableData, String[][] selectedCells, Cell[][] cells) 
+    {
+        facade.updateTableWithDeletion(tableName, tableData, selectedCells, cells);
+    }
 }
