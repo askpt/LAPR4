@@ -2,6 +2,8 @@ package csheets.core.ext.share;
 
 import static org.junit.Assert.*;
 
+import java.util.*;
+
 import org.junit.*;
 
 import csheets.core.*;
@@ -13,7 +15,7 @@ import csheets.ext.share.core.*;
  * @author Andre
  * 
  */
-public class SendReceiveTest {
+public class SendReceiveTest implements Observer {
 
 	private static Workbook workbook;
 	private static Spreadsheet sheet;
@@ -58,9 +60,9 @@ public class SendReceiveTest {
 
 			// Start client and server
 			svr.startServer(50000, cells,
-					Validate.encrypt(password.getBytes()), props);
+					Validate.encrypt(password.getBytes()), props, this);
 			cli.startClient("localhost", 50000, cellFim,
-					Validate.encrypt(password.getBytes()));
+					Validate.encrypt(password.getBytes()), this);
 
 			// To wait to the system transmition
 			Thread.sleep(1000);
@@ -69,5 +71,10 @@ public class SendReceiveTest {
 		} catch (Exception e) {
 			fail("Exception Error!");
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		fail("Exception Error!");
 	}
 }

@@ -1,6 +1,7 @@
 package csheets.ext.share.ui;
 
 import java.awt.event.ActionEvent;
+import java.util.Observer;
 
 import csheets.core.Cell;
 import csheets.ext.share.controller.SendController;
@@ -66,11 +67,14 @@ public class SendAction extends FocusOwnerAction {
 	 *            the connection port
 	 * @param password
 	 *            the connection password
+	 * @param observer
+	 *            the observer class
 	 */
-	public void clickOnSidebar(int port, String password, String properties) {
+	public void clickOnSidebar(int port, String password, String properties,
+			Observer observer) {
 		Cell[][] cells = focusOwner.getSelectedCells();
 		SendController sc = new SendController();
-		sc.startServer(port, cells, password, properties);
+		sc.startServer(port, cells, password, properties, observer);
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package csheets.ext.share.ui;
 
+import java.util.*;
+
 import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
@@ -12,7 +14,7 @@ import csheets.ext.share.core.Validate;
  * @author Andre
  * 
  */
-public class SendUI {
+public class SendUI implements Observer {
 
 	/**
 	 * Create the UI for the send action
@@ -45,7 +47,12 @@ public class SendUI {
 			String password = JOptionPane
 					.showInputDialog("Please input the password!");
 			sc.startServer(port, cells, Validate.encrypt(password.getBytes()),
-					props);
+					props, this);
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		JOptionPane.showMessageDialog(null, "Connection Error");
 	}
 }

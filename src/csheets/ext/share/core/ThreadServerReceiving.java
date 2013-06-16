@@ -2,6 +2,7 @@ package csheets.ext.share.core;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.*;
 import java.util.logging.*;
 
 import javax.swing.JOptionPane;
@@ -14,29 +15,26 @@ import csheets.core.Cell;
  * @author Tiago
  * 
  */
-public class ThreadServerReceiving implements Runnable {
+public class ThreadServerReceiving extends Observable implements Runnable {
 
 	/** the cells we will pass throw network */
 	private Cell cellStart;
 	/** server socket */
 	private Socket sock;
+	/** the observer class */
+	private Observer observer;
 
 	private Cell[][] cells;
 
 	private CellNetworkListenerServer listenerServer;
 
-	/**
-	 * Create a new server
-	 */
-	private ThreadServerReceiving() {
-	}
-
 	public ThreadServerReceiving(Cell[][] cells, Socket sock,
-			CellNetworkListenerServer listenerServer) {
+			CellNetworkListenerServer listenerServer, Observer observer) {
 
 		this.cellStart = cellStart;
 		this.sock = sock;
 		this.listenerServer = listenerServer;
+		this.observer = observer;
 	}
 
 	/**
@@ -101,17 +99,19 @@ public class ThreadServerReceiving implements Runnable {
 	@Override
 	public void run() {
 		try {
-
+			addObserver(observer);
 			while (true) {
 				receiveUpdates(sock);
 			}
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Connection Error");
+			//JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
 			e.printStackTrace();
-
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		}
 	}
 }

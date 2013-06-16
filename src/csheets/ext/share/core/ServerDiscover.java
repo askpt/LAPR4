@@ -2,6 +2,8 @@ package csheets.ext.share.core;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Class that implements a server side of the discover through network
@@ -9,11 +11,13 @@ import java.net.*;
  * @author Andre
  * 
  */
-public class ServerDiscover implements Runnable {
+public class ServerDiscover extends Observable implements Runnable {
 	/** Instance of server discover */
 	private static ServerDiscover instance = null;
 	/** Port of the connection */
 	private int port;
+	/** the observer class */
+	private Observer observer;
 
 	/**
 	 * Creates a new client discover
@@ -38,11 +42,13 @@ public class ServerDiscover implements Runnable {
 	 * 
 	 * @param port
 	 *            the port of the connection
-	 * @throws IOException
-	 *             signals if the I/O Exception occurs
+	 * @param observer
+	 *            the observer class
 	 */
-	public void findClients(int port) throws IOException {
+	public void findClients(int port, Observer observer) {
 		this.port = port;
+		this.observer = observer;
+		addObserver(observer);
 		Thread thr = new Thread(getInstance());
 		thr.start();
 	}
@@ -52,42 +58,39 @@ public class ServerDiscover implements Runnable {
 	 * 
 	 */
 	@SuppressWarnings("resource")
-	private void broadcast() {
-		try {
-			MulticastSocket serverSocket;
-			serverSocket = new MulticastSocket(9876);
+	private void broadcast() throws IOException {
+		MulticastSocket serverSocket;
+		serverSocket = new MulticastSocket(9876);
 
-			byte[] receiveData = new byte[1024];
-			byte[] sendData = new byte[1024];
-			int i = 1;
-			while (i > 0) {
-				DatagramPacket receivePacket = new DatagramPacket(receiveData,
-						receiveData.length);
+		byte[] receiveData = new byte[1024];
+		byte[] sendData = new byte[1024];
+		int i = 1;
+		while (i > 0) {
+			DatagramPacket receivePacket = new DatagramPacket(receiveData,
+					receiveData.length);
 
-				serverSocket.receive(receivePacket);
-				String testReceive = new String(receivePacket.getData());
-				testReceive = Validate.removeMessage(testReceive);
+			serverSocket.receive(receivePacket);
+			String testReceive = new String(receivePacket.getData());
+			testReceive = Validate.removeMessage(testReceive);
 
-				if (testReceive.equals("send me connection")) {
-					InetAddress IPAddress = receivePacket.getAddress();
-					int portPacket = receivePacket.getPort();
+			if (testReceive.equals("send me connection")) {
+				InetAddress IPAddress = receivePacket.getAddress();
+				int portPacket = receivePacket.getPort();
 
-					int portSend = port;
+				int portSend = port;
 
-					String portConnect = portSend + "";
-					int portLenght = portConnect.length();
-					portConnect = portLenght + "-" + portSend;
+				String portConnect = portSend + "";
+				int portLenght = portConnect.length();
+				portConnect = portLenght + "-" + portSend;
 
-					sendData = portConnect.getBytes();
-					DatagramPacket sendPacket = new DatagramPacket(sendData,
-							sendData.length, IPAddress, portPacket);
-					serverSocket.send(sendPacket);
-				}
+				sendData = portConnect.getBytes();
+				DatagramPacket sendPacket = new DatagramPacket(sendData,
+						sendData.length, IPAddress, portPacket);
+				serverSocket.send(sendPacket);
 			}
-			// serverSocket.close();
-
-		} catch (IOException e) {
 		}
+		// serverSocket.close();
+
 	}
 
 	/**
@@ -95,6 +98,15 @@ public class ServerDiscover implements Runnable {
 	 */
 	@Override
 	public void run() {
-		broadcast();
+		try {
+			addObserver(observer);
+			broadcast();
+		} catch (IOException e) {
+			Logger.getLogger(ServerDiscover.class.getName()).log(Level.SEVERE,
+					null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
+		}
 	}
 }
