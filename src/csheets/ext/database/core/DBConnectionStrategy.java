@@ -94,7 +94,7 @@ public interface DBConnectionStrategy
      * @param tableName table's name
      * @param column table's column
      * @param origin value to be final
-     * @param destination target value in the database table 
+     * @param destination primary key in database 
      */
     public void updateRow(String tableName, String column, String origin, String destination);
 

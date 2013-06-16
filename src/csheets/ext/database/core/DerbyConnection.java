@@ -292,14 +292,10 @@ public class DerbyConnection implements DBConnectionStrategy {
 			String destination) {
 		Statement st = null;
 		String stat = "UPDATE " + tableName + " SET " + column + " = '"
-				+ origin + "' WHERE " + column + " = '" + destination + "'";
-		System.out.println(stat); // TODO remove
+				+ origin + "' WHERE LINHA = " + Integer.parseInt(destination);
 		try {
 			st = connection.createStatement();
 			int i = st.executeUpdate(stat);
-			JOptionPane.showMessageDialog(null,
-					"Derby database: success on update\nPreviously: "
-							+ destination + "\nNow: " + origin);
 		} catch (SQLException ex) {
 			Logger.getLogger(HsqlDBConnection.class.getName()).log(
 					Level.SEVERE, null, ex);

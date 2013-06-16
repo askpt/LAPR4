@@ -30,8 +30,8 @@ public class ConsoleDerbyTest
 //        createTable(tableName);
 //        insertRestaurants(insertSt);
 //        insertRestaurants(insertSt2);
-        selectRestaurants();
-        showAllTables();
+//        selectRestaurants();
+//        showAllTables();
         allTables = saveAllTableNamesToArrayList();
 //        printArrayList(allTables);
 //        query = queryToArray(tableName);
@@ -41,7 +41,7 @@ public class ConsoleDerbyTest
 //        System.out.println("ROWS = " + rowsCols[0]);
 //        System.out.println("COLS = " + rowsCols[1]);
         
-        //dropAllTables(allTables);
+        dropAllTables(allTables);
         //update("UPDATE TITLES SET TITLES = 'f' WHERE TITLES = 'all bought'");
         
         shutdown();

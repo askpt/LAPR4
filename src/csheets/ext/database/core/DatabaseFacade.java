@@ -167,7 +167,7 @@ public class DatabaseFacade extends Observable {
 					.equals(cellTemp[i].getContent())
 					&& cellTemp[i].getContent().equals(lineServer[i + 1])) {
 				adapter.updateRow(tableName, cellHeader[i].getContent(),
-						cellApp[i].getContent(), lineServer[i + 1]);
+						cellApp[i].getContent(), lineServer[0]);
 			} else if (!cellApp[i].getContent()
 					.equals(cellTemp[i].getContent())
 					&& !cellTemp[i].getContent().equals(lineServer[i + 1])) {
@@ -180,7 +180,7 @@ public class DatabaseFacade extends Observable {
 					cellApp[i].setContent(lineServer[i + 1]);
 				} else if (obs.getDecision() == 1) {
 					adapter.updateRow(tableName, cellHeader[i].getContent(),
-							cellApp[i].getContent(), lineServer[i + 1]);
+							cellApp[i].getContent(), lineServer[0]);
 				}
 			}
 		}
@@ -368,11 +368,11 @@ public class DatabaseFacade extends Observable {
         String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
         for (int i = 0; i < selectedCells.length; i++) 
         {
-            for (int j = 0; j < selectedCells[0].length; j++) 
+            for (int j = 1; j < selectedCells[0].length; j++) 
             {
                 if (!selectedCells[i][j].toString().equals(tableData[i][j].toString())) 
                 {
-                    adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][j]);
+                    adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][0]);
                 }
             }
         }
