@@ -13,7 +13,7 @@ cp ../lib/antlr.jar ../dist/antlr.jar
 cp ../lib/hsqldb.jar ../dist/hsqldb.jar
 cp ../lib/derby.jar ../dist/derby.jar
 
-cp -R ../src-resources src-resources
+cp -R ../src-resources src-resources/
 
 # echo Removing temporary files...
 # rm -R jar
