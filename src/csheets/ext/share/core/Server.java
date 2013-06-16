@@ -162,6 +162,7 @@ public class Server extends Observable implements Runnable {
 				Thread thr = new Thread(new ThreadServer(cells, sock, password,
 						observer));
 				thr.start();
+
 				if (properties.equals("wr")) {
 					Thread tr = new Thread(new ThreadServerReceiving(sock,
 							getListener(), observer));

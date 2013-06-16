@@ -31,6 +31,9 @@ public class Client extends Observable implements Runnable {
 	/** the cell listener */
 	private final CellNetworkListenerClient listener = new CellNetworkListenerClient();
 
+	/** share properties (writable wr) or read-only(r) */
+	private String properties;
+
 	/**
 	 * Create a new client
 	 */
@@ -139,6 +142,9 @@ public class Client extends Observable implements Runnable {
 		OutputStream out = cli.getOutputStream();
 		DataOutputStream outStream = new DataOutputStream(out);
 		outStream.writeUTF(password);
+		DataInputStream receiveProps = new DataInputStream(cli.getInputStream());
+		this.properties = receiveProps.readUTF();
+
 		while (isCell) {
 			ObjectInputStream inStream = new ObjectInputStream(
 					cli.getInputStream());
@@ -162,7 +168,7 @@ public class Client extends Observable implements Runnable {
 			}
 		}
 		outStream.writeUTF("Close yourself");
-		// cli.close();
+
 	}
 
 	/**
@@ -204,9 +210,13 @@ public class Client extends Observable implements Runnable {
 
 	}
 
+	/**
+	 * Running thread
+	 */
 	@Override
 	public void run() {
 		try {
+
 			addObserver(observer);
 			Socket cli;
 			if (IP != null) {
@@ -219,19 +229,19 @@ public class Client extends Observable implements Runnable {
 			thr.start();
 
 			while (true) {
-				if (Server.getInstance().getProperties().equals("wr"))
-					// FIXME only works in the same instance
+				if (this.properties.equals("wr"))
+
 					sendToServer(cli);
 			}
 
 		} catch (UnknownHostException e) {
-			// JOptionPane.showMessageDialog(null, "Connection Error");
+
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 			setChanged();
 			notifyObservers();
 			clearChanged();
 		} catch (IOException e) {
-			// JOptionPane.showMessageDialog(null, "Connection Error");
+
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
 			setChanged();
 			notifyObservers();

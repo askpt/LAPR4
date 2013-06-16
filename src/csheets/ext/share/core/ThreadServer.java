@@ -60,6 +60,9 @@ public class ThreadServer extends Observable implements Runnable {
 
 			DataInputStream in = new DataInputStream(sock.getInputStream());
 			if (in.readUTF().equals(password)) {
+				DataOutputStream sendProps = new DataOutputStream(
+						sock.getOutputStream());
+				sendProps.writeUTF(Server.getInstance().getProperties());
 				for (int i = 0; i < cells.length; i++) {
 					for (int j = 0; j < cells[i].length; j++) {
 						CellNetwork cell = new CellNetwork(
