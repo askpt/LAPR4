@@ -121,8 +121,6 @@ public class NumberSignExpressionCompiler implements ExpressionCompiler {
 
 					Expression expression = convert(cell, node.getFirstChild());
 					cell.setContent(expression.evaluate().toText());
-					// FIXME need to fix some bugs...
-					// doesnt appear the function result, but the string
 				} catch (IllegalValueTypeException e) {
 				}
 
