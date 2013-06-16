@@ -365,8 +365,32 @@ public class DerbyConnection implements DBConnectionStrategy {
     }
 
     @Override
-    public void deleteRows(String tableName, String[] toDelete) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void deleteRows(String tableName, String[] toDelete) 
+    {
+        String stat = "DELETE FROM " + tableName + " WHERE LINHA = ";
+        String []deleteStat = new String[toDelete.length];
+        
+        for(int i = 0; i < deleteStat.length; i++)
+        {
+            deleteStat[i] = stat + toDelete[i];
+        }
+        
+        for (int i = 0; i < deleteStat.length; i++) 
+        {
+            Statement st = null;
+            try 
+            {
+                st = connection.createStatement();
+                int j = st.executeUpdate(deleteStat[i]);
+            } 
+            catch (SQLException ex) 
+            {
+                Logger.getLogger(HsqlDBConnection.class.getName()).log(Level.SEVERE, null, ex);
+		/* keep this until observer is implemented */
+                JOptionPane.showMessageDialog(null, "Error: data not inserted");
+            }
+        }
+        
     }
 
 }
