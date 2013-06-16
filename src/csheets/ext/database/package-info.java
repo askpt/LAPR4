@@ -251,33 +251,55 @@
  end
  @enduml
 
- @startuml doc-files/use_case_realization_DBupdate.png
- UIExport -> ControllerExport: <<create(Observer this)>>
- ControllerExport -> ControllerExport: addObserver(Observer this)
- ControllerExport -> DatabaseFacade: <<create>>
- UIExport -> ControllerExport: getDBList()
- ControllerExport -> DatabaseFacade: getDBList()
- UIExport -> ControllerExport: getCredentials(String url, String user, String pass)
- ControllerExport -> DatabaseFacade: urlConnect = getUrlConnection()
- ControllerExport -> DatabaseFacade: urlConnect = createConnection(String url, String user, String pass)
- DatabaseFacade -> DBConnectionAdapterFactory: getInstance()
- DatabaseFacade -> DBConnectionAdapterFactory: getDBTechnology(String urlConnect)
- DatabaseFacade -> DBConnectionAdapter: createConnection(String url, String user, String pass)
- UIExport -> ControllerExport: getTableList()
- ControllerExport -> DatabaseFacade: getTableList()
- DatabaseFacade -> DBConnectionAdapter: getTableList()
- UIExport -> UIExport: targetTable = selectTable()
- UIExport -> ControllerExport: setDataToUpdate(String targetTable, Cell [][]cells, int [][]pk)
- ControllerExport -> DatabaseFacade: setDataToUpdate(String targetTable, Cell [][]cells, int [][]pk)
- UIExport -> ControllerExport: starUpdate()
- note left of ControllerExport
- thread launched 
- at this point
- end note
- ControllerExport -> DatabaseFacade: update()
- DatabaseFacade -> DBConnectionAdapter: updateTable(String targetTable, Cell [][]cells, int [][]pk)
- ControllerExport -> ControllerExport: alertObservers()
- @enduml
+  @startuml doc-files/use_case_realization_DBupdate.png
+ UIUpdate -> ControllerUpdate: <<create(Observer this)>>
+ ControllerUpdate -> ControllerUpdate: addObserver(Observer this)
+ ControllerUpdate -> DatabaseFacade: <<create>>
+ UIUpdate -> ControllerUpdate: getDBList()
+ ControllerUpdate -> DBCsvReader: <create>
+ ControllerUpdate -> DBCsvReader: getDBList()
+ UIUpdate -> ControllerUpdate: <<Thread.run>>\n\tstart()
+ UIUpdate -> ControllerUpdate: connect(String url, String user, String pass, String dbName) 
+ ControllerUpdate -> DatabaseFacade: urlConnect = createConnection(String url, String user, String pass, String dbName)
+ DatabaseFacade -> DBConnectionFactory: getInstance()
+ DatabaseFacade -> DBConnectionFactory: getDBTechnology(String urlConnect)
+ UIUpdate -> UITableSelectUpdate: <<create>>
+ UITableSelectUpdate -> ControllerUpdate: getTableList()
+ ControllerUpdate -> DatabaseFacade: getTableList()
+ DatabaseFacade -> DBConnectionStrategy: getTableList()
+ DatabaseFacade -> DBConnectionStrategy: queryToArray() 
+ UITableSelectUpdate -> ControllerUpdate: String [][]tableData = loadTable(String tableName)
+ ControllerUpdate -> DatabaseFacade: loadTable(String tableName)  
+ DatabaseFacade -> DBConnectionStrategy: getTableContent(String tableName)
+ DBConnectionStrategy -> DBConnectionStrategy: queryToArray(String tableName)
+ DBConnectionStrategy -> DBConnectionStrategy: countsRowsAndCols(String tableName)
+ DBConnectionStrategy -> DBConnectionStrategy: queryTo2dArray(String tableName)
+ UITableSelectUpdate -> ControllerUpdate: String [][]selectCells = cellsTo2dArray(Cell [][]cells)
+ ControllerUpdate -> DatabaseFacade: cellsTo2dArray(Cell [][]cells)
+ UITableSelectUpdate -> ControllerUpdate: boolean isDifferent = compareCellsWithDB(String [][]tableData, String [][]selectedCells)
+ alt isDifferent
+  UITableSelectUpdate -> ControllerUpdate: updateTable(String tableName, String [][]tableData, String [][]selectedCells, Cell [][]cells)
+  ControllerUpdate -> DatabaseFacade: updateTable(String tableName, String [][]tableData, String [][]selectedCells, Cell [][]cells) 
+  alt selectedCellsRows > tableDataRows
+   DatabaseFacade -> DBConnectionStrategy: insertNewData(String tableName, String [][] newRows)
+   DatabaseFacade -> DatabaseFacade: selectedCells = cellsTo2dArray(Cell [][]cells)
+   DatabaseFacade -> DatabaseFacade: tableData = loadTable(String tableName)
+   DatabaseFacade -> DatabaseFacade: updateEqualRows(String tableName, String [][]tableData, String [][]selectedCells)
+   loop as many as individual cells edited  
+    DatabaseFacade -> DBConnectionStrategy: updateRow(String tableName, String tableData, String column, String origin, String destination)  
+   end
+ else
+   DatabaseFacade -> DatabaseFacade: updateEqualRows(String tableName, String [][]tableData, String [][]selectedCells)
+   loop as many as individual cells edited  
+    DatabaseFacade -> DBConnectionStrategy: updateRow(String tableName, String tableData, String column, String origin, String destination)  
+   end
+  end
+ else selectCells.length < tableData.length
+  UITableSelectUpdate -> ControllerUpdate: updateTableWithDeletion(String tableName, String [][]tableData, String [][]selectedCells, Cell [][]cells)
+  ControllerUpdate -> DatabaseFacade: updateTableWithDeletion(String tableName, String [][]tableData, String [][]selectedCells, Cell [][]cells)
+  DatabaseFacade -> DBConnectionStrategy: deleteRows(String tableName, String []toDelete) 
+ end
+@enduml
 
  @startuml doc-files/sequence_diagram_sync.png
  participant UISync as uis
