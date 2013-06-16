@@ -1,6 +1,7 @@
 package csheets.ext.share.ui;
 
 import java.awt.event.ActionEvent;
+import java.util.Observer;
 
 import csheets.core.Cell;
 import csheets.ext.share.controller.ReceiveController;
@@ -78,11 +79,14 @@ public class ReceiveAction extends FocusOwnerAction {
 	 *            the connection port
 	 * @param password
 	 *            the connection password
+	 * @param observer
+	 *            the observer class
 	 */
-	public void clickOnSidebar(String IP, int port, String password) {
+	public void clickOnSidebar(String IP, int port, String password,
+			Observer observer) {
 		Cell cellStart = focusOwner.getSelectedCell();
 		ReceiveController rc = new ReceiveController();
-		rc.startClient(IP, port, cellStart, password);
+		rc.startClient(IP, port, cellStart, password, observer);
 	}
 
 	/**
@@ -91,10 +95,12 @@ public class ReceiveAction extends FocusOwnerAction {
 	 * 
 	 * @param connection
 	 *            the connection details
+	 * @param observer
+	 *            the observer class
 	 */
-	public void clickOnSidebar(Connections connection) {
+	public void clickOnSidebar(Connections connection, Observer observer) {
 		Cell cellStart = focusOwner.getSelectedCell();
 		ReceiveController rc = new ReceiveController();
-		rc.startClient(connection, cellStart);
+		rc.startClient(connection, cellStart, observer);
 	}
 }

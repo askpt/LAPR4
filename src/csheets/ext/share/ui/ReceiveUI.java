@@ -1,5 +1,7 @@
 package csheets.ext.share.ui;
 
+import java.util.*;
+
 import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
@@ -12,7 +14,7 @@ import csheets.ext.share.core.Validate;
  * @author Andre
  * 
  */
-public class ReceiveUI {
+public class ReceiveUI implements Observer {
 
 	/**
 	 * Create a user interface for the receive action
@@ -55,7 +57,12 @@ public class ReceiveUI {
 			String password = JOptionPane.showInputDialog("Enter password");
 			ReceiveController rc = new ReceiveController();
 			rc.startClient(IP, port, cellStart,
-					Validate.encrypt(password.getBytes()));
+					Validate.encrypt(password.getBytes()), this);
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		JOptionPane.showMessageDialog(null, "Connection Error");
 	}
 }

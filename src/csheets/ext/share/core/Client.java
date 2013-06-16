@@ -2,9 +2,8 @@ package csheets.ext.share.core;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 import java.util.logging.*;
-
-import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
@@ -16,7 +15,7 @@ import csheets.core.formula.compiler.FormulaCompilationException;
  * @author Andre
  * 
  */
-public class Client implements Runnable {
+public class Client extends Observable implements Runnable {
 	/** the ip of the server */
 	private String IP;
 	/** the port of the connection */
@@ -27,6 +26,8 @@ public class Client implements Runnable {
 	private Connections connection;
 	/** the connection password */
 	private String password;
+	/** the observer class */
+	private Observer observer;
 
 	private final CellNetworkListenerClient listener = new CellNetworkListenerClient();
 
@@ -45,12 +46,16 @@ public class Client implements Runnable {
 	 *            the port of the connection
 	 * @param cellStart
 	 *            the cell where the program will copy
+	 * @param observer
+	 *            the observer class
 	 */
-	private Client(String IP, int port, Cell cellStart, String password) {
+	private Client(String IP, int port, Cell cellStart, String password,
+			Observer observer) {
 		this.IP = IP;
 		this.port = port;
 		this.cellStart = cellStart;
 		this.password = password;
+		this.observer = observer;
 	}
 
 	/**
@@ -61,9 +66,10 @@ public class Client implements Runnable {
 	 * @param cellStart
 	 *            the cell where the program will copy
 	 */
-	private Client(Connections connection, Cell cellStart) {
+	private Client(Connections connection, Cell cellStart, Observer observer) {
 		this.connection = connection;
 		this.cellStart = cellStart;
+		this.observer = observer;
 	}
 
 	/**
@@ -77,9 +83,13 @@ public class Client implements Runnable {
 	 *            cell where we paste the content of the shared cells
 	 * @param password
 	 *            the connection password
+	 * @param observer
+	 *            the observer class
 	 */
-	public void startClient(String IP, int port, Cell cellStart, String password) {
-		Thread thr = new Thread(new Client(IP, port, cellStart, password));
+	public void startClient(String IP, int port, Cell cellStart,
+			String password, Observer observer) {
+		Thread thr = new Thread(new Client(IP, port, cellStart, password,
+				observer));
 		thr.start();
 	}
 
@@ -90,9 +100,12 @@ public class Client implements Runnable {
 	 *            the connection to the server
 	 * @param cellStart
 	 *            cell where we paste the content of the shared cells
+	 * @param observer
+	 *            the observer class
 	 */
-	public void startClient(Connections connection, Cell cellStart) {
-		Thread thr = new Thread(new Client(connection, cellStart));
+	public void startClient(Connections connection, Cell cellStart,
+			Observer observer) {
+		Thread thr = new Thread(new Client(connection, cellStart, observer));
 		thr.start();
 	}
 
@@ -148,10 +161,15 @@ public class Client implements Runnable {
 		// cli.close();
 	}
 
-	/*
+	/**
 	 * Method that when changes occurred on cells of client's share, listener
 	 * changes a flag value and this method can run and send that update to the
 	 * server
+	 * 
+	 * @param sock
+	 *            the client socket
+	 * @exception IOException
+	 *                of a I/O exception occurs
 	 */
 	public synchronized void sendToServer(Socket sock) throws IOException,
 			InterruptedException {
@@ -188,7 +206,7 @@ public class Client implements Runnable {
 	@Override
 	public void run() {
 		try {
-
+			addObserver(observer);
 			Socket cli;
 			if (IP != null) {
 				cli = new Socket(IP, port);
@@ -196,7 +214,7 @@ public class Client implements Runnable {
 				cli = new Socket(connection.getIP(), connection.getPort());
 			receive(cellStart, cli, password);
 			Thread thr = new Thread(new ThreadClient(port, cellStart, cli,
-					listener));
+					listener, observer));
 			thr.start();
 
 			while (true) {
@@ -206,18 +224,32 @@ public class Client implements Runnable {
 			}
 
 		} catch (UnknownHostException e) {
-			JOptionPane.showMessageDialog(null, "Connection Error");
+			// JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Connection Error");
+			// JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		} catch (ClassNotFoundException e) {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		} catch (FormulaCompilationException e) {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		}
 	}
 }

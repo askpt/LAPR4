@@ -2,10 +2,8 @@ package csheets.ext.share.core;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.logging.*;
-
-import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 
@@ -15,7 +13,7 @@ import csheets.core.Cell;
  * @author Andre
  * 
  */
-public class Server implements Runnable {
+public class Server extends Observable implements Runnable {
 	/** the connection port */
 	private int port;
 	/** the cells we will pass throw network */
@@ -24,6 +22,8 @@ public class Server implements Runnable {
 	private ServerSocket svr;
 	/** connection passoword */
 	private String password;
+	/** observer class */
+	private Observer observer;
 
 	private String properties;
 
@@ -62,14 +62,20 @@ public class Server implements Runnable {
 	 *            the cells we will pass throw network
 	 */
 	private Server(int port, Cell[][] cells, ServerSocket svr, String password,
-			String properties) {
+			String properties, Observer observer) {
 		this.port = port;
 		this.cells = cells;
 		this.svr = svr;
 		this.password = password;
 		this.properties = properties;
+		this.observer = observer;
 	}
 
+	/**
+	 * Return the cells to be share
+	 * 
+	 * @return the shared cells
+	 */
 	public Cell[][] getCells() {
 		return cells;
 	}
@@ -83,9 +89,11 @@ public class Server implements Runnable {
 	 *            value that will be shared throw network
 	 * @param password
 	 *            the connection password
+	 * @param observer
+	 *            the observer class
 	 */
 	public void startServer(int port, Cell[][] cells, String password,
-			String properties) {
+			String properties, Observer observer) {
 
 		try {
 			for (int i = 0; i < cells.length; i++) {
@@ -97,17 +105,27 @@ public class Server implements Runnable {
 			this.cells = cells;
 			this.password = password;
 			this.properties = properties;
+			this.observer = observer;
+			addObserver(observer);
 
 			Thread thr = new Thread(getInstance());
 			thr.start();
 
-			ServerDiscover.getInstance().findClients(port);
+			ServerDiscover.getInstance().findClients(port, observer);
 		} catch (Exception e) {
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		}
 
 	}
 
+	/**
+	 * Return the connection sockets
+	 * 
+	 * @return the connection sockets
+	 */
 	public ArrayList<Socket> getSockets() {
 		return sockets;
 	}
@@ -121,20 +139,24 @@ public class Server implements Runnable {
 			while (true) {
 				Socket sock = svr.accept();
 				sockets.add(sock);
+				addObserver(observer);
 
 				Thread thr = new Thread(new ThreadServer(port, cells, sock,
-						password, properties));
+						password, properties, observer));
 				thr.start();
 				if (properties.equals("wr")) {
 					Thread tr = new Thread(new ThreadServerReceiving(cells,
-							sock, getListener()));
+							sock, getListener(), observer));
 					tr.start();
 				}
 			}
 
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Connection Error");
+			// JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		}
 	}
 }

@@ -2,7 +2,7 @@ package csheets.ext.share.ui;
 
 import java.awt.GridLayout;
 import java.awt.event.*;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -21,13 +21,16 @@ import csheets.ui.ext.UIExtension;
  * @author Andre
  * 
  */
-public class UISharingExtension extends UIExtension {
+public class UISharingExtension extends UIExtension implements Observer {
 
 	/** The sidebar of the extension */
 	private JComponent sidebar;
 
 	/** The menu of the extension */
 	private SharingMenu menu;
+
+	/** The sharing extension */
+	private final UISharingExtension uiShare = this;
 
 	/**
 	 * Creates a new UI for sharing extension
@@ -78,6 +81,7 @@ public class UISharingExtension extends UIExtension {
 			JButton sendAction = new JButton("Send");
 			sendAction.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					String portTemp = sendPort.getText();
 					if (Validate.checkIfANumber(portTemp)) {
@@ -87,7 +91,7 @@ public class UISharingExtension extends UIExtension {
 									port,
 									Validate.encrypt(String.copyValueOf(
 											pass.getPassword()).getBytes()),
-									textProp.getText());
+									textProp.getText(), uiShare);
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"Check if port is between 49152 and 65535",
@@ -133,7 +137,7 @@ public class UISharingExtension extends UIExtension {
 										IP,
 										port,
 										Validate.encrypt(passwordReceive
-												.getBytes()));
+												.getBytes()), uiShare);
 							} else {
 								JOptionPane
 										.showMessageDialog(
@@ -163,7 +167,7 @@ public class UISharingExtension extends UIExtension {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					ReceiveController rec = new ReceiveController();
-					List<Connections> connections = rec.findServers();
+					List<Connections> connections = rec.findServers(uiShare);
 					if (connections.size() > 0) {
 
 						Object[] objs = new Object[connections.size()];
@@ -176,7 +180,8 @@ public class UISharingExtension extends UIExtension {
 										JOptionPane.PLAIN_MESSAGE, null, objs,
 										"");
 						if (con != null) {
-							ReceiveAction.getInstance().clickOnSidebar(con);
+							ReceiveAction.getInstance().clickOnSidebar(con,
+									uiShare);
 						}
 					} else {
 						JOptionPane.showMessageDialog(sidebar,
@@ -208,5 +213,10 @@ public class UISharingExtension extends UIExtension {
 			sidebar.add(receivePanel);
 		}
 		return sidebar;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		JOptionPane.showMessageDialog(null, "Connection Error");
 	}
 }

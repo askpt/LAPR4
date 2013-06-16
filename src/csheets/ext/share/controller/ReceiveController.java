@@ -1,6 +1,6 @@
 package csheets.ext.share.controller;
 
-import java.util.List;
+import java.util.*;
 
 import csheets.core.Cell;
 import csheets.ext.share.core.*;
@@ -24,19 +24,24 @@ public class ReceiveController {
 	 *            cell where we paste the content of the shared cells
 	 * @param password
 	 *            the connection password
+	 * @param observer
+	 *            the observer class
 	 */
-	public void startClient(String IP, int port, Cell cellStart, String password) {
+	public void startClient(String IP, int port, Cell cellStart,
+			String password, Observer observer) {
 		Client cli = new Client();
-		cli.startClient(IP, port, cellStart, password);
+		cli.startClient(IP, port, cellStart, password, observer);
 	}
 
 	/**
 	 * Find a servers that have an active sharing
 	 * 
+	 * @param observer
+	 *            the observer class
 	 * @return a list of servers with active sharing
 	 */
-	public List<Connections> findServers() {
-		return ClientDiscover.getInstance().findServers();
+	public List<Connections> findServers(Observer observer) {
+		return ClientDiscover.getInstance().findServers(observer);
 	}
 
 	/**
@@ -46,10 +51,13 @@ public class ReceiveController {
 	 *            the connection details
 	 * @param cellStart
 	 *            cell where we paste the content of the shared cells
+	 * @param observer
+	 *            the observer class
 	 */
-	public void startClient(Connections connection, Cell cellStart) {
+	public void startClient(Connections connection, Cell cellStart,
+			Observer observer) {
 		Client cli = new Client();
-		cli.startClient(connection, cellStart);
+		cli.startClient(connection, cellStart, observer);
 	}
 
 }

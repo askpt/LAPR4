@@ -2,9 +2,8 @@ package csheets.ext.share.core;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.*;
 import java.util.logging.*;
-
-import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 
@@ -14,7 +13,7 @@ import csheets.core.Cell;
  * @author Andre
  * 
  */
-public class ThreadServer implements Runnable {
+public class ThreadServer extends Observable implements Runnable {
 	/** the connection port */
 	private int port;
 	/** the cells we will pass throw network */
@@ -23,16 +22,12 @@ public class ThreadServer implements Runnable {
 	private Socket sock;
 	/** connection passoword */
 	private String password;
+	/** the observer class */
+	private Observer observer;
 
 	private String properties;
 
 	private Cell cellUpdated;
-
-	/**
-	 * Create a new server
-	 */
-	private ThreadServer() {
-	}
 
 	/**
 	 * Create internaly a new client
@@ -43,14 +38,17 @@ public class ThreadServer implements Runnable {
 	 *            the cells we will pass throw network
 	 * @param password
 	 *            the connection password
+	 * @param observer
+	 *            the observer class
 	 */
 	public ThreadServer(int port, Cell[][] cells, Socket sock, String password,
-			String properties) {
+			String properties, Observer observer) {
 		this.port = port;
 		this.cells = cells;
 		this.sock = sock;
 		this.password = password;
 		this.properties = properties;
+		this.observer = observer;
 	}
 
 	/**
@@ -90,15 +88,6 @@ public class ThreadServer implements Runnable {
 			}
 		}
 	}
-
-	/**
-	 * Method that will be on a loop to listen message from client when client
-	 * send a message it will update server information
-	 * 
-	 * @param cellUpdated
-	 * @param cli
-	 * @throws Exception
-	 */
 
 	/**
 	 * method to send changes to all clients Not called yet because don't be
@@ -156,6 +145,7 @@ public class ThreadServer implements Runnable {
 	@Override
 	public void run() {
 		try {
+
 			while (true) {
 
 				send(cells, sock);
@@ -164,11 +154,12 @@ public class ThreadServer implements Runnable {
 			}
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Connection Error");
+			//JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
-			e.printStackTrace();
-
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		}
 	}
 }

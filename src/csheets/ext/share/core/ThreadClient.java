@@ -2,9 +2,8 @@ package csheets.ext.share.core;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.*;
 import java.util.logging.*;
-
-import javax.swing.JOptionPane;
 
 import csheets.core.Cell;
 
@@ -14,28 +13,25 @@ import csheets.core.Cell;
  * @author Tiago
  * 
  */
-public class ThreadClient implements Runnable {
+public class ThreadClient extends Observable implements Runnable {
 	/** the connection port */
 	private int port;
 	/** the cells we will pass throw network */
 	private Cell cellStart;
 	/** server socket */
 	private Socket sock;
+	/** the observer class */
+	private Observer observer;
 
 	private CellNetworkListenerClient listenerClient;
 
-	/**
-	 * Create a new server
-	 */
-	private ThreadClient() {
-	}
-
 	public ThreadClient(int port, Cell cellStart, Socket sock,
-			CellNetworkListenerClient listener) {
+			CellNetworkListenerClient listener, Observer observer) {
 		this.port = port;
 		this.cellStart = cellStart;
 		this.sock = sock;
 		this.listenerClient = listener;
+		this.observer = observer;
 	}
 
 	/**
@@ -102,17 +98,18 @@ public class ThreadClient implements Runnable {
 	@Override
 	public void run() {
 		try {
-
+			addObserver(observer);
 			while (true) {
 				receiveUpdates(cellStart, sock);
 			}
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Connection Error");
+			//JOptionPane.showMessageDialog(null, "Connection Error");
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
-			e.printStackTrace();
-
+			setChanged();
+			notifyObservers();
+			clearChanged();
 		}
 	}
 }
