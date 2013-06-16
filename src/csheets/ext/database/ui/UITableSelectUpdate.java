@@ -148,16 +148,16 @@ public class UITableSelectUpdate extends JFrame
                 
                 
                 
-//                System.out.println("DATABASE");
-//                for(int i = 0; i < tableData.length; i++)
-//                {
-//                    for(int j = 0; j < tableData[0].length; j++)
-//                    {
-//                        
-//                         System.out.println(tableData[i][j]);
-//                     }
-//                    System.out.println("----");
-//                  }
+                System.out.println("DATABASE");
+                for(int i = 0; i < tableData.length; i++)
+                {
+                    for(int j = 0; j < tableData[0].length; j++)
+                    {
+                        
+                         System.out.println(tableData[i][j]);
+                     }
+                    System.out.println("----");
+                  }
                 
                 
                 
@@ -170,10 +170,10 @@ public class UITableSelectUpdate extends JFrame
                 System.out.println("SELECTED CELLS");
                 for(int i = 0; i < tableData.length; i++)
                 {
-//                    for(int j = 0; j < tableData[0].length; j++)
-//                    {        
-//                         System.out.println(tableData[i][j]);
-//                     }
+                    for(int j = 0; j < tableData[0].length; j++)
+                    {        
+                         System.out.println(tableData[i][j]);
+                     }
                     System.out.println("----");
                  }
                     
