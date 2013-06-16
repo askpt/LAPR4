@@ -54,9 +54,11 @@ public class SendReceiveTest {
 			// Create a new instance of server and client
 			Server svr = Server.getInstance();
 			Client cli = new Client();
+			String props = "wr";
 
 			// Start client and server
-			svr.startServer(50000, cells, Validate.encrypt(password.getBytes()));
+			svr.startServer(50000, cells,
+					Validate.encrypt(password.getBytes()), props);
 			cli.startClient("localhost", 50000, cellFim,
 					Validate.encrypt(password.getBytes()));
 

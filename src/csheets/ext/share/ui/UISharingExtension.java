@@ -73,6 +73,8 @@ public class UISharingExtension extends UIExtension {
 			final JTextField sendPort = new JTextField(10);
 			JLabel sendPass = new JLabel("Pass");
 			final JPasswordField pass = new JPasswordField(10);
+			JLabel labelProp = new JLabel("Writable/Read-Only");
+			final JTextField textProp = new JTextField(10);
 			JButton sendAction = new JButton("Send");
 			sendAction.addActionListener(new ActionListener() {
 
@@ -84,7 +86,8 @@ public class UISharingExtension extends UIExtension {
 							SendAction.getInstance().clickOnSidebar(
 									port,
 									Validate.encrypt(String.copyValueOf(
-											pass.getPassword()).getBytes()));
+											pass.getPassword()).getBytes()),
+									textProp.getText());
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"Check if port is between 49152 and 65535",
@@ -101,6 +104,8 @@ public class UISharingExtension extends UIExtension {
 			sendPanel.add(sendPort);
 			sendPanel.add(sendPass);
 			sendPanel.add(pass);
+			sendPanel.add(labelProp);
+			sendPanel.add(textProp);
 			sendPanel.add(sendAction);
 
 			JPanel receivePanel = new JPanel();

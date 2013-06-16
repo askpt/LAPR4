@@ -20,9 +20,10 @@ public class SendController {
 	 * @param password
 	 *            the connection password
 	 */
-	public void startServer(int port, Cell[][] cells, String password) {
+	public void startServer(int port, Cell[][] cells, String password,
+			String properties) {
 		Server svr = Server.getInstance();
-		svr.startServer(port, cells, password);
+		svr.startServer(port, cells, password, properties);
 	}
 
 }

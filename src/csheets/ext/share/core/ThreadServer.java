@@ -24,6 +24,8 @@ public class ThreadServer implements Runnable {
 	/** connection passoword */
 	private String password;
 
+	private String properties;
+
 	private Cell cellUpdated;
 
 	/**
@@ -42,11 +44,13 @@ public class ThreadServer implements Runnable {
 	 * @param password
 	 *            the connection password
 	 */
-	public ThreadServer(int port, Cell[][] cells, Socket sock, String password) {
+	public ThreadServer(int port, Cell[][] cells, Socket sock, String password,
+			String properties) {
 		this.port = port;
 		this.cells = cells;
 		this.sock = sock;
 		this.password = password;
+		this.properties = properties;
 	}
 
 	/**
