@@ -5,7 +5,7 @@ import csheets.core.*;
 /**
  * Class that will detect changes on server's cells This class implements
  * CellListener's interface Change the flag when any cell from client is changed
- * Just the method contentChanged(Cell cell) is implement, the other are not
+ * Just the method contentChanged(Cell cell) is implement, the others are not
  * used
  * 
  * @author Tiago
