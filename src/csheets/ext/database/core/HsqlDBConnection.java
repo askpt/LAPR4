@@ -50,7 +50,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 		int numberOfRows = cells.length;
 
 		/* beginning the construction of the sql statement */
-		String stat = "CREATE TABLE " + tableName + "(linha VARCHAR(20), ";
+		String stat = "CREATE TABLE " + tableName + "(linha INTEGER, ";
 
 		/* the first line of the exported cells is the name of each column */
 		String[] columnsName = new String[cells[0].length];
@@ -65,7 +65,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 			}
 			/* if it's the last column must close with bracket */
 			else {
-				columnsName[i] = cells[0][i].getContent() + " VARCHAR(200))";
+				columnsName[i] = cells[0][i].getContent() + " VARCHAR(200), PRIMARY KEY(linha))";
 				columnsNameCopy[i] = cells[0][i].getContent();
 			}
 		}
@@ -314,7 +314,8 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 			String destination) {
 		Statement st = null;
 		String stat = "UPDATE " + tableName + " SET " + column + " = '"
-				+ origin + "' WHERE LINHA = '" + destination + "'";
+				+ origin + "' WHERE LINHA = " + Integer.parseInt(destination);
+                System.out.println("HSQL --> " + stat);
 		try {
 			st = connection.createStatement();
 			int i = st.executeUpdate(stat);
@@ -333,7 +334,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
     {
         /* array with all insert statements */
         String []statementVec = new String[newData.length];
-        String beginStatement = "INSERT INTO " + tableName + " VALUES ('"; 
+        String beginStatement = "INSERT INTO " + tableName + " VALUES ("; 
         
         /* begining to concatenate insert vector */
         for(int i = 0; i < statementVec.length; i++)
@@ -346,8 +347,13 @@ public class HsqlDBConnection implements DBConnectionStrategy {
         {
              for(int j = 0; j < newData[0].length; j++)
              {
+                 /* if it's the first colum is an INTEGER therefore we can't add ' at the end */
+                 if(j == 0)
+                 {
+                     statementVec[i] += newData[i][j] + ",'";
+                 }
                  /* if it's not the last column it must include , */
-                 if(j < (newData[0].length - 1))
+                 if(j > 0 && j < (newData[0].length - 1))
                  {
                      statementVec[i] += newData[i][j] + "','";
                  }
