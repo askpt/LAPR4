@@ -180,7 +180,7 @@ public class UITableSelectUpdate extends JFrame
                     boolean isDifferent = ctrlUp.compareCellsWithDB(tableData, selectedCells);
                     if(isDifferent)
                     {
-                        ctrlUp.updateTable(tableList.getSelectedValue().toString(), tableData, selectedCells);
+                        ctrlUp.updateTable(tableList.getSelectedValue().toString(), tableData, selectedCells, cells);
                         JOptionPane.showMessageDialog(null, tableList.getSelectedValue().toString() + " database: data successfully updated!");
                     }
                     else

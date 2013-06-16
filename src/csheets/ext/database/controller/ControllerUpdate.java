@@ -173,8 +173,8 @@ public class ControllerUpdate implements Subject
      * @param tableData 2D array with current table data
      * @param selectedCells 2D array with selected cells in spreadsheet
      */
-    public void updateTable(String tableName, String[][] tableData, String[][] selectedCells) 
+    public void updateTable(String tableName, String[][] tableData, String[][] selectedCells, Cell [][]cells) 
     {
-        facade.updateTable(tableName, tableData, selectedCells);
+        facade.updateTable(tableName, tableData, selectedCells, cells);
     }
 }
