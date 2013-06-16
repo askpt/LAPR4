@@ -293,7 +293,8 @@ public class DerbyConnection implements DBConnectionStrategy {
 		Statement st = null;
 		String stat = "UPDATE " + tableName + " SET " + column + " = '"
 				+ origin + "' WHERE LINHA = " + Integer.parseInt(destination);
-		try {
+		System.out.println("DERBY --> " + stat);
+                try {
 			st = connection.createStatement();
 			int i = st.executeUpdate(stat);
 		} catch (SQLException ex) {

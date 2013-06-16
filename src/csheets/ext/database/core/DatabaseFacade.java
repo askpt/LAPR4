@@ -366,15 +366,24 @@ public class DatabaseFacade extends Observable {
     private void updateEqualRows(String tableName, String[][] tableData, String[][] selectedCells) 
     {
         String[][] modifiedCells = new String[selectedCells.length][selectedCells[0].length];
+        int cont = 0;
         for (int i = 0; i < selectedCells.length; i++) 
         {
-            for (int j = 1; j < selectedCells[0].length; j++) 
+            for (int j = 0; j < selectedCells[0].length; j++) 
             {
                 if (!selectedCells[i][j].toString().equals(tableData[i][j].toString())) 
                 {
                     adapter.updateRow(tableName, tableData[0][j], selectedCells[i][j], tableData[i][0]);
+                    cont++;
+                    System.out.println("GOT HERE: " + cont);
+                    System.out.println("table name: " + tableName);
+                    System.out.println("table data 0j: " + tableData[0][j]);
+                    System.out.println("selected cells ij: " + selectedCells[i][j]);
+                    System.out.println("tabledata i0: " + tableData[i][0]);
+                    System.out.println("\n");
                 }
             }
+            cont = 0;
         }
     }
 }
