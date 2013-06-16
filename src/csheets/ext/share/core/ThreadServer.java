@@ -18,7 +18,7 @@ public class ThreadServer extends Observable implements Runnable {
 	private final Cell[][] cells;
 	/** server socket */
 	private final Socket sock;
-	/** connection passoword */
+	/** connection password */
 	private final String password;
 	/** the observer class */
 	private final Observer observer;
@@ -136,6 +136,9 @@ public class ThreadServer extends Observable implements Runnable {
 
 	}
 
+	/**
+	 * running thread
+	 */
 	@Override
 	public void run() {
 		try {
@@ -148,7 +151,7 @@ public class ThreadServer extends Observable implements Runnable {
 			}
 
 		} catch (Exception e) {
-			// JOptionPane.showMessageDialog(null, "Connection Error");
+
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
 			setChanged();

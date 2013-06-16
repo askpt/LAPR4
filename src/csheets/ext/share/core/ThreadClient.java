@@ -20,9 +20,22 @@ public class ThreadClient extends Observable implements Runnable {
 	private Socket sock;
 	/** the observer class */
 	private Observer observer;
-
+	/** CellNetowrkListenerClient's object */
 	private CellNetworkListenerClient listenerClient;
 
+	/**
+	 * ThreadClient's builder
+	 * 
+	 * @param cellStart
+	 *            cell to start writing (cell selected by user when he decide to
+	 *            receive share
+	 * @param sock
+	 *            socket to communicate with server
+	 * @param listener
+	 *            listener to client's cells
+	 * @param observer
+	 *            observer
+	 */
 	public ThreadClient(Cell cellStart, Socket sock,
 			CellNetworkListenerClient listener, Observer observer) {
 		this.cellStart = cellStart;
@@ -35,7 +48,10 @@ public class ThreadClient extends Observable implements Runnable {
 	 * Method to wait from message of server to update client's information
 	 * 
 	 * @param cellStart
+	 *            cell to start writing (cell selected by user when he decide to
+	 *            receive share
 	 * @param cli
+	 *            socket to communicate with server
 	 * @throws Exception
 	 */
 	private synchronized void receiveUpdates(Cell cellStart, Socket cli)
@@ -101,7 +117,7 @@ public class ThreadClient extends Observable implements Runnable {
 			}
 
 		} catch (Exception e) {
-			// JOptionPane.showMessageDialog(null, "Connection Error");
+
 			Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE,
 					null, e);
 			setChanged();
