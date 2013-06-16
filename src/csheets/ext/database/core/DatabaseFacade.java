@@ -303,8 +303,9 @@ public class DatabaseFacade extends Observable {
 	 * @param selectedCells
 	 *            2D array with selected cells in spreadsheet
 	 */
-	public void updateTable(String tableName, String[][] tableData, String[][] selectedCells) 
+	public void updateTable(String tableName, String[][] tableData, String[][] selectedCells, Cell [][]cells) 
         {
+            this.cells = cells;
             int tableDataRows = tableData.length;
             int selectedCellsRows = selectedCells.length;
             
@@ -333,10 +334,11 @@ public class DatabaseFacade extends Observable {
                 }
                 /* inserts the "extra" selected cells in the database */
                 adapter.insertNewData(tableName, newRows);
-                /* at this points the rows are equal so we call the following to
-                 update any existing data */
-              // TODO (needs fix)
-                //updateEqualRows(tableName, newRows, selectedCells);
+                /* at this point we need to make sure the rows are equal in both
+                 * tables so we call the following methods before update takes place */
+                selectedCells = cellsTo2dArray(cells);
+                tableData = loadTable(tableName);
+                updateEqualRows(tableName, tableData, selectedCells);
             }
 
             /*
@@ -345,7 +347,7 @@ public class DatabaseFacade extends Observable {
 		 */
             else if (selectedCellsRows < tableDataRows) 
             {
-
+                
             }
 
             /* if row count is the same then we only need to update the table */

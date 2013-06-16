@@ -315,7 +315,7 @@ public class HsqlDBConnection implements DBConnectionStrategy {
 		Statement st = null;
 		String stat = "UPDATE " + tableName + " SET " + column + " = '"
 				+ origin + "' WHERE LINHA = " + Integer.parseInt(destination);
-                System.out.println("HSQL --> " + stat);
+                //System.out.println("HSQL --> " + stat);
 		try {
 			st = connection.createStatement();
 			int i = st.executeUpdate(stat);
