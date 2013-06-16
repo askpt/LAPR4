@@ -72,11 +72,15 @@ public class Client extends Observable implements Runnable {
 	 *            the cell where the program will copy
 	 * @param observer
 	 *            the connection observer
+	 * @param password
+	 *            the password connection
 	 */
-	private Client(Connections connection, Cell cellStart, Observer observer) {
+	private Client(Connections connection, Cell cellStart, Observer observer,
+			String password) {
 		this.connection = connection;
 		this.cellStart = cellStart;
 		this.observer = observer;
+		this.password = password;
 	}
 
 	/**
@@ -109,10 +113,13 @@ public class Client extends Observable implements Runnable {
 	 *            cell where we paste the content of the shared cells
 	 * @param observer
 	 *            the observer class
+	 * @param password
+	 *            the password connection
 	 */
 	public void startClient(Connections connection, Cell cellStart,
-			Observer observer) {
-		Thread thr = new Thread(new Client(connection, cellStart, observer));
+			Observer observer, String password) {
+		Thread thr = new Thread(new Client(connection, cellStart, observer,
+				password));
 		thr.start();
 	}
 

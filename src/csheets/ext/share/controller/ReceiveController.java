@@ -53,11 +53,13 @@ public class ReceiveController {
 	 *            cell where we paste the content of the shared cells
 	 * @param observer
 	 *            the observer class
+	 * @param password
+	 *            the password connection
 	 */
 	public void startClient(Connections connection, Cell cellStart,
-			Observer observer) {
+			Observer observer, String password) {
 		Client cli = new Client();
-		cli.startClient(connection, cellStart, observer);
+		cli.startClient(connection, cellStart, observer, password);
 	}
 
 }
