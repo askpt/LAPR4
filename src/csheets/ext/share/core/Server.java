@@ -151,6 +151,9 @@ public class Server extends Observable implements Runnable {
 		return sockets;
 	}
 
+	/**
+	 * running thread
+	 */
 	@Override
 	public void run() {
 		try {
