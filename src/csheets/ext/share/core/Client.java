@@ -198,9 +198,11 @@ public class Client implements Runnable {
 			Thread thr = new Thread(new ThreadClient(port, cellStart, cli,
 					listener));
 			thr.start();
-			while (true) {
 
-				sendToServer(cli);
+			while (true) {
+				if (Server.getInstance().getProps().equals("wr"))
+
+					sendToServer(cli);
 			}
 
 		} catch (UnknownHostException e) {

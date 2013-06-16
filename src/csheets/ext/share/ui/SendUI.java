@@ -24,9 +24,12 @@ public class SendUI {
 		boolean portIsNotCorrect = true;
 		boolean portAsNumber;
 		int port = 0;
+		String props = null;
 		while (portIsNotCorrect) {
 			String portTemp = JOptionPane
 					.showInputDialog("Please input a port (49152 to 65535)");
+			props = JOptionPane
+					.showInputDialog("Writable (wr) or Read-only (r)");
 			if (portTemp != null) {
 				portAsNumber = Validate.checkIfANumber(portTemp);
 				if (portAsNumber) {
@@ -41,7 +44,8 @@ public class SendUI {
 			SendController sc = new SendController();
 			String password = JOptionPane
 					.showInputDialog("Please input the password!");
-			sc.startServer(port, cells, Validate.encrypt(password.getBytes()));
+			sc.startServer(port, cells, Validate.encrypt(password.getBytes()),
+					props);
 		}
 	}
 }

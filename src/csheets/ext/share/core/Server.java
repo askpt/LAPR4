@@ -25,6 +25,8 @@ public class Server implements Runnable {
 	/** connection passoword */
 	private String password;
 
+	private String properties;
+
 	private final ArrayList<Socket> sockets = new ArrayList<Socket>();
 
 	private final CellNetworkListenerServer listener = new CellNetworkListenerServer();
@@ -47,6 +49,10 @@ public class Server implements Runnable {
 		return listener;
 	}
 
+	public String getProps() {
+		return properties;
+	}
+
 	/**
 	 * Create internaly a new client
 	 * 
@@ -55,11 +61,13 @@ public class Server implements Runnable {
 	 * @param cells
 	 *            the cells we will pass throw network
 	 */
-	private Server(int port, Cell[][] cells, ServerSocket svr, String password) {
+	private Server(int port, Cell[][] cells, ServerSocket svr, String password,
+			String properties) {
 		this.port = port;
 		this.cells = cells;
 		this.svr = svr;
 		this.password = password;
+		this.properties = properties;
 	}
 
 	public Cell[][] getCells() {
@@ -76,7 +84,8 @@ public class Server implements Runnable {
 	 * @param password
 	 *            the connection password
 	 */
-	public void startServer(int port, Cell[][] cells, String password) {
+	public void startServer(int port, Cell[][] cells, String password,
+			String properties) {
 
 		try {
 			for (int i = 0; i < cells.length; i++) {
@@ -87,6 +96,7 @@ public class Server implements Runnable {
 			svr = new ServerSocket(port);
 			this.cells = cells;
 			this.password = password;
+			this.properties = properties;
 
 			Thread thr = new Thread(getInstance());
 			thr.start();
@@ -113,11 +123,13 @@ public class Server implements Runnable {
 				sockets.add(sock);
 
 				Thread thr = new Thread(new ThreadServer(port, cells, sock,
-						password));
+						password, properties));
 				thr.start();
-				Thread tr = new Thread(new ThreadServerReceiving(cells, sock,
-						getListener()));
-				tr.start();
+				if (properties.equals("wr")) {
+					Thread tr = new Thread(new ThreadServerReceiving(cells,
+							sock, getListener()));
+					tr.start();
+				}
 			}
 
 		} catch (IOException e) {

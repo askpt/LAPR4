@@ -67,10 +67,10 @@ public class SendAction extends FocusOwnerAction {
 	 * @param password
 	 *            the connection password
 	 */
-	public void clickOnSidebar(int port, String password) {
+	public void clickOnSidebar(int port, String password, String properties) {
 		Cell[][] cells = focusOwner.getSelectedCells();
 		SendController sc = new SendController();
-		sc.startServer(port, cells, password);
+		sc.startServer(port, cells, password, properties);
 	}
 
 	/**
