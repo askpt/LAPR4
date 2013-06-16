@@ -60,6 +60,24 @@
  * </p>
  * <img src="doc-files/class_diagram.png">
  * 
+ * <p>
+ * <b> Class Diagram Week 3 </b>
+ * </p>
+ * <img src="doc-files/ClassesDiagramWeek3.png">
+ * 
+ * <p>
+ * <b>Sequence Diagram client server Week 3 </b>
+ * </p>
+ * <img src="doc-files/sd_client_server_week3.png">
+ * 
+ * <p>
+ * <b> Use Case Diagram Week 3 </b>
+ * </p>
+ * <img src="doc-files/UseCaseDiagramWeek3.png">
+ * 
+ * 
+ * 
+ * 
  * @author Andre Silva
  */
 /*
