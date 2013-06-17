@@ -52,6 +52,7 @@ public class UISharingExtension extends UIExtension implements Observer {
 		return menu;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public JComponent getSideBar() {
 		if (sidebar == null) {
@@ -65,13 +66,20 @@ public class UISharingExtension extends UIExtension implements Observer {
 			final JTextField sendPort = new JTextField(10);
 			JLabel sendPass = new JLabel("Pass");
 			final JPasswordField pass = new JPasswordField(10);
+			String[] propsChoose = new String[] { "Writable", "Read-Only" };
+			final JComboBox comboProps = new JComboBox(propsChoose);
 			JLabel labelProp = new JLabel("Writable/Read-Only");
-			final JTextField textProp = new JTextField(10);
 			JButton sendAction = new JButton("Send");
 			sendAction.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					String propsTemp = (String) comboProps.getSelectedItem();
+					String props = "r";
+					if (propsTemp.equals("Writable")) {
+						props = "wr";
+
+					}
 					String portTemp = sendPort.getText();
 					if (Validate.checkIfANumber(portTemp)) {
 						int port = Integer.parseInt(portTemp);
@@ -80,7 +88,7 @@ public class UISharingExtension extends UIExtension implements Observer {
 									port,
 									Validate.encrypt(String.copyValueOf(
 											pass.getPassword()).getBytes()),
-									textProp.getText(), uiShare);
+									props, uiShare);
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"Check if port is between 49152 and 65535",
@@ -98,7 +106,7 @@ public class UISharingExtension extends UIExtension implements Observer {
 			sendPanel.add(sendPass);
 			sendPanel.add(pass);
 			sendPanel.add(labelProp);
-			sendPanel.add(textProp);
+			sendPanel.add(comboProps);
 			sendPanel.add(sendAction);
 
 			JPanel receivePanel = new JPanel();
@@ -234,10 +242,8 @@ public class UISharingExtension extends UIExtension implements Observer {
 		int option = JOptionPane.showOptionDialog(null, panel, "The title",
 				JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,
 				options, options[1]);
-		if (option == 0) // pressing OK button
-		{
+		if (option == 0) {
 			password = pass.getPassword();
-			System.out.println("Your password is: " + new String(password));
 		}
 
 		return new String(password);
