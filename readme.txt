@@ -1,3 +1,11 @@
+Academic project in the scope of "Laboratory / Project 4" (2nd year of Informatics Engineering). 
+This is a fork of CleanSheets, a Java application similar to MS Excel. Upon forking, new features were added 
+to the original project, using the provided extension mechanism. These features include new capabilities in 
+persisting data using embebed databases, sharing information over a local network using sockets and 
+the addition of new properties to the previous excel-like formulae language.
+
+**************************************************************************************************************
+
 The 'scripts' folder contains executable files that can be used 
 to perform important tasks of the project.
 
