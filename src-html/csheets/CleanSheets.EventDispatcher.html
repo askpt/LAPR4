@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="pt">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Copyright (c) 2005 Einar Pehrson &lt;einar@pehrson.nu&gt;.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> *<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * This file is part of<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * CleanSheets - a spreadsheet application for the Java platform.<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * CleanSheets is free software; you can redistribute it and/or modify<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * it under the terms of the GNU General Public License as published by<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * the Free Software Foundation; either version 2 of the License, or<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * (at your option) any later version.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * CleanSheets is distributed in the hope that it will be useful,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * GNU General Public License for more details.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> *<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * You should have received a copy of the GNU General Public License<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * along with CleanSheets; if not, write to the Free Software<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<a name="line.19"></a>
+<span class="sourceLineNo">020</span> */<a name="line.20"></a>
+<span class="sourceLineNo">021</span>package csheets;<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.io.File;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.io.FileInputStream;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.io.FileNotFoundException;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import java.io.FileOutputStream;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import java.io.IOException;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import java.io.InputStream;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>import java.text.DateFormat;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>import java.util.ArrayList;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>import java.util.Collection;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import java.util.Date;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>import java.util.HashMap;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>import java.util.List;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>import java.util.Map;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>import java.util.Properties;<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>import javax.swing.SwingUtilities;<a name="line.38"></a>
+<span class="sourceLineNo">039</span><a name="line.39"></a>
+<span class="sourceLineNo">040</span>import csheets.core.Workbook;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>import csheets.core.formula.compiler.FormulaCompiler;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>import csheets.core.formula.lang.Language;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>import csheets.ext.ExtensionManager;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>import csheets.io.Codec;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>import csheets.io.CodecFactory;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>import csheets.io.NamedProperties;<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>/**<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * CleanSheets - the main class of the application.<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * The class manages workbooks, performs I/O operations and provides support<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * for notifying listeners when workbooks are created, loaded or saved.<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * @author Einar Pehrson<a name="line.52"></a>
+<span class="sourceLineNo">053</span> */<a name="line.53"></a>
+<span class="sourceLineNo">054</span>public class CleanSheets {<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>        /** The filename of the default properties, loaded from the directory of the class */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        private static final String DEFAULT_PROPERTIES_FILENAME = "res/defaults.xml";<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span>        /** The filename of the user properties, loaded from the user's current working directory */<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        private static final String USER_PROPERTIES_FILENAME = "csheets.xml";<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>        /** The open workbooks */<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        private Map&lt;Workbook, File&gt; workbooks = new HashMap&lt;Workbook, File&gt;();<a name="line.63"></a>
+<span class="sourceLineNo">064</span><a name="line.64"></a>
+<span class="sourceLineNo">065</span>        /** The application's properties */<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        private NamedProperties props;<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>        /** The listeners registered to receive events */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        private List&lt;SpreadsheetAppListener&gt; listeners<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                = new ArrayList&lt;SpreadsheetAppListener&gt;();<a name="line.70"></a>
+<span class="sourceLineNo">071</span><a name="line.71"></a>
+<span class="sourceLineNo">072</span>        /**<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * Creates the CleanSheets application.<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        public CleanSheets() {<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                // Loads compilers<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                FormulaCompiler.getInstance();<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>                // Loads language<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                Language.getInstance();<a name="line.80"></a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span>                // Loads extensions<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                ExtensionManager.getInstance();<a name="line.83"></a>
+<span class="sourceLineNo">084</span><a name="line.84"></a>
+<span class="sourceLineNo">085</span>                // Loads default properties<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                Properties defaultProps = new Properties();<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                InputStream defaultStream = CleanSheets.class.getResourceAsStream(DEFAULT_PROPERTIES_FILENAME);<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                if (defaultStream != null)<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        try {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                                defaultProps.loadFromXML(defaultStream);<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                        } catch (IOException e) {<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                                System.err.println("Could not load default application properties.");<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                        } finally {<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                                try {<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                                        if (defaultStream != null)<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                                                defaultStream.close();<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                                } catch (IOException e) {}<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                        }<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>                // Loads user properties<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                File propsFile = new File(USER_PROPERTIES_FILENAME);<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                props = new NamedProperties(propsFile, defaultProps);<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        }<a name="line.103"></a>
+<span class="sourceLineNo">104</span><a name="line.104"></a>
+<span class="sourceLineNo">105</span>        /**<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * Starts CleanSheets from the command-line.<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * @param args the command-line arguments (not used)<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         */<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        public static void main(String[] args) {<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                CleanSheets app = new CleanSheets();<a name="line.110"></a>
+<span class="sourceLineNo">111</span><a name="line.111"></a>
+<span class="sourceLineNo">112</span>                // Configures look and feel<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                javax.swing.JFrame.setDefaultLookAndFeelDecorated(true);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                javax.swing.JDialog.setDefaultLookAndFeelDecorated(true);<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                <a name="line.115"></a>
+<span class="sourceLineNo">116</span>                try {<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                        javax.swing.UIManager.setLookAndFeel(<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                                javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                } catch (Exception e) {<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                }<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                /* try {<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                        javax.swing.UIManager.setLookAndFeel("className");<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                } catch (Exception e) {} */<a name="line.123"></a>
+<span class="sourceLineNo">124</span><a name="line.124"></a>
+<span class="sourceLineNo">125</span>                // Creates user interface<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                new csheets.ui.Frame.Creator(app).createAndWait();<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                app.create();<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        }<a name="line.128"></a>
+<span class="sourceLineNo">129</span><a name="line.129"></a>
+<span class="sourceLineNo">130</span>        /**<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * Returns the current user properties.<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * @return the current user properties<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         */<a name="line.133"></a>
+<span class="sourceLineNo">134</span>        public Properties getUserProperties() {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                return props;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        }<a name="line.136"></a>
+<span class="sourceLineNo">137</span><a name="line.137"></a>
+<span class="sourceLineNo">138</span>        /**<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * Exits the application.<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         */<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        public void exit() {<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                // Stores properties<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                if (props.size() &gt; 0)<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                        try {<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                                props.storeToXML("CleanSheets User Properties (" + <a name="line.145"></a>
+<span class="sourceLineNo">146</span>                                        DateFormat.getDateTimeInstance().format(new Date()) + ")");<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        } catch (IOException e) {<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                                System.err.println("An error occurred while saving properties.");<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                        }<a name="line.149"></a>
+<span class="sourceLineNo">150</span><a name="line.150"></a>
+<span class="sourceLineNo">151</span>                // Terminates the virtual machine<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                System.exit(0);<a name="line.152"></a>
+<span class="sourceLineNo">153</span>        }<a name="line.153"></a>
+<span class="sourceLineNo">154</span><a name="line.154"></a>
+<span class="sourceLineNo">155</span>        /**<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * Creates a new workbook.<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         */<a name="line.157"></a>
+<span class="sourceLineNo">158</span>        public void create() {<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                Workbook workbook = new Workbook(3);<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                workbooks.put(workbook, null);<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                fireSpreadsheetAppEvent(workbook, null, SpreadsheetAppEvent.Type.CREATED);<a name="line.161"></a>
+<span class="sourceLineNo">162</span>        }<a name="line.162"></a>
+<span class="sourceLineNo">163</span><a name="line.163"></a>
+<span class="sourceLineNo">164</span>        /**<a name="line.164"></a>
+<span class="sourceLineNo">165</span>         * Loads a workbook from the given file.<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         * @param file the file in which the workbook is stored<a name="line.166"></a>
+<span class="sourceLineNo">167</span>         * @throws IOException if the file could not be loaded correctly<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         */<a name="line.168"></a>
+<span class="sourceLineNo">169</span>        public void load(File file) throws IOException, ClassNotFoundException {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                Codec codec = new CodecFactory().getCodec(file);<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                if (codec != null) {<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                        FileInputStream stream = null;<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                        Workbook workbook;<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        try {<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                                // Reads workbook data<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                                stream = new FileInputStream(file);<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                                workbook = codec.read(stream);<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                        } finally {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                                try {<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                                        if (stream != null)<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                                stream.close();<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                                } catch (IOException e) {}<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                        }<a name="line.183"></a>
+<span class="sourceLineNo">184</span><a name="line.184"></a>
+<span class="sourceLineNo">185</span>                        // Loads the workbook<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                        workbooks.put(workbook, file);<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.LOADED);<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                } else<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                        throw new IOException("Codec could not be found");<a name="line.189"></a>
+<span class="sourceLineNo">190</span>        }<a name="line.190"></a>
+<span class="sourceLineNo">191</span><a name="line.191"></a>
+<span class="sourceLineNo">192</span>        /**<a name="line.192"></a>
+<span class="sourceLineNo">193</span>         * Unloads the given workbook.<a name="line.193"></a>
+<span class="sourceLineNo">194</span>         * @param workbook the workbook to unload<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         */<a name="line.195"></a>
+<span class="sourceLineNo">196</span>        public void unload(Workbook workbook) {<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                File file = workbooks.remove(workbook);<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.UNLOADED);<a name="line.198"></a>
+<span class="sourceLineNo">199</span>        }<a name="line.199"></a>
+<span class="sourceLineNo">200</span><a name="line.200"></a>
+<span class="sourceLineNo">201</span>        /**<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * Saves the given workbook to the file from which it was loaded,<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         * or to which it was most recently saved.<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         * @param workbook the workbook to save<a name="line.204"></a>
+<span class="sourceLineNo">205</span>         * @throws IOException if the file could not be saved correctly<a name="line.205"></a>
+<span class="sourceLineNo">206</span>         */<a name="line.206"></a>
+<span class="sourceLineNo">207</span>        public void save(Workbook workbook) throws IOException {<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                File file = workbooks.get(workbook);<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                if (file != null)<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                        saveAs(workbook, file);<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                else<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                        throw new FileNotFoundException("No file assigned to the workbook.");<a name="line.212"></a>
+<span class="sourceLineNo">213</span>        }<a name="line.213"></a>
+<span class="sourceLineNo">214</span><a name="line.214"></a>
+<span class="sourceLineNo">215</span>        /**<a name="line.215"></a>
+<span class="sourceLineNo">216</span>         * Saves the given workbook to the given file.<a name="line.216"></a>
+<span class="sourceLineNo">217</span>         * @param workbook the workbook to save<a name="line.217"></a>
+<span class="sourceLineNo">218</span>         * @param file the file to which the workbook should be saved<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         * @throws IOException if the file could not be saved correctly<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         */<a name="line.220"></a>
+<span class="sourceLineNo">221</span>        public void saveAs(Workbook workbook, File file) throws IOException {<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                Codec codec = new CodecFactory().getCodec(file);<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                if (codec != null) {<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                        FileOutputStream stream = null;<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                        try {<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                                // Reads workbook data<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                                stream = new FileOutputStream(file);<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                                codec.write(workbook, stream);<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                        } finally {<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                                try {<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                                        if (stream != null)<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                                                stream.close();<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                                } catch (IOException e) {}<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                        }<a name="line.234"></a>
+<span class="sourceLineNo">235</span><a name="line.235"></a>
+<span class="sourceLineNo">236</span>                        workbooks.put(workbook, file);<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                        fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.SAVED);<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                }<a name="line.238"></a>
+<span class="sourceLineNo">239</span>        }<a name="line.239"></a>
+<span class="sourceLineNo">240</span><a name="line.240"></a>
+<span class="sourceLineNo">241</span>        /**<a name="line.241"></a>
+<span class="sourceLineNo">242</span>         * Returns the workbooks that are open.<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         * @return the workbooks that are open<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         */<a name="line.244"></a>
+<span class="sourceLineNo">245</span>        public Workbook[] getWorkbooks() {<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                Collection&lt;Workbook&gt; workbookSet = workbooks.keySet();<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                return workbookSet.toArray(new Workbook[workbookSet.size()]);<a name="line.247"></a>
+<span class="sourceLineNo">248</span>        }<a name="line.248"></a>
+<span class="sourceLineNo">249</span><a name="line.249"></a>
+<span class="sourceLineNo">250</span>        /**<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         * Returns the file in which the given workbook is stored.<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         * @return the file in which the given workbook is stored, or null if it isn't<a name="line.252"></a>
+<span class="sourceLineNo">253</span>         */<a name="line.253"></a>
+<span class="sourceLineNo">254</span>        public File getFile(Workbook workbook) {<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                return workbooks.get(workbook);<a name="line.255"></a>
+<span class="sourceLineNo">256</span>        }<a name="line.256"></a>
+<span class="sourceLineNo">257</span><a name="line.257"></a>
+<span class="sourceLineNo">258</span>        /**<a name="line.258"></a>
+<span class="sourceLineNo">259</span>         * Returns whether a file has been specified for the given workbook,<a name="line.259"></a>
+<span class="sourceLineNo">260</span>         * either when it was loaded or when it was last saved.<a name="line.260"></a>
+<span class="sourceLineNo">261</span>         * @return whether the given workbook belongs to a file<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         */<a name="line.262"></a>
+<span class="sourceLineNo">263</span>        public boolean isWorkbookStored(Workbook workbook) {<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                return workbooks.get(workbook) != null;<a name="line.264"></a>
+<span class="sourceLineNo">265</span>        }<a name="line.265"></a>
+<span class="sourceLineNo">266</span><a name="line.266"></a>
+<span class="sourceLineNo">267</span>        /**<a name="line.267"></a>
+<span class="sourceLineNo">268</span>         * Returns the workbook that is stored in the given file, if it is already<a name="line.268"></a>
+<span class="sourceLineNo">269</span>         * open.<a name="line.269"></a>
+<span class="sourceLineNo">270</span>         * @param file the file to look for<a name="line.270"></a>
+<span class="sourceLineNo">271</span>         * @return the workbook that is stored in the given file, or null if the file isn't open<a name="line.271"></a>
+<span class="sourceLineNo">272</span>         */<a name="line.272"></a>
+<span class="sourceLineNo">273</span>        public Workbook getWorkbook(File file) {<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                for (Map.Entry&lt;Workbook, File&gt; entry : workbooks.entrySet())<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                        if (entry.getValue() != null &amp;&amp; entry.getValue().equals(file))<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                                return entry.getKey();<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                return null;<a name="line.277"></a>
+<span class="sourceLineNo">278</span>        }<a name="line.278"></a>
+<span class="sourceLineNo">279</span><a name="line.279"></a>
+<span class="sourceLineNo">280</span>        /**<a name="line.280"></a>
+<span class="sourceLineNo">281</span>         * Returns whether the given file is open, and a workbook thereby loaded<a name="line.281"></a>
+<span class="sourceLineNo">282</span>         * from it or saved to it.<a name="line.282"></a>
+<span class="sourceLineNo">283</span>         * @param file the file to look for<a name="line.283"></a>
+<span class="sourceLineNo">284</span>         * @return whether the given file is open<a name="line.284"></a>
+<span class="sourceLineNo">285</span>         */<a name="line.285"></a>
+<span class="sourceLineNo">286</span>        public boolean isFileOpen(File file) {<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                return workbooks.containsValue(file);<a name="line.287"></a>
+<span class="sourceLineNo">288</span>        }<a name="line.288"></a>
+<span class="sourceLineNo">289</span><a name="line.289"></a>
+<span class="sourceLineNo">290</span>        /**<a name="line.290"></a>
+<span class="sourceLineNo">291</span>         * Registers the given listener on the spreadsheet application.<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * @param listener the listener to be added<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         */<a name="line.293"></a>
+<span class="sourceLineNo">294</span>        public void addSpreadsheetAppListener(SpreadsheetAppListener listener) {<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                listeners.add(listener);<a name="line.295"></a>
+<span class="sourceLineNo">296</span>        }<a name="line.296"></a>
+<span class="sourceLineNo">297</span><a name="line.297"></a>
+<span class="sourceLineNo">298</span>        /**<a name="line.298"></a>
+<span class="sourceLineNo">299</span>         * Removes the given listener from the spreadsheet application.<a name="line.299"></a>
+<span class="sourceLineNo">300</span>         * @param listener the listener to be removed<a name="line.300"></a>
+<span class="sourceLineNo">301</span>         */<a name="line.301"></a>
+<span class="sourceLineNo">302</span>        public void removeSpreadsheetAppListener(SpreadsheetAppListener listener) {<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                listeners.remove(listener);<a name="line.303"></a>
+<span class="sourceLineNo">304</span>        }<a name="line.304"></a>
+<span class="sourceLineNo">305</span><a name="line.305"></a>
+<span class="sourceLineNo">306</span>        /**<a name="line.306"></a>
+<span class="sourceLineNo">307</span>         * Notifies all registered listeners that a spreadsheet application event<a name="line.307"></a>
+<span class="sourceLineNo">308</span>         * occurred.<a name="line.308"></a>
+<span class="sourceLineNo">309</span>         * @param workbook the workbook that was affected<a name="line.309"></a>
+<span class="sourceLineNo">310</span>         * @param file the file that was affected<a name="line.310"></a>
+<span class="sourceLineNo">311</span>         */<a name="line.311"></a>
+<span class="sourceLineNo">312</span>        private void fireSpreadsheetAppEvent(Workbook workbook, File file,<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                        SpreadsheetAppEvent.Type type) {<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                SpreadsheetAppEvent event<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                        = new SpreadsheetAppEvent(this, workbook, file, type);<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                if (SwingUtilities.isEventDispatchThread())<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                        for (SpreadsheetAppListener listener : listeners)<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                                switch (event.getType()) {<a name="line.318"></a>
+<span class="sourceLineNo">319</span>                                        case CREATED:<a name="line.319"></a>
+<span class="sourceLineNo">320</span>                                                listener.workbookCreated(event); break;<a name="line.320"></a>
+<span class="sourceLineNo">321</span>                                        case LOADED:<a name="line.321"></a>
+<span class="sourceLineNo">322</span>                                                listener.workbookLoaded(event); break;<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                                        case UNLOADED:<a name="line.323"></a>
+<span class="sourceLineNo">324</span>                                                listener.workbookUnloaded(event); break;<a name="line.324"></a>
+<span class="sourceLineNo">325</span>                                        case SAVED:<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                                                listener.workbookSaved(event); break;<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                                }<a name="line.327"></a>
+<span class="sourceLineNo">328</span>                else<a name="line.328"></a>
+<span class="sourceLineNo">329</span>                        SwingUtilities.invokeLater(<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                                new EventDispatcher(event, <a name="line.330"></a>
+<span class="sourceLineNo">331</span>                                        listeners.toArray(new SpreadsheetAppListener[listeners.size()])<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                                )<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                        );<a name="line.333"></a>
+<span class="sourceLineNo">334</span>        }<a name="line.334"></a>
+<span class="sourceLineNo">335</span><a name="line.335"></a>
+<span class="sourceLineNo">336</span>        /**<a name="line.336"></a>
+<span class="sourceLineNo">337</span>         * A utility for dispatching events on the AWT event dispatching thread.<a name="line.337"></a>
+<span class="sourceLineNo">338</span>         * @author Einar Pehrson<a name="line.338"></a>
+<span class="sourceLineNo">339</span>         */<a name="line.339"></a>
+<span class="sourceLineNo">340</span>        public static class EventDispatcher implements Runnable {<a name="line.340"></a>
+<span class="sourceLineNo">341</span><a name="line.341"></a>
+<span class="sourceLineNo">342</span>                /** The event to fire */<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                private SpreadsheetAppEvent event;<a name="line.343"></a>
+<span class="sourceLineNo">344</span><a name="line.344"></a>
+<span class="sourceLineNo">345</span>                /** The listeners to which the event should be dispatched */<a name="line.345"></a>
+<span class="sourceLineNo">346</span>                private SpreadsheetAppListener[] listeners;<a name="line.346"></a>
+<span class="sourceLineNo">347</span><a name="line.347"></a>
+<span class="sourceLineNo">348</span>                /**<a name="line.348"></a>
+<span class="sourceLineNo">349</span>                 * Creates a new event dispatcher.<a name="line.349"></a>
+<span class="sourceLineNo">350</span>                 * @param event the event to fire<a name="line.350"></a>
+<span class="sourceLineNo">351</span>                 * @param listeners the listeners to which the event should be dispatched<a name="line.351"></a>
+<span class="sourceLineNo">352</span>                 */<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                public EventDispatcher(SpreadsheetAppEvent event,<a name="line.353"></a>
+<span class="sourceLineNo">354</span>                                SpreadsheetAppListener[] listeners) {<a name="line.354"></a>
+<span class="sourceLineNo">355</span>                        this.event = event;<a name="line.355"></a>
+<span class="sourceLineNo">356</span>                        this.listeners = listeners;<a name="line.356"></a>
+<span class="sourceLineNo">357</span>                }<a name="line.357"></a>
+<span class="sourceLineNo">358</span><a name="line.358"></a>
+<span class="sourceLineNo">359</span>                /**<a name="line.359"></a>
+<span class="sourceLineNo">360</span>                 * Dispatches the event.<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                 */<a name="line.361"></a>
+<span class="sourceLineNo">362</span>                public void run() {<a name="line.362"></a>
+<span class="sourceLineNo">363</span>                        for (SpreadsheetAppListener listener : listeners)<a name="line.363"></a>
+<span class="sourceLineNo">364</span>                                switch (event.getType()) {<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                                        case CREATED:<a name="line.365"></a>
+<span class="sourceLineNo">366</span>                                                listener.workbookCreated(event); break;<a name="line.366"></a>
+<span class="sourceLineNo">367</span>                                        case LOADED:<a name="line.367"></a>
+<span class="sourceLineNo">368</span>                                                listener.workbookLoaded(event); break;<a name="line.368"></a>
+<span class="sourceLineNo">369</span>                                        case UNLOADED:<a name="line.369"></a>
+<span class="sourceLineNo">370</span>                                                listener.workbookUnloaded(event); break;<a name="line.370"></a>
+<span class="sourceLineNo">371</span>                                        case SAVED:<a name="line.371"></a>
+<span class="sourceLineNo">372</span>                                                listener.workbookSaved(event); break;<a name="line.372"></a>
+<span class="sourceLineNo">373</span>                                }<a name="line.373"></a>
+<span class="sourceLineNo">374</span>                }<a name="line.374"></a>
+<span class="sourceLineNo">375</span>        }<a name="line.375"></a>
+<span class="sourceLineNo">376</span>}<a name="line.376"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

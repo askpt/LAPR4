@@ -1,0 +1,316 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="pt">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Copyright (c) 2005 Einar Pehrson &lt;einar@pehrson.nu&gt;.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> *<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * This file is part of<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * CleanSheets - a spreadsheet application for the Java platform.<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * CleanSheets is free software; you can redistribute it and/or modify<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * it under the terms of the GNU General Public License as published by<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * the Free Software Foundation; either version 2 of the License, or<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * (at your option) any later version.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * CleanSheets is distributed in the hope that it will be useful,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * GNU General Public License for more details.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> *<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * You should have received a copy of the GNU General Public License<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * along with CleanSheets; if not, write to the Free Software<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA     02111-1307      USA<a name="line.19"></a>
+<span class="sourceLineNo">020</span> */<a name="line.20"></a>
+<span class="sourceLineNo">021</span>package csheets.ext.style.ui;<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.awt.BorderLayout;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.awt.Color;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.awt.Component;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import java.awt.Dimension;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import java.awt.GridBagConstraints;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import java.awt.GridBagLayout;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>import java.awt.Insets;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>import java.awt.event.ActionEvent;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>import java.awt.event.ItemEvent;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import java.awt.event.ItemListener;<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>import javax.swing.AbstractAction;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>import javax.swing.BorderFactory;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>import javax.swing.BoxLayout;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>import javax.swing.Icon;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>import javax.swing.ImageIcon;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>import javax.swing.JButton;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>import javax.swing.JColorChooser;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>import javax.swing.JComponent;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>import javax.swing.JLabel;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>import javax.swing.JOptionPane;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>import javax.swing.JPanel;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>import javax.swing.JToggleButton;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>import javax.swing.border.Border;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>import javax.swing.border.MatteBorder;<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>import csheets.ext.style.StyleExtension;<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>/**<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * A component which allows the user to select a border.<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * @author Einar Pehrson<a name="line.53"></a>
+<span class="sourceLineNo">054</span> */ <a name="line.54"></a>
+<span class="sourceLineNo">055</span>@SuppressWarnings("serial")<a name="line.55"></a>
+<span class="sourceLineNo">056</span>public class BorderChooser extends JComponent {<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        /** The toggle button for the top border segment */<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        private JToggleButton topButton = new JToggleButton(new ImageIcon(<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                StyleExtension.class.getResource("res/img/border_top.gif")));<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>        /** The toggle button for the left border segment */<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        private JToggleButton leftButton = new JToggleButton(new ImageIcon(<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                StyleExtension.class.getResource("res/img/border_left.gif")));<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>        /** The toggle button for the right border segment */<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        private JToggleButton rightButton = new JToggleButton(new ImageIcon(<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                StyleExtension.class.getResource("res/img/border_right.gif")));<a name="line.68"></a>
+<span class="sourceLineNo">069</span><a name="line.69"></a>
+<span class="sourceLineNo">070</span>        /** The toggle button for the bottom border segment */<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        private JToggleButton bottomButton = new JToggleButton(new ImageIcon(<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                StyleExtension.class.getResource("res/img/border_bottom.gif")));<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>        /** The preview label */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        private JLabel previewLabel = new JLabel("");<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>        /** The currently selected border color */<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        private Color color = Color.black;<a name="line.78"></a>
+<span class="sourceLineNo">079</span><a name="line.79"></a>
+<span class="sourceLineNo">080</span>        /**<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * Creates a new border selection panel.<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         */<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        public BorderChooser () {<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                this(null);<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        }<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>        /**<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * Creates a new border selection panel with the given initial border<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         * selected.<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * @param initialBorder the border to select initially<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         */<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        public BorderChooser(Border initialBorder) {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                // Configures preview label<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                previewLabel.setPreferredSize(new Dimension(100, 80));<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                previewLabel.setBorder(<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                        BorderFactory.createCompoundBorder(<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                                BorderFactory.createTitledBorder("Preview"),<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                                BorderFactory.createEmptyBorder(5, 5, 5, 5)<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                ));<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>                // Registers listener<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                PreviewLabelUpdater updater = new PreviewLabelUpdater();<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                topButton.addItemListener(updater);<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                leftButton.addItemListener(updater);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                rightButton.addItemListener(updater);<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                bottomButton.addItemListener(updater);<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>                // Lays out button panel<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                JPanel buttonPanel = new JPanel(new GridBagLayout());<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                GridBagConstraints gc = new GridBagConstraints();<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                gc.gridwidth = gc.gridheight = 2;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                gc.gridy = 1;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                buttonPanel.add(leftButton, gc);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                gc.gridx = 2;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                gc.gridy = 0;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                buttonPanel.add(topButton, gc);<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                gc.gridy = 2;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                buttonPanel.add(bottomButton, gc);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                gc.gridx = 4;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                gc.gridy = 1;<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                buttonPanel.add(rightButton, gc);<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                buttonPanel.setBorder(BorderFactory.createTitledBorder("Border"));<a name="line.122"></a>
+<span class="sourceLineNo">123</span><a name="line.123"></a>
+<span class="sourceLineNo">124</span>                // Creates color panel<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                JPanel colorPanel = new JPanel();<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                JButton colorButton = new JButton(new ColorAction());<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                colorButton.setAlignmentY(0.5f);<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                colorPanel.add(colorButton);<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                colorPanel.setBorder(BorderFactory.createTitledBorder("Color"));<a name="line.130"></a>
+<span class="sourceLineNo">131</span><a name="line.131"></a>
+<span class="sourceLineNo">132</span>                // Configures layout and adds components<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                setLayout(new BorderLayout(5, 5));<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                add(buttonPanel, BorderLayout.CENTER);<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                add(colorPanel, BorderLayout.EAST);<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                add(previewLabel, BorderLayout.SOUTH);<a name="line.136"></a>
+<span class="sourceLineNo">137</span><a name="line.137"></a>
+<span class="sourceLineNo">138</span>                // Sets the initial border<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                setSelectedBorder(initialBorder);<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        }<a name="line.140"></a>
+<span class="sourceLineNo">141</span><a name="line.141"></a>
+<span class="sourceLineNo">142</span>        /**<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         * Lets the user select a border from a chooser in a standard dialog.<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         * @param parent the parent component of the dialog<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * @param title the title of the dialog<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @param initialBorder the border to select initially<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * @return the selected border or, if the user did not press OK, null<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         */<a name="line.148"></a>
+<span class="sourceLineNo">149</span>        public static Border showDialog(Component parent, String title,<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        Border initialBorder) {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                BorderChooser chooser = new BorderChooser(initialBorder);<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                int returnValue = JOptionPane.showConfirmDialog(<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                        parent,<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                        chooser,<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        title,<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        JOptionPane.OK_CANCEL_OPTION,<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        JOptionPane.PLAIN_MESSAGE,<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                        (Icon)null);<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                if (returnValue == JOptionPane.OK_OPTION)<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                        return chooser.getSelectedBorder();<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                else<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                        return null;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        }<a name="line.163"></a>
+<span class="sourceLineNo">164</span><a name="line.164"></a>
+<span class="sourceLineNo">165</span>        /**<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         * Returns the currently selected border in the dialog.<a name="line.166"></a>
+<span class="sourceLineNo">167</span>         * @return the currently selected border<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         */<a name="line.168"></a>
+<span class="sourceLineNo">169</span>        public Border getSelectedBorder() {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                return BorderFactory.createMatteBorder(<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        topButton.isSelected() ? 1 : 0,<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                        leftButton.isSelected() ? 1 : 0,<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                        bottomButton.isSelected() ? 1 : 0,<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        rightButton.isSelected() ? 1 : 0,<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                        color);<a name="line.175"></a>
+<span class="sourceLineNo">176</span>        }<a name="line.176"></a>
+<span class="sourceLineNo">177</span><a name="line.177"></a>
+<span class="sourceLineNo">178</span>        /**<a name="line.178"></a>
+<span class="sourceLineNo">179</span>         * Sets the currently selected border in the dialog.<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         * @param border the border to select<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         */<a name="line.181"></a>
+<span class="sourceLineNo">182</span>        public void setSelectedBorder(Border border) {<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                if (border instanceof MatteBorder) {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                        MatteBorder matteBorder = (MatteBorder)border;<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                        color = matteBorder.getMatteColor();<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                        Insets insets = matteBorder.getBorderInsets();<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        topButton.setSelected(insets.top &gt; 0);<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                        leftButton.setSelected(insets.left &gt; 0);<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                        bottomButton.setSelected(insets.bottom &gt; 0);<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                        rightButton.setSelected(insets.right &gt; 0);<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        }<a name="line.192"></a>
+<span class="sourceLineNo">193</span><a name="line.193"></a>
+<span class="sourceLineNo">194</span>        /**<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         * Updates the border of the preview label.<a name="line.195"></a>
+<span class="sourceLineNo">196</span>         */<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        private void updatePreviewBorder() {<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                previewLabel.setBorder(<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                        BorderFactory.createCompoundBorder(<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                                BorderFactory.createTitledBorder("Preview"),<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                                BorderFactory.createCompoundBorder(<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                                        BorderFactory.createEmptyBorder(5, 5, 5, 5),<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                                        getSelectedBorder())));<a name="line.203"></a>
+<span class="sourceLineNo">204</span>        }<a name="line.204"></a>
+<span class="sourceLineNo">205</span><a name="line.205"></a>
+<span class="sourceLineNo">206</span>        /**<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         * A controller that listens to selection events on the buttons.<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         */<a name="line.208"></a>
+<span class="sourceLineNo">209</span>        private class PreviewLabelUpdater implements ItemListener {<a name="line.209"></a>
+<span class="sourceLineNo">210</span><a name="line.210"></a>
+<span class="sourceLineNo">211</span>                /**<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                 * Creates a new preview label updater.<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                 */<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                public PreviewLabelUpdater() {}<a name="line.214"></a>
+<span class="sourceLineNo">215</span><a name="line.215"></a>
+<span class="sourceLineNo">216</span>                /**<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                 * Updates the preview label.<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                 * @param e the event that was fired<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                 */<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                public void itemStateChanged(ItemEvent e) {<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                        updatePreviewBorder();<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                }<a name="line.222"></a>
+<span class="sourceLineNo">223</span>        }<a name="line.223"></a>
+<span class="sourceLineNo">224</span><a name="line.224"></a>
+<span class="sourceLineNo">225</span>        /**<a name="line.225"></a>
+<span class="sourceLineNo">226</span>         * An action for letting the user select a new border color from a chooser.<a name="line.226"></a>
+<span class="sourceLineNo">227</span>         */<a name="line.227"></a>
+<span class="sourceLineNo">228</span>        private class ColorAction extends AbstractAction {<a name="line.228"></a>
+<span class="sourceLineNo">229</span><a name="line.229"></a>
+<span class="sourceLineNo">230</span>                public ColorAction() {<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                        putValue(SMALL_ICON, new ImageIcon(<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                                StyleExtension.class.getResource("res/img/color_bg.gif")));<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                }<a name="line.233"></a>
+<span class="sourceLineNo">234</span><a name="line.234"></a>
+<span class="sourceLineNo">235</span>                public void actionPerformed(ActionEvent e) {<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                        Color c = JColorChooser.showDialog(null, "Choose Border Color",<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                                color);<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                        if (c != null) {<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                                color = c;<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                                updatePreviewBorder();<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                        }<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                }<a name="line.242"></a>
+<span class="sourceLineNo">243</span>        }<a name="line.243"></a>
+<span class="sourceLineNo">244</span>}<a name="line.244"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

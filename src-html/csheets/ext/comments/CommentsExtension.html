@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="pt">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package csheets.ext.comments;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import csheets.core.Cell;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import csheets.ext.Extension;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import csheets.ext.comments.ui.UIExtensionComments;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import csheets.ui.ctrl.UIController;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import csheets.ui.ext.UIExtension;<a name="line.7"></a>
+<span class="sourceLineNo">008</span><a name="line.8"></a>
+<span class="sourceLineNo">009</span>/**<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * An extension to support comments on cells.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * An extension must extend the Extension abstract class.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * The class that implements the Extension is the "bootstrap" of the extension.<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * @see Extension<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * @author Alexandre Braganca<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * @author Einar Pehrson<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>public class CommentsExtension extends Extension {<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>        /** The name of the extension */<a name="line.19"></a>
+<span class="sourceLineNo">020</span>        public static final String NAME = "Comments";<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>        /**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>         * Creates a new Example extension.<a name="line.23"></a>
+<span class="sourceLineNo">024</span>         */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        public CommentsExtension() {<a name="line.25"></a>
+<span class="sourceLineNo">026</span>                super(NAME);<a name="line.26"></a>
+<span class="sourceLineNo">027</span>        }<a name="line.27"></a>
+<span class="sourceLineNo">028</span>        <a name="line.28"></a>
+<span class="sourceLineNo">029</span>        /**<a name="line.29"></a>
+<span class="sourceLineNo">030</span>         * Makes the given cell commentable.<a name="line.30"></a>
+<span class="sourceLineNo">031</span>         * @param cell the cell to comment<a name="line.31"></a>
+<span class="sourceLineNo">032</span>         * @return a commentable cell<a name="line.32"></a>
+<span class="sourceLineNo">033</span>         */<a name="line.33"></a>
+<span class="sourceLineNo">034</span>        public CommentableCell extend(Cell cell) {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>                return new CommentableCell(cell);<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        }<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        <a name="line.37"></a>
+<span class="sourceLineNo">038</span>        /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>         * Returns the user interface extension of this extension <a name="line.39"></a>
+<span class="sourceLineNo">040</span>         * @param uiController the user interface controller<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         * @return a user interface extension, or null if none is provided<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         */<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        public UIExtension getUIExtension(UIController uiController) {<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                return new UIExtensionComments(this, uiController);<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        }<a name="line.45"></a>
+<span class="sourceLineNo">046</span>}<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

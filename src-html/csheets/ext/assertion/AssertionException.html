@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="pt">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Copyright (c) 2005 Peter Palotas, Fredrik Johansson, Einar Pehrson,<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * Sebastian Kekkonen, Lars Magnus Lang, Malin Johansson and Sofia Nilsson<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * This file is part of<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * CleanSheets Extension for Assertions<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * CleanSheets Extension for Assertions is free software; you can<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * redistribute it and/or modify it under the terms of the GNU General Public<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * License as published by the Free Software Foundation; either version 2 of<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * the License, or (at your option) any later version.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> *<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * CleanSheets Extension for Assertions is distributed in the hope that<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * it will be useful, but WITHOUT ANY WARRANTY; without even the implied<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * See the GNU General Public License for more details.<a name="line.16"></a>
+<span class="sourceLineNo">017</span> *<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * You should have received a copy of the GNU General Public License<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * along with CleanSheets Extension for Assertions; if not, write to the<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * Free Software Foundation, Inc., 59 Temple Place, Suite 330,<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * Boston, MA  02111-1307  USA<a name="line.21"></a>
+<span class="sourceLineNo">022</span> */<a name="line.22"></a>
+<span class="sourceLineNo">023</span>package csheets.ext.assertion;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>/** Representing a parse error of an assertion. Thrown by Assertion().<a name="line.25"></a>
+<span class="sourceLineNo">026</span>        @author Fredrik Johansson<a name="line.26"></a>
+<span class="sourceLineNo">027</span>        @author Peter Palotas<a name="line.27"></a>
+<span class="sourceLineNo">028</span>*/<a name="line.28"></a>
+<span class="sourceLineNo">029</span>public class AssertionException extends Exception {<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        static final long serialVersionUID = 2950555036431465919L;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        private int line;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>        private int column;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>        private String errorMsg;<a name="line.33"></a>
+<span class="sourceLineNo">034</span><a name="line.34"></a>
+<span class="sourceLineNo">035</span>        public AssertionException(int line, int column, String errorMsg) {<a name="line.35"></a>
+<span class="sourceLineNo">036</span>                this.line = line;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>                this.column = column;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>                this.errorMsg = errorMsg;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        }<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>        public AssertionException(String errorMsg) {<a name="line.41"></a>
+<span class="sourceLineNo">042</span>                this.line = this.column = -1;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                this.errorMsg = errorMsg;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        }<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>        public AssertionException(antlr.RecognitionException re) {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                this.line = re.getLine();<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                this.column = re.getColumn();<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                this.errorMsg = re.toString();<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        }<a name="line.50"></a>
+<span class="sourceLineNo">051</span><a name="line.51"></a>
+<span class="sourceLineNo">052</span>        public AssertionException(antlr.TokenStreamException tse) {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                this.line = -1;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                this.column = -1;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                this.errorMsg = tse.toString();<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        public AssertionException(antlr.CharStreamException cse) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                this.line = -1;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                this.column = -1;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                this.errorMsg = cse.toString();<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        }<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>        public AssertionException(antlr.MismatchedCharException ex) {<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                this.line = ex.getLine();<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                this.column = ex.getColumn();<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                this.errorMsg = ex.getMessage();<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        }<a name="line.68"></a>
+<span class="sourceLineNo">069</span><a name="line.69"></a>
+<span class="sourceLineNo">070</span>        public AssertionException(antlr.MismatchedTokenException ex) {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                this.line = ex.getLine();<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                this.column = ex.getColumn();<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                this.errorMsg = ex.getMessage();<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        }<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>        public AssertionException(antlr.NoViableAltException ex) {<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                this.line = ex.getLine();<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                this.column = ex.getColumn();<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                this.errorMsg = ex.getMessage();<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        }<a name="line.80"></a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span>        public AssertionException(antlr.NoViableAltForCharException ex) {<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                this.line = ex.getLine();<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                this.column = ex.getColumn();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                this.errorMsg = ex.getMessage();<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        }<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>        /** Returns &lt;code&gt;true&lt;/code&gt; if this exception contains information<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                about where in the assertion string the error occured,<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                meaning getLine() and getColumn() will return<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                correct values. Returns &lt;code&gt;false&lt;/code&gt; otherwise.<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        */<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        public boolean hasLocationInfo() {<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                return (this.column != -1);<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        }<a name="line.95"></a>
+<span class="sourceLineNo">096</span><a name="line.96"></a>
+<span class="sourceLineNo">097</span>        /** Returns the line of the assertion on which this<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                error occured if hasLocationInfo() returns<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                &lt;code&gt;true&lt;/code&gt;. Otherwise &lt;code&gt;-1&lt;/code&gt; will<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                be returned.<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        */<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        public int getLine() {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                return line;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        }<a name="line.104"></a>
+<span class="sourceLineNo">105</span><a name="line.105"></a>
+<span class="sourceLineNo">106</span>        /** Returns the column of the assertion on which this<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                error occured if hasLocationInfo() returns<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                &lt;code&gt;true&lt;/code&gt;. Otherwise &lt;code&gt;-1&lt;/code&gt; will<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                be returned.<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        */<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        public int getColumn() {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                return column;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>        /** Returns the message of this error. */<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        public String getMessage() {<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                return errorMsg;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>        }<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>        /** Returns a message describing this error.<a name="line.120"></a>
+<span class="sourceLineNo">121</span>        */<a name="line.121"></a>
+<span class="sourceLineNo">122</span>        public String toString() {<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                String s = "Error parsing assertion:\n";<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                if (hasLocationInfo())<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                        s += "col " + getColumn() + ": ";<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                s += getMessage();<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                return s;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        }<a name="line.128"></a>
+<span class="sourceLineNo">129</span>}<a name="line.129"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="pt">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/*<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * Copyright (c) 2005 Einar Pehrson &lt;einar@pehrson.nu&gt;.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> *<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * This file is part of<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * CleanSheets - a spreadsheet application for the Java platform.<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * CleanSheets is free software; you can redistribute it and/or modify<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * it under the terms of the GNU General Public License as published by<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * the Free Software Foundation; either version 2 of the License, or<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * (at your option) any later version.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * CleanSheets is distributed in the hope that it will be useful,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * GNU General Public License for more details.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> *<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * You should have received a copy of the GNU General Public License<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * along with CleanSheets; if not, write to the Free Software<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<a name="line.19"></a>
+<span class="sourceLineNo">020</span> */<a name="line.20"></a>
+<span class="sourceLineNo">021</span>package csheets.ui.sheet;<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.awt.Graphics;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.awt.event.ActionEvent;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.awt.event.KeyEvent;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import java.beans.PropertyChangeEvent;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import java.beans.PropertyChangeListener;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import java.util.Enumeration;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>import java.util.LinkedList;<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>import javax.swing.AbstractAction;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import javax.swing.Action;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>import javax.swing.ActionMap;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>import javax.swing.KeyStroke;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>import javax.swing.TransferHandler;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>import javax.swing.table.TableColumn;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>import javax.swing.table.TableModel;<a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>import csheets.core.Address;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>import csheets.core.Cell;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>import csheets.core.Spreadsheet;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>import csheets.ext.style.StylableSpreadsheet;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>import csheets.ext.style.StyleExtension;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>import csheets.ui.ctrl.SelectionEvent;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>import csheets.ui.ctrl.SelectionListener;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>import csheets.ui.ctrl.UIController;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>import csheets.ui.ext.TableDecorator;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>import csheets.ui.ext.UIExtension;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>import csheets.ui.grid.Grid;<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>/**<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * A customized JTable component, used to visualize a spreadsheet.<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * @author Einar Pehrson<a name="line.53"></a>
+<span class="sourceLineNo">054</span> */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>@SuppressWarnings("serial")<a name="line.55"></a>
+<span class="sourceLineNo">056</span>public class SpreadsheetTable extends Grid implements SelectionListener {<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        /** The action command used for the action */<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        public static final String CLEAR_SELECTION_COMMAND = "Clear the content of the selected cells";<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>        /** The spreadsheet that is displayed by the table */<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        private Spreadsheet spreadsheet;<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>        /** The user interface controller */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        private UIController uiController;<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>        /** The table decorators invoked when painting the table */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        private java.util.List&lt;TableDecorator&gt; decorators<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                = new LinkedList&lt;TableDecorator&gt;();<a name="line.69"></a>
+<span class="sourceLineNo">070</span><a name="line.70"></a>
+<span class="sourceLineNo">071</span>        /** The column width tracker */<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        private PropertyChangeListener columnWidthTracker = new ColumnWidthTracker();<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>        /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * Creates a spreadsheet table for the given spreadsheet.<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         * @param spreadsheet the spreadsheet to display in the table<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * @param uiController the user interface controller<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         */<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        public SpreadsheetTable(Spreadsheet spreadsheet, UIController uiController) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                this(new SpreadsheetTableModel(spreadsheet, uiController), uiController);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>        /**<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * Creates a spreadsheet table for the given spreadsheet table model.<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * @param tableModel the spreadsheet table model to display in the table<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * @param uiController the user interface controller<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         */<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        public SpreadsheetTable(SpreadsheetTableModel tableModel, UIController uiController) {<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                super(null);<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>                // Stores members<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                this.uiController = uiController;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                uiController.addSelectionListener(this);<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>                // Configures cell rendering and editing<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                setDefaultRenderer(Cell.class, new CellRenderer(uiController));<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                setDefaultEditor(Cell.class, new CellEditor(uiController));<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                setDragEnabled(true);<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                setTransferHandler(uiController.getCellTransferHandler());<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>                // Configures cell editing actions<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                ActionMap actionMap = getActionMap();<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME),<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                        TransferHandler.getCutAction());<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                actionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME),<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                        TransferHandler.getCopyAction());<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                actionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME),<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                        TransferHandler.getPasteAction());<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                actionMap.put(CLEAR_SELECTION_COMMAND, new ClearSelectionAction());<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                        CLEAR_SELECTION_COMMAND);<a name="line.111"></a>
+<span class="sourceLineNo">112</span><a name="line.112"></a>
+<span class="sourceLineNo">113</span>                // Fetches decorators<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                for (UIExtension extension : uiController.getExtensions()) {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                        TableDecorator decorator = extension.getTableDecorator();<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                        if (decorator != null)<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                                decorators.add(decorator);<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                }<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>                // Updates model<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                setModel(tableModel);<a name="line.121"></a>
+<span class="sourceLineNo">122</span>        }<a name="line.122"></a>
+<span class="sourceLineNo">123</span><a name="line.123"></a>
+<span class="sourceLineNo">124</span>/*<a name="line.124"></a>
+<span class="sourceLineNo">125</span> * DATA<a name="line.125"></a>
+<span class="sourceLineNo">126</span> */<a name="line.126"></a>
+<span class="sourceLineNo">127</span><a name="line.127"></a>
+<span class="sourceLineNo">128</span>        /**<a name="line.128"></a>
+<span class="sourceLineNo">129</span>         * Returns the spreadsheet that the table displays.<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * @return the spreadsheet that the table displays.<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         */<a name="line.131"></a>
+<span class="sourceLineNo">132</span>        public Spreadsheet getSpreadsheet() {<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                return spreadsheet;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>        }<a name="line.134"></a>
+<span class="sourceLineNo">135</span><a name="line.135"></a>
+<span class="sourceLineNo">136</span>        /**<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * Sets the spreadsheet that is displayed by the table.<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * @param spreadsheet the spreadsheet that is displayed by the table<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         */<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        public void setSpreadsheet(Spreadsheet spreadsheet) {<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                setModel(new SpreadsheetTableModel(spreadsheet, uiController));<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        }<a name="line.142"></a>
+<span class="sourceLineNo">143</span><a name="line.143"></a>
+<span class="sourceLineNo">144</span>        /**<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * Sets the data model of the table. Overridden to only accept instances<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * of the &lt;code&gt;SpreadsheetTableModel&lt;/code&gt; class.<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * @param dataModel the new data source for this table, must be a &lt;code&gt;SpreadsheetTableModel&lt;/code&gt;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         */<a name="line.148"></a>
+<span class="sourceLineNo">149</span>        public void setModel(TableModel dataModel) {<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                if (!(dataModel instanceof SpreadsheetTableModel))<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        return;<a name="line.151"></a>
+<span class="sourceLineNo">152</span><a name="line.152"></a>
+<span class="sourceLineNo">153</span>                // Updates model<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                this.spreadsheet = ((SpreadsheetTableModel)dataModel).getSpreadsheet();<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                super.setModel(dataModel);<a name="line.155"></a>
+<span class="sourceLineNo">156</span><a name="line.156"></a>
+<span class="sourceLineNo">157</span>                // Restores column widths and row heights<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                StylableSpreadsheet styleableSpreadsheet = (StylableSpreadsheet)<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                        spreadsheet.getExtension(StyleExtension.NAME);<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                for (int column = 0; column &lt; spreadsheet.getColumnCount(); column++) {<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                        int columnWidth = styleableSpreadsheet.getColumnWidth(column);<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                        if (columnWidth != -1)<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                                columnModel.getColumn(column).setPreferredWidth(columnWidth);<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                }<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                for (int row = 0; row &lt; spreadsheet.getRowCount(); row++) {<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        int rowHeight = styleableSpreadsheet.getRowHeight(row);<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        if (rowHeight != -1)<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                                super.setRowHeight(row, rowHeight);<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                }<a name="line.169"></a>
+<span class="sourceLineNo">170</span><a name="line.170"></a>
+<span class="sourceLineNo">171</span>                // Adds column width listener<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                Enumeration&lt;TableColumn&gt; columns = columnModel.getColumns();<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                while (columns.hasMoreElements())<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        columns.nextElement().addPropertyChangeListener(columnWidthTracker);<a name="line.174"></a>
+<span class="sourceLineNo">175</span>        }<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>/*<a name="line.177"></a>
+<span class="sourceLineNo">178</span> * SELECTION<a name="line.178"></a>
+<span class="sourceLineNo">179</span> */<a name="line.179"></a>
+<span class="sourceLineNo">180</span><a name="line.180"></a>
+<span class="sourceLineNo">181</span>        /**<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         * Returns the active cell of the spreadsheet table.<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         * @return the active cell of the spreadsheet table<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         */<a name="line.184"></a>
+<span class="sourceLineNo">185</span>        public Cell getSelectedCell() {<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                int activeColumn = getColumnModel().getSelectionModel().getAnchorSelectionIndex();<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                int activeRow = getSelectionModel().getAnchorSelectionIndex();<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                return spreadsheet.getCell(new Address(activeColumn, activeRow));<a name="line.188"></a>
+<span class="sourceLineNo">189</span>        }<a name="line.189"></a>
+<span class="sourceLineNo">190</span><a name="line.190"></a>
+<span class="sourceLineNo">191</span>        /**<a name="line.191"></a>
+<span class="sourceLineNo">192</span>         * Returns the currently selected cells in the spreadsheet table.<a name="line.192"></a>
+<span class="sourceLineNo">193</span>         * @return a two-dimensional array of the the currently selected cells in the spreadsheet table<a name="line.193"></a>
+<span class="sourceLineNo">194</span>         */<a name="line.194"></a>
+<span class="sourceLineNo">195</span>        public Cell[][] getSelectedCells() {<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                int[] rows = getSelectedRows();<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                int[] columns = getSelectedColumns();<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                Cell[][] range = new Cell[rows.length][columns.length];<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                for (int row = 0; row &lt; range.length; row++)<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                        for (int column = 0; column &lt; range[row].length; column++)<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                                range[row][column] = spreadsheet.getCell(columns[column], rows[row]);<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                return range;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>        }<a name="line.203"></a>
+<span class="sourceLineNo">204</span><a name="line.204"></a>
+<span class="sourceLineNo">205</span>        /**<a name="line.205"></a>
+<span class="sourceLineNo">206</span>         * Clears the currently selected cells in the table.<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         */<a name="line.207"></a>
+<span class="sourceLineNo">208</span>        public void clearSelectedCells() {<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                for (Cell[] row : getSelectedCells())<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                        for (Cell cell : row)<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                                cell.clear();<a name="line.211"></a>
+<span class="sourceLineNo">212</span>        }<a name="line.212"></a>
+<span class="sourceLineNo">213</span><a name="line.213"></a>
+<span class="sourceLineNo">214</span>        /**<a name="line.214"></a>
+<span class="sourceLineNo">215</span>         * Changes the current selection in the table. Overridden to update the<a name="line.215"></a>
+<span class="sourceLineNo">216</span>         * user interface controller as well.<a name="line.216"></a>
+<span class="sourceLineNo">217</span>         * @param row the row that was selected<a name="line.217"></a>
+<span class="sourceLineNo">218</span>         * @param column the column that was selected<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         * @param toggle whether the selection should be toggled<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         * @param extend whether the selection should be extended<a name="line.220"></a>
+<span class="sourceLineNo">221</span>         */<a name="line.221"></a>
+<span class="sourceLineNo">222</span>        public void changeSelection(int row, int column, boolean toggle, boolean extend) {<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                super.changeSelection(row, column, toggle, extend);<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                if (!extend)<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                        uiController.setActiveCell(getSelectedCell());<a name="line.225"></a>
+<span class="sourceLineNo">226</span>        }<a name="line.226"></a>
+<span class="sourceLineNo">227</span><a name="line.227"></a>
+<span class="sourceLineNo">228</span>        /**<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         * Selects all cells in the spreadsheet table.<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         */<a name="line.230"></a>
+<span class="sourceLineNo">231</span>        public void selectAll() {<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                super.changeSelection(0, 0, false, false);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                changeSelection(<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                        spreadsheet.getRowCount(),<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                        spreadsheet.getColumnCount(), false, true);<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                uiController.setActiveCell(getSelectedCell());<a name="line.236"></a>
+<span class="sourceLineNo">237</span>        }<a name="line.237"></a>
+<span class="sourceLineNo">238</span><a name="line.238"></a>
+<span class="sourceLineNo">239</span>        /**<a name="line.239"></a>
+<span class="sourceLineNo">240</span>         * Updates the selection in the table when the active cell is changed.<a name="line.240"></a>
+<span class="sourceLineNo">241</span>         * @param event the selection event that was fired<a name="line.241"></a>
+<span class="sourceLineNo">242</span>         */<a name="line.242"></a>
+<span class="sourceLineNo">243</span>        public void selectionChanged(SelectionEvent event) {<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                if (spreadsheet == event.getSpreadsheet() &amp;&amp; event.isCellChanged()) {<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                        int activeColumn = getColumnModel().getSelectionModel().getAnchorSelectionIndex();<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                        int activeRow = getSelectionModel().getAnchorSelectionIndex();<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                        Address address = event.getCell().getAddress();<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                        if (event.getPreviousCell() == null || (address.getColumn()<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                                != activeColumn || address.getRow() != activeRow)) {<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                                changeSelection(address.getRow(), address.getColumn(), false, false);<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                                requestFocus();<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                        }<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                }<a name="line.253"></a>
+<span class="sourceLineNo">254</span>        }<a name="line.254"></a>
+<span class="sourceLineNo">255</span><a name="line.255"></a>
+<span class="sourceLineNo">256</span>/*<a name="line.256"></a>
+<span class="sourceLineNo">257</span> * DECORATION<a name="line.257"></a>
+<span class="sourceLineNo">258</span> */<a name="line.258"></a>
+<span class="sourceLineNo">259</span><a name="line.259"></a>
+<span class="sourceLineNo">260</span>        /**<a name="line.260"></a>
+<span class="sourceLineNo">261</span>         * Overridden to delegate painting to decorators.<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         * @param g the Graphics object to protect<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         */<a name="line.263"></a>
+<span class="sourceLineNo">264</span>        protected void paintComponent(Graphics g) {<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                super.paintComponent(g);<a name="line.265"></a>
+<span class="sourceLineNo">266</span><a name="line.266"></a>
+<span class="sourceLineNo">267</span>                // Invokes decorators<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                for (TableDecorator decorator : decorators)<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                        if (decorator.isEnabled())<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                                decorator.decorate(g, this);<a name="line.270"></a>
+<span class="sourceLineNo">271</span>        }<a name="line.271"></a>
+<span class="sourceLineNo">272</span><a name="line.272"></a>
+<span class="sourceLineNo">273</span>/*<a name="line.273"></a>
+<span class="sourceLineNo">274</span> * HEADERS<a name="line.274"></a>
+<span class="sourceLineNo">275</span> */<a name="line.275"></a>
+<span class="sourceLineNo">276</span><a name="line.276"></a>
+<span class="sourceLineNo">277</span>        /**<a name="line.277"></a>
+<span class="sourceLineNo">278</span>         * Sets the height for row to rowHeight, revalidates, and repaints. The height of the cells in this row will be equal to the row height minus the row margin. <a name="line.278"></a>
+<span class="sourceLineNo">279</span>         * @param row - the row whose height is being changed<a name="line.279"></a>
+<span class="sourceLineNo">280</span>         * @param rowHeight - new row height, in pixels <a name="line.280"></a>
+<span class="sourceLineNo">281</span>         * @throws IllegalArgumentException if rowHeight is less than 1<a name="line.281"></a>
+<span class="sourceLineNo">282</span>         */<a name="line.282"></a>
+<span class="sourceLineNo">283</span>        public void setRowHeight(int row, int rowHeight) {<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                super.setRowHeight(row, rowHeight);<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                uiController.setWorkbookModified(spreadsheet.getWorkbook());<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                StylableSpreadsheet styleableSpreadsheet = (StylableSpreadsheet)<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                        spreadsheet.getExtension(StyleExtension.NAME);<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                styleableSpreadsheet.setRowHeight(row, rowHeight);<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        }<a name="line.289"></a>
+<span class="sourceLineNo">290</span><a name="line.290"></a>
+<span class="sourceLineNo">291</span>        /**<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * A listener that forwards column width changes to the style extension.<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         */<a name="line.293"></a>
+<span class="sourceLineNo">294</span>        private class ColumnWidthTracker implements PropertyChangeListener {<a name="line.294"></a>
+<span class="sourceLineNo">295</span><a name="line.295"></a>
+<span class="sourceLineNo">296</span>                /**<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                 * Creates a new column width tracker.<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                 */<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                public ColumnWidthTracker() {}<a name="line.299"></a>
+<span class="sourceLineNo">300</span><a name="line.300"></a>
+<span class="sourceLineNo">301</span>                /**<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                 * Stores the width of the column that was resized.<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                 * @param event the event that was fired<a name="line.303"></a>
+<span class="sourceLineNo">304</span>                 */<a name="line.304"></a>
+<span class="sourceLineNo">305</span>                public void propertyChange(PropertyChangeEvent event) {<a name="line.305"></a>
+<span class="sourceLineNo">306</span>                        if (event.getPropertyName().equals("width")) {<a name="line.306"></a>
+<span class="sourceLineNo">307</span>                                TableColumn source = (TableColumn)event.getSource();<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                                StylableSpreadsheet styleableSpreadsheet = (StylableSpreadsheet)<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                                        spreadsheet.getExtension(StyleExtension.NAME);<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                                if (styleableSpreadsheet.getColumnWidth(source.getModelIndex())<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                                                != source.getWidth()) {<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                                        styleableSpreadsheet.setColumnWidth(<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                                                source.getModelIndex(), source.getWidth());<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                                        uiController.setWorkbookModified(spreadsheet.getWorkbook());<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                                }<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                        }<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                }<a name="line.317"></a>
+<span class="sourceLineNo">318</span>        }<a name="line.318"></a>
+<span class="sourceLineNo">319</span><a name="line.319"></a>
+<span class="sourceLineNo">320</span>/*<a name="line.320"></a>
+<span class="sourceLineNo">321</span> * ACTIONS<a name="line.321"></a>
+<span class="sourceLineNo">322</span> */<a name="line.322"></a>
+<span class="sourceLineNo">323</span><a name="line.323"></a>
+<span class="sourceLineNo">324</span>        /**<a name="line.324"></a>
+<span class="sourceLineNo">325</span>         * An action for clearing the content of the selected cells, without<a name="line.325"></a>
+<span class="sourceLineNo">326</span>         * invoking the editor.<a name="line.326"></a>
+<span class="sourceLineNo">327</span>         * @author Einar Pehrson<a name="line.327"></a>
+<span class="sourceLineNo">328</span>         */<a name="line.328"></a>
+<span class="sourceLineNo">329</span>        @SuppressWarnings("serial")<a name="line.329"></a>
+<span class="sourceLineNo">330</span>        protected class ClearSelectionAction extends AbstractAction {<a name="line.330"></a>
+<span class="sourceLineNo">331</span><a name="line.331"></a>
+<span class="sourceLineNo">332</span>                /**<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                 * Creates a selection clearing action.<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                 */<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                public ClearSelectionAction() {<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                        // Configures action<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                        putValue(NAME, CLEAR_SELECTION_COMMAND);<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                        putValue(SHORT_DESCRIPTION, CLEAR_SELECTION_COMMAND);<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                        putValue(ACTION_COMMAND_KEY, CLEAR_SELECTION_COMMAND);<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                }<a name="line.340"></a>
+<span class="sourceLineNo">341</span><a name="line.341"></a>
+<span class="sourceLineNo">342</span>                public void actionPerformed(ActionEvent event) {<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                        clearSelectedCells();<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                }<a name="line.344"></a>
+<span class="sourceLineNo">345</span>        }<a name="line.345"></a>
+<span class="sourceLineNo">346</span>}<a name="line.346"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
